@@ -82,7 +82,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         INTENT_FILTER.addAction(Intent.ACTION_TIME_CHANGED);
     }
 
-    private final String TIME_FORMAT_DISPLAYED = "kk:mm a";
+    private final String TIME_FORMAT_DISPLAYED = "HH:mm";
 
     private BroadcastReceiver mTimeInfoReceiver = new BroadcastReceiver(){
         @Override
@@ -110,14 +110,14 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
 
     @Override
     public void onScreenDim() {
-        mTime.setTextColor(Color.WHITE);
-        mBattery.setTextColor(Color.WHITE);
+        /*mTime.setTextColor(Color.WHITE);
+        mBattery.setTextColor(Color.WHITE);*/
     }
 
     @Override
     public void onScreenAwake() {
-        mTime.setTextColor(Color.RED);
-        mBattery.setTextColor(Color.RED);
+//        mTime.setTextColor(Color.RED);
+//        mBattery.setTextColor(Color.RED);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         //Wearable.DataApi.removeListener(mGoogleApiClient, this);
         //Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         //Wearable.NodeApi.removeListener(mGoogleApiClient, this);
-        if (mRanking!=null) mRanking.setText("Pause");
+        //if (mRanking!=null) mRanking.setText("Pause");
      //   mGoogleApiClient.disconnect();
     }
 
@@ -181,7 +181,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         Wearable.DataApi.addListener(mGoogleApiClient, this);
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.NodeApi.addListener(mGoogleApiClient, this);
-        if (mRanking!=null)  mRanking.setText("onConnected");
+        if (mRanking!=null)  mRanking.setText("C");
     }
 
 
@@ -189,9 +189,9 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     protected void onResume() {
         super.onResume();
         //mGoogleApiClient.connect();
-        if (mTWA != null){
+        /*if (mTWA != null){
             mTWA.setText("Resume");
-        } else LOGD(TAG,"Resume");
+        } else   LOGD(TAG,"Resume");*/
         //registerReceiver(mTimeInfoReceiver, INTENT_FILTER);
         //registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
