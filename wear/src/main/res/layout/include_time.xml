@@ -1,154 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/lay_rel_inc">
-    <ImageView
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView5"
-        android:src="@drawable/vorg_pjib"
-        android:layout_marginLeft="70dp"
-        android:layout_marginTop="10dp" />
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/lay_rel_inc"
+    android:background="@drawable/bg_grei">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:id="@+id/imageView"
-        android:src="@drawable/wind"
-        android:layout_alignParentTop="false"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentRight="false"
-        android:layout_alignParentLeft="false"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="25dp" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="false">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="33dp"
-        android:id="@+id/imageView2"
-        android:src="@drawable/boat"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_below="@+id/imageView"
-        android:layout_alignStart="@+id/imageView"
-        android:layout_marginLeft="-15dp" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:id="@+id/imageView3"
-        android:src="@drawable/rank"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_below="@+id/imageView4"
-        android:layout_alignStart="@+id/imageView"
-        android:layout_marginLeft="-20dp"
-        android:layout_marginTop="2dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_boat"
+            android:src="@drawable/E0001"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="false"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="false" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:id="@+id/imageView4"
-        android:src="@drawable/wingdegree"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_below="@+id/imageView2"
-        android:layout_alignStart="@+id/imageView"
-        android:layout_marginLeft="-25dp" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView6"
-        android:layout_toEndOf="@+id/watch_time"
-        android:src="@drawable/compass"
-        android:layout_alignTop="@+id/mWindDegree"
-        android:layout_alignStart="@+id/mWindDegree" />
+        <TextView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:text="10"
+            android:id="@+id/mWSpeed"
+            android:textColor="#FFFFFFFF"
+            android:layout_toEndOf="@id/center"
+            android:gravity="center"
+            android:background="@drawable/wind"
+            android:textStyle="bold"
+            android:layout_alignBaseline="@+id/mBSpeed"
+            android:layout_alignBottom="@+id/mBSpeed" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="10knt"
-        android:id="@+id/mWSpeed"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_alignBottom="@+id/imageView"
-        android:gravity="center_vertical|left"
-        android:textColor="#FF6D3F" />
+        <TextView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:text="10"
+            android:id="@+id/mBSpeed"
+            android:textColor="#FFFFFFFF"
+            android:gravity="center"
+            android:background="@drawable/boat"
+            android:textStyle="bold"
+            android:layout_toStartOf="@+id/center"
+            android:layout_above="@+id/center" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="33dp"
-        android:text="10knt"
-        android:id="@+id/mBSpeed"
-        android:layout_toEndOf="@+id/imageView2"
-        android:layout_alignBottom="@+id/imageView2"
-        android:gravity="center_vertical"
-        android:textColor="#FF6D3F" />
+        <TextView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:text="220"
+            android:id="@+id/mTWA"
+            android:gravity="center"
+            android:textColor="#FFFFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/compass"
+            android:layout_toEndOf="@+id/img_boat"
+            android:layout_alignTop="@+id/textView"
+            android:layout_alignStart="@+id/mWindDegree" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="58888"
-        android:id="@+id/mRank"
-        android:gravity="center_vertical"
-        android:textColor="#FF6D3F"
-        android:layout_alignBottom="@+id/imageView3"
-        android:layout_toRightOf="@+id/imageView3"
-        android:layout_alignEnd="@+id/textView"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentEnd="false" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="09:53"
+            android:id="@+id/watch_time"
+            android:gravity="center_horizontal|bottom"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:textSize="36dp"
+            android:textIsSelectable="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:text="220o"
-        android:id="@+id/mTWA"
-        android:layout_toEndOf="@+id/imageView4"
-        android:layout_alignBottom="@+id/imageView4"
-        android:gravity="center_vertical"
-        android:textColor="#FF6D3F"
-        android:layout_marginLeft="5dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="50%"
+            android:id="@+id/watch_battery"
+            android:textColor="#FF0000"
+            android:gravity="center_horizontal|top"
+            android:textSize="16dp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="09:53"
-        android:id="@+id/watch_time"
-        android:layout_alignParentTop="true"
-        android:gravity="center_horizontal|top"
-        android:layout_marginTop="15dp"
-        android:textStyle="bold"
-        android:layout_alignParentEnd="false"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:text="180"
+            android:id="@+id/mWindDegree"
+            android:textColor="#FFFFFFFF"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:background="@drawable/wingdegree"
+            android:layout_toEndOf="@+id/img_boat"
+            android:layout_centerVertical="true" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="50%"
-        android:id="@+id/watch_battery"
-        android:textColor="#FF0000"
-        android:gravity="center_horizontal|top"
-        android:layout_toStartOf="@+id/watch_time"
-        android:layout_toEndOf="@+id/watch_time"
-        android:layout_alignBaseline="@+id/mBSpeed"
-        android:layout_alignBottom="@+id/mBSpeed"
-        android:layout_alignEnd="@+id/imageView5" />
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="90dp"
+            android:id="@+id/center"
+            android:layout_centerInParent="true"
+            android:singleLine="false" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:text="220o"
-        android:id="@+id/mWindDegree"
-        android:textColor="#fffff907"
-        android:gravity="center_vertical|center_horizontal"
-        android:textStyle="bold|italic"
-        android:layout_alignBaseline="@+id/mTWA"
-        android:layout_alignBottom="@+id/mTWA"
-        android:layout_alignEnd="@+id/imageView5" />
+        <TextView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:text="1"
+            android:id="@+id/mRank"
+            android:textColor="@android:color/white"
+            android:layout_column="1"
+            android:layout_columnSpan="3"
+            android:background="@drawable/rank"
+            android:textStyle="bold|italic"
+            android:gravity="center"
+            android:layout_toStartOf="@+id/watch_time"
+            android:textSize="24sp"
+            android:layout_alignTop="@+id/mWindDegree" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="33.24.000º\n26.33.444º"
+            android:id="@+id/textView"
+            android:gravity="center"
+            android:textColor="@color/green"
+            android:textSize="9sp"
+            android:textIsSelectable="false"
+            android:layout_toStartOf="@+id/watch_time"
+            android:layout_alignBottom="@+id/center" />
+
+    </RelativeLayout>
+
 </RelativeLayout>
