@@ -120,7 +120,8 @@
             android:gravity="center"
             android:layout_toStartOf="@+id/watch_time"
             android:textSize="24sp"
-            android:layout_alignTop="@+id/mWindDegree" />
+            android:layout_alignTop="@+id/mWindDegree"
+            android:layout_alignStart="@+id/textView" />
 
         <TextView
             android:layout_width="wrap_content"
