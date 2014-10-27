@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/VORg.iml" filepath="$PROJECT_DIR$/VORg.iml" />
-      <module fileurl="file://$PROJECT_DIR$/VORgGit.iml" filepath="$PROJECT_DIR$/VORgGit.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/wear/wear.iml" filepath="$PROJECT_DIR$/wear/wear.iml" />
     </modules>
