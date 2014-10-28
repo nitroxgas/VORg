@@ -7,14 +7,12 @@ import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,14 +36,13 @@ import java.util.Vector;
 import br.com.casadalagoa.vorg.R;
 import br.com.casadalagoa.vorg.Utility;
 import br.com.casadalagoa.vorg.VORG_MainMobile;
-import br.com.casadalagoa.vorg.data.BoatContract;
 import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
 import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
 
-public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
+public class VORSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
-    public final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
+    public final String LOG_TAG = VORSyncAdapter.class.getSimpleName();
 
     // Interval at which to sync with the weather, in milliseconds.
     // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
@@ -54,7 +51,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private final Context mContext;
 
-    public SunshineSyncAdapter(Context context, boolean autoInitialize) {
+    public VORSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         Log.d(LOG_TAG, "Creating SyncAdapter");
         mContext = context;
@@ -73,33 +70,19 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         BufferedReader reader = null;
 
         // Will contain the raw JSON response as a string.
-        String forecastJsonStr = null;
-
-        String format = "json";
-        String units = "metric";
-        int numDays = 14;
+        String ReportJsonStr = null;
 
         try {
-            // Construct the URL for the OpenWeatherMap query
-            // Possible parameters are avaiable at OWM's forecast API page, at
-            // http://openweathermap.org/API#forecast
-            final String FORECAST_BASE_URL =
-                    "http://api.openweathermap.org/data/2.5/forecast/daily?";
-            final String QUERY_PARAM = "q";
-            final String FORMAT_PARAM = "mode";
-            final String UNITS_PARAM = "units";
-            final String DAYS_PARAM = "cnt";
+            // Construct the URL
+            final String REPORT_BASE_URL =
+                    "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG1_2014.json";
 
-            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                    .appendQueryParameter(QUERY_PARAM, locationQuery)
-                    .appendQueryParameter(FORMAT_PARAM, format)
-                    .appendQueryParameter(UNITS_PARAM, units)
-                    .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
-                    .build();
+            // Not really needed, but if the query someday needs parameters just add them here
+            Uri builtUri = Uri.parse(REPORT_BASE_URL).buildUpon().build();
 
             URL url = new URL(builtUri.toString());
 
-            // Create the request to OpenWeatherMap, and open the connection
+            // Create the request to OpenBoatMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -109,10 +92,9 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
-                return;
             }
-
             reader = new BufferedReader(new InputStreamReader(inputStream));
+
             String line;
             while ((line = reader.readLine()) != null) {
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
@@ -125,12 +107,11 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 // Stream was empty.  No point in parsing.
                 return;
             }
-            forecastJsonStr = buffer.toString();
+            ReportJsonStr = buffer.toString();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
+            // If the code didn't successfully get the boat data, there's no point in attemping
             // to parse it.
-            return;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -150,120 +131,133 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         // These are the names of the JSON objects that need to be extracted.
 
-        // Location information
-        final String OWM_CITY = "city";
-        final String OWM_CITY_NAME = "name";
-        final String OWM_COORD = "coord";
+        // Code information elements of "codes" array
+        final String OWM_CODES = "codes";
 
-        // Location coordinate
-        final String OWM_LATITUDE = "lat";
-        final String OWM_LONGITUDE = "lon";
+        final String OWM_CODE  = "code";
+        final String OWM_NAME  = "name";
+        final String OWM_COLOR = "color";
 
-        // Weather information.  Each day's forecast info is an element of the "list" array.
-        final String OWM_LIST = "list";
+        // Boat information.  Each Report info is an element of the "trackslatest" array.
+        final String OWM_LATEST = "trackslatest";
 
-        final String OWM_DATETIME = "dt";
-        final String OWM_PRESSURE = "pressure";
-        final String OWM_HUMIDITY = "humidity";
-        final String OWM_WINDSPEED = "speed";
-        final String OWM_WIND_DIRECTION = "deg";
-
-        // All temperatures are children of the "temp" object.
-        final String OWM_TEMPERATURE = "temp";
-        final String OWM_MAX = "max";
-        final String OWM_MIN = "min";
-
-        final String OWM_WEATHER = "weather";
-        final String OWM_DESCRIPTION = "main";
-        final String OWM_WEATHER_ID = "id";
+        final String OWM_REPORTDATE = "reportdate";
+        final String OWM_TIMEOFFIX = "timeoffix";
+        final String OWM_STATUS = "status";
+        final String OWM_LATITUDE = "latitude";
+        final String OWM_LONGITUDE = "longitude";
+        final String OWM_DTF = "dtf";
+        final String OWM_DTLC = "dtlc";
+        final String OWM_LEGSTANDING = "legstanding";
+        final String OWM_TWENTYFOURHOURRUN = "twentyfourhourrun";
+        final String OWM_LEGPROGRESS = "legprogress";
+        final String OWM_DUL = "dul";
+        final String OWM_BOATHEADINGTRUE = "boatheadingtrue";
+        final String OWM_SMG = "smg";
+        final String OWM_SEATEMPERATURE = "seatemperature";
+        final String OWM_TRUWINDSPEEDAVG = "truwindspeedavg";
+        final String OWM_SPEEDTHROWATER = "speedthrowater";
+        final String OWM_TRUEWINDSPEEDMAX = "truewindspeedmax";
+        final String OWM_TRUEWINDDIRECTION = "truewinddirection";
+        final String OWM_LATESTSPEEDTHROWATER = "latestspeedthrowater";
+        final String OWM_MAXAVGSPEED = "maxavgspeed";
 
         try {
-            JSONObject forecastJson = new JSONObject(forecastJsonStr);
-            JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
-            JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
-            String cityName = cityJson.getString(OWM_CITY_NAME);
+            JSONObject ReportJson = new JSONObject(ReportJsonStr);
 
-            JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
-            double cityLatitude = cityCoord.getDouble(OWM_LATITUDE);
-            double cityLongitude = cityCoord.getDouble(OWM_LONGITUDE);
+            JSONArray codeArray = ReportJson.getJSONArray(OWM_CODES);
+            JSONObject dataArray = ReportJson.getJSONObject("data");
+            String nextUpdate = ReportJson.getString("nextReport");
+            JSONArray boatArray = dataArray.getJSONArray(OWM_LATEST);
 
-            long locationId = addLocation(locationQuery, cityName, cityLatitude, cityLongitude);
+            Vector<ContentValues> cVVector = new Vector<ContentValues>(codeArray.length());
 
-            // Insert the new weather information into the database
-            Vector<ContentValues> cVVector = new Vector<ContentValues>(weatherArray.length());
-
-            for(int i = 0; i < weatherArray.length(); i++) {
+            for(int i = 0; i < codeArray.length(); i++) {
                 // These are the values that will be collected.
+                String code, name, color;
+                int codeId;
 
-                long dateTime;
-                double pressure;
-                int humidity;
-                double windSpeed;
-                double windDirection;
+                JSONObject codeJson = codeArray.getJSONObject(i);
+                code  = codeJson.getString(OWM_CODE);
+                name  = codeJson.getString(OWM_NAME);
+                color = codeJson.getString(OWM_COLOR);
 
-                double high;
-                double low;
+                ContentValues codeValues = new ContentValues();
 
-                String description;
-                int weatherId;
-
-                // Get the JSON object representing the day
-                JSONObject dayForecast = weatherArray.getJSONObject(i);
-
-                // The date/time is returned as a long.  We need to convert that
-                // into something human-readable, since most people won't read "1400356800" as
-                // "this saturday".
-                dateTime = dayForecast.getLong(OWM_DATETIME);
-
-                pressure = dayForecast.getDouble(OWM_PRESSURE);
-                humidity = dayForecast.getInt(OWM_HUMIDITY);
-                windSpeed = dayForecast.getDouble(OWM_WINDSPEED);
-                windDirection = dayForecast.getDouble(OWM_WIND_DIRECTION);
-
-                // Description is in a child array called "weather", which is 1 element long.
-                // That element also contains a weather code.
-                JSONObject weatherObject =
-                        dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
-                description = weatherObject.getString(OWM_DESCRIPTION);
-                weatherId = weatherObject.getInt(OWM_WEATHER_ID);
-
-                // Temperatures are in a child object called "temp".  Try not to name variables
-                // "temp" when working with temperature.  It confuses everybody.
-                JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
-                high = temperatureObject.getDouble(OWM_MAX);
-                low = temperatureObject.getDouble(OWM_MIN);
-
-                ContentValues weatherValues = new ContentValues();
-/*
-                weatherValues.put(BoatEntry.COLUMN_LOC_KEY, locationId);
-                weatherValues.put(BoatEntry.COLUMN_DATETEXT,
-                        BoatContract.getDbDateString(new Date(dateTime * 1000L)));
-                weatherValues.put(BoatEntry.COLUMN_HUMIDITY, humidity);
-                weatherValues.put(BoatEntry.COLUMN_PRESSURE, pressure);
-                weatherValues.put(BoatEntry.COLUMN_WIND_SPEED, windSpeed);
-                weatherValues.put(BoatEntry.COLUMN_DEGREES, windDirection);
-                weatherValues.put(BoatEntry.COLUMN_MAX_TEMP, high);
-                weatherValues.put(BoatEntry.COLUMN_MIN_TEMP, low);
-                weatherValues.put(BoatEntry.COLUMN_SHORT_DESC, description);
-                weatherValues.put(BoatEntry.COLUMN_WEATHER_ID, weatherId);*/
-
-                cVVector.add(weatherValues);
-
-                // The first weather item is going to be for today.  Use weather data to populate a
-                // notification to the user, so they know what kind of world they're walking into
-                // when they walk out the front door.
-                if (i == 0) {
-                    notifyWeather(high, low, description, weatherId);
-                }
-
+                codeValues.put(CodeEntry.COLUMN_CODE, code);
+                codeValues.put(CodeEntry.COLUMN_NAME, name);
+                codeValues.put(CodeEntry.COLUMN_COLOR, color);
+                cVVector.add(codeValues);
+                Log.v(LOG_TAG, "Code: "+ code + ", Name: " + name + " Color: " + color);
             }
-            if ( cVVector.size() > 0 ) {
+            if (cVVector.size() > 0) {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
+                mContext.getContentResolver().bulkInsert(CodeEntry.CONTENT_URI, cvArray);
+            }
+
+
+
+            // Get and insert the new boat information into the database
+            Vector<ContentValues> bVVector = new Vector<ContentValues>(21);
+
+            for(int i = 0; i < boatArray.length(); i++) {
+                // These are the values that will be collected.
+                String code, reportdate, timeoffix, status, latitude, longitude, dtf, dtlc,
+                        legstanding, twentyfourhourrun, legprogress, dul, boatheadingtrue, smg,
+                        seatemperature, truwindspeedavg, speedthrowater, truewindspeedmax, truewinddirection, latestspeedthrowater,
+                        maxavgspeed;
+
+                // Get the JSON object representing the day
+                JSONArray dayForecast = boatArray.getJSONArray(i);
+
+                // Just to be clear how to populate the vector
+                code = dayForecast.getString(0);
+                reportdate = dayForecast.getString(1);
+                timeoffix = dayForecast.getString(2);
+                status = dayForecast.getString(3);
+                longitude = dayForecast.getString(4);
+                latitude = dayForecast.getString(5);
+                dtf = dayForecast.getString(6);
+                dtlc = dayForecast.getString(7);
+                legstanding = dayForecast.getString(8);
+                twentyfourhourrun = dayForecast.getString(9);
+                legprogress = dayForecast.getString(10);
+                dul = dayForecast.getString(11);
+                boatheadingtrue = dayForecast.getString(12);
+                smg = dayForecast.getString(13);
+                seatemperature = dayForecast.getString(14);
+                truwindspeedavg = dayForecast.getString(15);
+                speedthrowater = dayForecast.getString(16);
+                truewindspeedmax = dayForecast.getString(17);
+                truewinddirection = dayForecast.getString(18);
+                latestspeedthrowater = dayForecast.getString(19);
+                maxavgspeed = dayForecast.getString(19);
+
+                ContentValues boatValues = new ContentValues();
+
+                boatValues.put(BoatEntry.COLUMN_BOAT_ID, code);
+                boatValues.put(BoatEntry.COLUMN_TIMEOFFIX, timeoffix);                  boatValues.put(BoatEntry.COLUMN_DUL, dul);
+                boatValues.put(BoatEntry.COLUMN_REPORTDATE, reportdate);                boatValues.put(BoatEntry.COLUMN_BOATHEADINGTRUE, boatheadingtrue);
+                boatValues.put(BoatEntry.COLUMN_STATUS, status);                        boatValues.put(BoatEntry.COLUMN_SMG, smg);
+                boatValues.put(BoatEntry.COLUMN_LONGITUDE, longitude);                  boatValues.put(BoatEntry.COLUMN_SEATEMPERATURE, seatemperature);
+                boatValues.put(BoatEntry.COLUMN_LATITUDE, latitude);                    boatValues.put(BoatEntry.COLUMN_TRUWINDSPEEDAVG, truwindspeedavg);
+                boatValues.put(BoatEntry.COLUMN_DTF, dtf);                              boatValues.put(BoatEntry.COLUMN_SPEEDTHROWATER, speedthrowater);
+                boatValues.put(BoatEntry.COLUMN_DTLC, dtlc);                            boatValues.put(BoatEntry.COLUMN_TRUEWINDSPEEDMAX, truewindspeedmax);
+                boatValues.put(BoatEntry.COLUMN_LEG_STANDING, legstanding);             boatValues.put(BoatEntry.COLUMN_TRUEWINDDIRECTION, truewinddirection);
+                boatValues.put(BoatEntry.COLUMN_TWENTYFOURHOURRUN, twentyfourhourrun);  boatValues.put(BoatEntry.COLUMN_LATESTSPEEDTHROWATER, latestspeedthrowater);
+                boatValues.put(BoatEntry.COLUMN_LEGPROGRESS, legprogress);              boatValues.put(BoatEntry.COLUMN_MAXAVGSPEED, maxavgspeed);
+
+                bVVector.add(boatValues);
+                Log.v(LOG_TAG, "Data: "+ dayForecast.toString());
+            }
+            if (bVVector.size() > 0) {
+                ContentValues[] cvArray = new ContentValues[bVVector.size()];
+                bVVector.toArray(cvArray);
                 mContext.getContentResolver().bulkInsert(BoatEntry.CONTENT_URI, cvArray);
             }
-            Log.d(LOG_TAG, "FetchWeatherTask Complete. " + cVVector.size() + " Inserted");
+            Log.d(LOG_TAG, "Sync Data Complete. " + cVVector.size() + " Inserted");
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -272,7 +266,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         return;
     }
 
-    private void notifyWeather(double high, double low, String description, int weatherId) {
+    private void notifyBoatData(double high, double low, String description, int weatherId) {
         Context context = getContext();
         //checking the last update and notify if it' the first of the day
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -336,57 +330,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    /**
-     * Helper method to handle insertion of a new location in the weather database.
-     *
-     * @param locationSetting The location string used to request updates from the server.
-     * @param cityName A human-readable city name, e.g "Mountain View"
-     * @param lat the latitude of the city
-     * @param lon the longitude of the city
-     * @return the row ID of the added location.
-     */
-    private long addLocation(String locationSetting, String cityName, double lat, double lon) {
-        long locationId;
-
-        Log.v(LOG_TAG, "inserting " + cityName + ", with coord: " + lat + ", " + lon);
-
-        // First, check if the location with this city name exists in the db
-        Cursor locationCursor = mContext.getContentResolver().query(
-                BoatContract.CodeEntry.CONTENT_URI,
-                new String[]{CodeEntry._ID},
-                CodeEntry.COLUMN_CODE + " = ?",
-                new String[]{locationSetting},
-                null);
-
-        if (locationCursor.moveToFirst()) {
-            int locationIdIndex = locationCursor.getColumnIndex(CodeEntry._ID);
-            locationId = locationCursor.getLong(locationIdIndex);
-        } else {
-            // Now that the content provider is set up, inserting rows of data is pretty simple.
-            // First create a ContentValues object to hold the data you want to insert.
-            ContentValues locationValues = new ContentValues();
-
-            // Then add the data, along with the corresponding name of the data type,
-            // so the content provider knows what kind of value is being inserted.
-            /*locationValues.put(CodeEntry.COLUMN_CITY_NAME, cityName);
-            locationValues.put(CodeEntry.COLUMN_LOCATION_SETTING, locationSetting);
-            locationValues.put(CodeEntry.COLUMN_COORD_LAT, lat);
-            locationValues.put(CodeEntry.COLUMN_COORD_LONG, lon);
-*/
-            // Finally, insert location data into the database.
-            Uri insertedUri = mContext.getContentResolver().insert(
-                    BoatContract.CodeEntry.CONTENT_URI,
-                    locationValues
-            );
-
-            // The resulting URI contains the ID for the row.  Extract the locationId from the Uri.
-            locationId = ContentUris.parseId(insertedUri);
-        }
-
-        // Wait, that worked?  Yes!
-        return locationId;
-    }
-    /**
+     /**
      * Helper method to have the sync adapter sync immediately
      *
      * @param context An app context
@@ -454,7 +398,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     private static void onAccountCreated(Account newAccount, Context context) {
 
         // Schedule the sync for periodic execution
-        SunshineSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+        VORSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
 
         // Without calling setSyncAutomatically, our periodic sync will not be enabled.
         ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);

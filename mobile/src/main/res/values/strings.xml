@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-
     <string name="app_name">VORg</string>
     <string name="title_activity_vorg__main_mobile">VOR WatchFace</string>
     <string name="hello_world">Hello world!</string>
-
-
-
-        <string name="start_wearable_activity">Start Wearable Activity</string>
-        <string name="start">Start</string>
-        <string name="take_photo">Take a Photo</string>
-        <string name="send_photo">Send Photo</string>
+    <string name="start_wearable_activity">Start Wearable Activity</string>
+    <string name="start">Start</string>
+    <string name="take_photo">Take a Photo</string>
+    <string name="send_photo">Send Photo</string>
 
     <!--
          By convention, "action" denotes that this String will be used as the label for an Action,
@@ -22,7 +18,6 @@
     <string name="action_share">Share</string>
     <!-- Menu label to fetch updated weather info from the server -->
     <string name="action_refresh" translatable="false">Refresh</string>
-
     <string name="title_activity_detail">Details</string>
     <string name="title_activity_settings">Settings</string>
 
@@ -39,20 +34,17 @@
     <string name="pref_last_notification">last_sync</string>
 
     <!-- Notification Format -->
-    <string name="format_notification">
-        Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s</xliff:g>
-        Low: <xliff:g id="low">%3$s</xliff:g>
-    </string>
+    <string name="format_notification">        Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s</xliff:g>         Low: <xliff:g id="low">%3$s</xliff:g></string>
 
     <!-- Strings related to Notification Enabled preference -->
     <string name="pref_enable_notifications_key" translatable="false">enable_notifications</string>
     <string name="pref_enable_notifications_label">Weather Notifications</string>
-
     <string name="pref_enable_notifications_true">Enabled</string>
     <string name="pref_enable_notifications_false">Not Enabled</string>
     <string name="pref_enable_notifications_default" translatable="false">true</string>
 
     <!-- Strings for formatting weather-related data -->
+
 
     <!-- Label for the temperature units preference [CHAR LIMIT=30] -->
     <string name="pref_units_label">Temperature Units</string>
@@ -79,9 +71,7 @@
     <string name="tomorrow">Tomorrow</string>
 
     <!-- Date format [CHAR LIMIT=NONE] -->
-    <string name="format_full_friendly_date">
-        <xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g>
-    </string>
+    <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
 
     <!-- Strings for formatting weather-related data -->
     <!-- Temperature format [CHAR LIMIT=5 -->
@@ -89,27 +79,23 @@
 
     <!-- Windspeed formats -->
     <!-- Wind in mph [CHAR LIMIT=25] -->
-    <string name="format_wind_mph">
-        Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g>
-    </string>
+    <string name="format_wind_mph">        Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g></string>
     <!-- Wind in kph [CHAR LIMIT=25] -->
-    <string name="format_wind_kmh">
-        Wind: <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g>
-    </string>
+    <string name="format_wind_kmh">        Wind: <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g></string>
 
     <!-- Pressure format CHAR LIMIT=25] -->
     <string name="format_pressure">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
 
-    <!-- Humidity format CHAR LIMIT=25]-->
+    <!-- Humidity format CHAR LIMIT=25] -->
     <string name="format_humidity">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%</string>
 
-    <!-- Share format [CHAR LIMIT=NONE]-->
-    <string name="format_share">
-        Weather for <xliff:g id="date">%1$s</xliff:g> in <xliff:g id="location">%2$s</xliff:g>:
-        A high of <xliff:g id="high">%3$s</xliff:g> and low of
-        <xliff:g id="low">%4$s</xliff:g></string>
+    <!-- Share format [CHAR LIMIT=NONE] -->
+    <string name="format_share">        Weather for <xliff:g id="date">%1$s</xliff:g> in <xliff:g id="location">%2$s</xliff:g>:
+        A high of <xliff:g id="high">%3$s</xliff:g> and low of <xliff:g id="low">%4$s</xliff:g></string>
     <!-- SyncAdapter related -->
-    <string name="sync_account_type">sunshine.example.com</string>
+    <string name="sync_account_type">vorg.casadalagoa.com.br</string>
     <string name="content_authority">"br.com.casadalagoa.vorg"</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_wear_com">WearCom</string>
 
 </resources>

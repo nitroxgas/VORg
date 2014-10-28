@@ -6,18 +6,16 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Permissions required by the sync adapter -->
-    <uses-permission
-        android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission
-        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-    <uses-permission
-        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <!--
         <activity
             android:name="br.com.casadalagoa.vorg.VORgService"
@@ -27,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
--->
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -36,21 +34,59 @@
             android:name="br.com.casadalagoa.vorg.VVorg_settings"
             android:label="@string/title_activity_vvorg_settings" >
         </activity>
-
         <activity
             android:name="br.com.casadalagoa.vorg.VORG_MainMobile"
             android:label="@string/title_activity_vorg__main_mobile" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <provider
+            android:name="br.com.casadalagoa.vorg.data.BoatProvider"
             android:authorities="@string/content_authority"
-            android:name=".data.BoatProvider"
             android:exported="false"
             android:syncable="true" />
+
+        <!-- SyncAdapter's dummy authentication service -->
+        <service android:name="br.com.casadalagoa.vorg.sync.VORAuthenticatorService" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <!-- The SyncAdapter service -->
+        <service
+            android:name="br.com.casadalagoa.vorg.sync.VORSyncService"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
+
+        <activity
+            android:name="br.com.casadalagoa.vorg.MainActivity"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="br.com.casadalagoa.vorg.conn.WearCom"
+            android:label="@string/title_activity_wear_com" >
+        </activity>
     </application>
 
 </manifest>
