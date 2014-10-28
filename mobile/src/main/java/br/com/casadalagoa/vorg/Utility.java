@@ -34,6 +34,14 @@ public class Utility {
                 context.getString(R.string.pref_location_default));
     }
 
+    public static String[] getBoatArray(String boat_pref){
+        String[] return_str = {"1","2","3"};
+     if (boat_pref=="1"){
+            return return_str;
+     }
+        return return_str;
+    }
+
     public static boolean isMetric(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_units_key),

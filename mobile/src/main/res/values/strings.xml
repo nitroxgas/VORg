@@ -9,6 +9,9 @@
     <string name="take_photo">Take a Photo</string>
     <string name="send_photo">Send Photo</string>
 
+    <!-- Key name for storing the configured boat code -->
+    <string name="pref_boat_key" translatable="false">boat_code</string>
+
     <!--
          By convention, "action" denotes that this String will be used as the label for an Action,
          typically from the action bar.  The ActionBar is limited real estate, so shorter is better.

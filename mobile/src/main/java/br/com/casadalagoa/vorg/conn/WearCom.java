@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.data.FreezableUtils;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
@@ -19,8 +20,12 @@ import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -35,15 +40,31 @@ public class WearCom extends Activity implements  DataApi.DataListener,
     private static final int REQUEST_RESOLVE_ERROR = 1000;
 
     // Patch and data keys to send to watch
-    private static final String BS_PATH = "/bs";
-    private static final String WS_PATH = "/ws";
-    private static final String WA_PATH = "/wa";
-    private static final String BA_PATH = "/ba";
+    private static final String BD_PATH = "/bd"; // Boat Data
+    private static final String BD_KEY = "bd"; // Boat data array!
 
+   /*
+    private static final String BS_PATH = "/bs"; // Boat Speed
+    private static final String WS_PATH = "/ws"; // Wind Speed
+    private static final String WA_PATH = "/wa"; // Wind Angle
+    private static final String BA_PATH = "/ba"; // Boat Angle
+    private static final String BH_PATH = "/bh"; // Boat Heading
+    private static final String BL_PATH = "/bl"; // Boat Locale
+    private static final String DL_PATH = "/dl"; // Distance to leader
+    private static final String DC_PATH = "/dc"; // Distance to Complete
+    private static final String RK_PATH = "/rk"; // Ranking
+    */
+    /*
+    private static final String RK_KEY = "rk";
+    private static final String DL_KEY = "dl";
+    private static final String DC_KEY = "dc";
+    private static final String BL_KEY = "bl";
+    private static final String BH_KEY = "bh";
     private static final String BS_KEY = "bs";
     private static final String WS_KEY = "ws";
     private static final String WA_KEY = "wa";
     private static final String BA_KEY = "ba";
+    */
 
 
 
@@ -113,6 +134,7 @@ public class WearCom extends Activity implements  DataApi.DataListener,
      * Saves the resolution state.
      */
     @Override
+
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_IN_RESOLUTION, mIsInResolution);
@@ -212,7 +234,6 @@ public class WearCom extends Activity implements  DataApi.DataListener,
         });
     }
 
-
     @Override //MessageListener
     public void onMessageReceived(final MessageEvent messageEvent) {
         // A message from watch was received
@@ -249,4 +270,30 @@ public class WearCom extends Activity implements  DataApi.DataListener,
         });*/
     }
 
+    private Collection<String> getNodes() {
+        HashSet<String> results = new HashSet<String>();
+        NodeApi.GetConnectedNodesResult nodes =
+                Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+        for (Node node : nodes.getNodes()) {
+            results.add(node.getId());
+        }
+
+        return results;
+    }
+
+    public void sendData(String[] boat_data) {
+        if (mGoogleApiClient.isConnected()) {
+            PutDataMapRequest dataMap = PutDataMapRequest.create(BD_PATH);
+            dataMap.getDataMap().putStringArray(BD_KEY, boat_data);
+            PutDataRequest request = dataMap.asPutDataRequest();
+            Wearable.DataApi.putDataItem(mGoogleApiClient, request)
+                    .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+                        @Override
+                        public void onResult(DataApi.DataItemResult dataItemResult) {
+                            Log.v(TAG, "Sending image was successful: " + dataItemResult.getStatus()
+                                    .isSuccess());
+                        }
+                    });
+        }
+    }
 }

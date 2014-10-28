@@ -330,7 +330,6 @@ public class VORG_MainMobile extends Activity implements DataApi.DataListener,
         HashSet<String> results = new HashSet<String>();
         NodeApi.GetConnectedNodesResult nodes =
                 Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-
         for (Node node : nodes.getNodes()) {
             results.add(node.getId());
         }

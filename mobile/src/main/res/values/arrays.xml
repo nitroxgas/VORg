@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="ilum_array">
-        <item>Sala de Reuniões</item>
-        <item>Sala de TV</item>
-        <item>Casa - Quarto Superior</item>
-        <item>Casa - Escritório</item>
+    <string-array name="fake_boat">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 </resources>

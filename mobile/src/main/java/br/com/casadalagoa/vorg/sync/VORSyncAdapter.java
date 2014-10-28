@@ -36,6 +36,7 @@ import java.util.Vector;
 import br.com.casadalagoa.vorg.R;
 import br.com.casadalagoa.vorg.Utility;
 import br.com.casadalagoa.vorg.VORG_MainMobile;
+import br.com.casadalagoa.vorg.conn.WearCom;
 import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
 import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
 
@@ -50,11 +51,13 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     private final Context mContext;
+    private final WearCom mWearCon;
 
     public VORSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         Log.d(LOG_TAG, "Creating SyncAdapter");
         mContext = context;
+        mWearCon = new WearCom();
     }
 
     @Override
@@ -263,7 +266,14 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-        return;
+        //return;
+    }
+
+    private void sendData(){
+        // Get Boat preference from pref_boat_key and send data to the watchface
+        Context context = getContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        mWearCon.sendData(Utility.getBoatArray(context.getString(R.string.pref_boat_key)));
     }
 
     private void notifyBoatData(double high, double low, String description, int weatherId) {
