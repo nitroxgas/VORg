@@ -282,6 +282,16 @@ public class WearCom extends Activity implements  DataApi.DataListener,
     }
 
     public void sendData(String[] boat_data) {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(Wearable.API)
+                            // Optionally, add additional APIs and scopes if required.
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+        }
+        mGoogleApiClient.connect();
+
         if (mGoogleApiClient.isConnected()) {
             PutDataMapRequest dataMap = PutDataMapRequest.create(BD_PATH);
             dataMap.getDataMap().putStringArray(BD_KEY, boat_data);
@@ -290,7 +300,7 @@ public class WearCom extends Activity implements  DataApi.DataListener,
                     .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                         @Override
                         public void onResult(DataApi.DataItemResult dataItemResult) {
-                            Log.v(TAG, "Sending image was successful: " + dataItemResult.getStatus()
+                            Log.v(TAG, "Sending data was successful: " + dataItemResult.getStatus()
                                     .isSuccess());
                         }
                     });

@@ -15,6 +15,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vor_select_boat);
         VORSyncAdapter.initializeSyncAdapter(this);
+        VORSyncAdapter.syncImmediately(this);
     }
 
 
@@ -34,6 +35,7 @@ public class MainActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            VORSyncAdapter.syncImmediately(this);
             return true;
         }
 

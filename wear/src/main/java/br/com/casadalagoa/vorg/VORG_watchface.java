@@ -140,6 +140,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mDataRec = 0;
 
                   //  Here, we're just calling our onReceive() so it can set the current time.
+
                 registerReceiver(mTimeInfoReceiver, INTENT_FILTER);
                 registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
             }
@@ -151,11 +152,13 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 .addOnConnectionFailedListener(this)
                 .build();
         mGoogleApiClient.connect();
+        LOGD(TAG, "onCreated()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LOGD(TAG, "onDestroy()");
         Wearable.DataApi.removeListener(mGoogleApiClient, this);
         Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         Wearable.NodeApi.removeListener(mGoogleApiClient, this);
@@ -165,6 +168,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     @Override
     protected void onPause() {
         super.onPause();
+        LOGD(TAG, "onPause()");
         //unregisterReceiver(mTimeInfoReceiver);
         //unregisterReceiver(mBatInfoReceiver);
         //Wearable.DataApi.removeListener(mGoogleApiClient, this);
@@ -187,6 +191,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     @Override
     protected void onResume() {
         super.onResume();
+        LOGD(TAG, "onResume()");
         //mGoogleApiClient.connect();
         /*if (mTWA != null){
             mTWA.setText("Resume");
@@ -215,7 +220,8 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             public void run() {
              if (mTWA != null) {
                 mTWA.setText(text);
-              } else LOGD(TAG, "EV");
+              } else
+              LOGD(TAG, "EV:"+text.toString());
                 // mIntroText.setVisibility(View.INVISIBLE);
                 // mDataItemListAdapter.add(new Event(title, text));
              }
@@ -309,7 +315,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         if (Log.isLoggable(tag, Log.DEBUG)) {
             Log.d(tag, message);
         }
-        Log.d(tag, message);
+        Log.v(tag, message);
     }
 
 

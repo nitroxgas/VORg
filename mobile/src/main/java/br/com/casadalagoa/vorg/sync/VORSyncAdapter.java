@@ -21,6 +21,21 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.data.FreezableUtils;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,33 +46,48 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Vector;
 
 import br.com.casadalagoa.vorg.R;
 import br.com.casadalagoa.vorg.Utility;
 import br.com.casadalagoa.vorg.VORG_MainMobile;
-import br.com.casadalagoa.vorg.conn.WearCom;
 import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
 import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
 
-public class VORSyncAdapter extends AbstractThreadedSyncAdapter {
+public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  DataApi.DataListener,
+        MessageApi.MessageListener, NodeApi.NodeListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
+
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-    private static final int WEATHER_NOTIFICATION_ID = 3004;
+
+   // private static final int WEATHER_NOTIFICATION_ID = 3004;
+
     public final String LOG_TAG = VORSyncAdapter.class.getSimpleName();
 
     // Interval at which to sync with the weather, in milliseconds.
     // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 1000* 60 * 60;
+    public static final int SYNC_INTERVAL = 1000* 60;// * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     private final Context mContext;
-    private final WearCom mWearCon;
 
     public VORSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         Log.d(LOG_TAG, "Creating SyncAdapter");
         mContext = context;
-        mWearCon = new WearCom();
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(context)
+                    .addApi(Wearable.API)
+                            // Optionally, add additional APIs and scopes if required.
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+        }
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -261,7 +291,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter {
                 mContext.getContentResolver().bulkInsert(BoatEntry.CONTENT_URI, cvArray);
             }
             Log.d(LOG_TAG, "Sync Data Complete. " + cVVector.size() + " Inserted");
-
+            sendData(Utility.getBoatArray(mContext.getString(R.string.pref_boat_key)));
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -269,12 +299,13 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter {
         //return;
     }
 
-    private void sendData(){
+   /* private void sendData(){
         // Get Boat preference from pref_boat_key and send data to the watchface
         Context context = getContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
         mWearCon.sendData(Utility.getBoatArray(context.getString(R.string.pref_boat_key)));
-    }
+    }*/
 
     private void notifyBoatData(double high, double low, String description, int weatherId) {
         Context context = getContext();
@@ -331,7 +362,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter {
                     (NotificationManager) getContext()
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             // mId allows you to update the notification later on.
-            mNotificationManager.notify(WEATHER_NOTIFICATION_ID, mBuilder.build());
+          //  mNotificationManager.notify(WEATHER_NOTIFICATION_ID, mBuilder.build());
 
             //refreshing last sync
             SharedPreferences.Editor editor = prefs.edit();
@@ -420,4 +451,203 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter {
     public static void initializeSyncAdapter(Context context) {
         getSyncAccount(context);
     }
+
+    //  ###### Wear Connection Implementation
+    private static final String TAG = "SyncWear";
+
+    private static final String KEY_IN_RESOLUTION = "is_in_resolution";
+    private static final int REQUEST_RESOLVE_ERROR = 1000;
+
+    // Patch and data keys to send to watch
+    private static final String BD_PATH = "/bd"; // Boat Data
+    private static final String BD_KEY = "bd"; // Boat data array!
+
+
+    /**
+     * Request code for auto Google Play Services error resolution.
+     */
+    protected static final int REQUEST_CODE_RESOLUTION = 1;
+
+    /**
+     * Google API client.
+     */
+    private GoogleApiClient mGoogleApiClient;
+
+    /**
+     * Determines if the client is in a resolution state, and
+     * waiting for resolution intent to return.
+     */
+    private boolean mIsInResolution;
+
+/*
+
+    *//**
+     * Called when activity gets invisible. Connection to Play Services needs to
+     * be disconnected as soon as an activity is invisible.
+     *//*
+    @Override
+    protected void onStop() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
+    }
+
+    *//**
+     * Saves the resolution state.
+     *//*
+    @Override
+
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_IN_RESOLUTION, mIsInResolution);
+    }*/
+
+  /*  *//**
+     * Handles Google Play Services resolution callbacks.
+     *//*
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_RESOLUTION:
+                retryConnecting();
+                break;
+        }
+    }*/
+
+    private void retryConnecting() {
+        mIsInResolution = false;
+        if (!mGoogleApiClient.isConnecting()) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    /**
+     * Called when {@code mGoogleApiClient} is connected.
+     */
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        Log.i(TAG, "GoogleApiClient connected");
+        // TODO: Start making API requests.
+        Wearable.DataApi.addListener(mGoogleApiClient, this);
+        Wearable.MessageApi.addListener(mGoogleApiClient, this);
+        Wearable.NodeApi.addListener(mGoogleApiClient, this);
+    }
+
+    /**
+     * Called when {@code mGoogleApiClient} connection is suspended.
+     */
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Log.i(TAG, "GoogleApiClient connection suspended");
+        retryConnecting();
+    }
+
+    /**
+     * Called when {@code mGoogleApiClient} is trying to connect but failed.
+     * Handle {@code result.getResolution()} if there is a resolution
+     * available.
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
+        if (!result.hasResolution()) {
+            // Show a localized error dialog.
+            return;
+        }
+        // If there is an existing resolution error being displayed or a resolution
+        // activity has started before, do nothing and wait for resolution
+        // progress to be completed.
+        if (mIsInResolution) {
+            return;
+        }
+        mIsInResolution = true;
+        retryConnecting();
+
+    }
+
+    @Override //DataListener
+    public void onDataChanged(DataEventBuffer dataEvents) {
+        final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
+        dataEvents.close();
+        Log.v(TAG, "Data Changed");
+    }
+
+    @Override //MessageListener
+    public void onMessageReceived(final MessageEvent messageEvent) {
+        Log.v(TAG, "Message Received!");
+        // A message from watch was received
+        /*
+        Implement the handler if UI interaction will be necessary
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });*/
+
+    }
+
+    @Override //NodeListener
+    public void onPeerConnected(final Node peer) {
+        Log.v(TAG, "Peer Connected! ");
+        // onPeerConnected:
+        /*mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });*/
+    }
+
+    @Override //NodeListener
+    public void onPeerDisconnected(final Node peer) {
+        Log.v(TAG, "Peer Disconnected! ");
+        // onPeerDisconnected:
+        /*mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });*/
+    }
+
+    private Collection<String> getNodes() {
+        HashSet<String> results = new HashSet<String>();
+        NodeApi.GetConnectedNodesResult nodes =
+                Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+        for (Node node : nodes.getNodes()) {
+            results.add(node.getId());
+        }
+
+        return results;
+    }
+
+    public void sendData(String[] boat_data) {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                    .addApi(Wearable.API)
+                            // Optionally, add additional APIs and scopes if required.
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+        }
+        mGoogleApiClient.connect();
+
+        if (mGoogleApiClient.isConnected()) {
+            PutDataMapRequest dataMap = PutDataMapRequest.create(BD_PATH);
+            dataMap.getDataMap().putStringArray(BD_KEY, boat_data);
+            PutDataRequest request = dataMap.asPutDataRequest();
+            Wearable.DataApi.putDataItem(mGoogleApiClient, request)
+                    .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+                        @Override
+                        public void onResult(DataApi.DataItemResult dataItemResult) {
+                            Log.v(TAG, "Sending data was successful: " + dataItemResult.getStatus()
+                                    .isSuccess());
+                        }
+                    });
+        }
+    }
+
 }
