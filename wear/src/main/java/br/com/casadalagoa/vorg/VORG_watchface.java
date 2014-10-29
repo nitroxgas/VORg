@@ -4,22 +4,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.data.FreezableUtils;
-import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -30,7 +25,6 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -40,38 +34,18 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         GoogleApiClient.OnConnectionFailedListener, DataApi.DataListener, MessageApi.MessageListener,
         NodeApi.NodeListener {
 
-    private static final String START_ACTIVITY_PATH = "/start-activity";
-    private static final String DATA_ITEM_RECEIVED_PATH = "/data-item-received";
-    public static final String COUNT_PATH = "/count";
-    public static final String IMAGE_PATH = "/image";
-    public static final String IMAGE_KEY = "photo";
-    private static final String COUNT_KEY = "count";
-    private static final int MAX_LOG_TAG_LENGTH = 23;
+    // Patch and data keys to send to watch
+    private static final String BD_PATH = "/bd"; // Boat Data
+    private static final String BD_KEY = "bd"; // Boat data array!
 
-    // VOR Boat Info
-    public static final String SPEED_PATH = "/speed";
-    public static final String SPEED_KEY = "speed";
-    public static final String WSPEED_PATH = "/wspeed";
-    public static final String WSPEED_KEY = "wspeed";
-    public static final String WDGREE_PATH = "/wdgree";
-    public static final String WDGREE_KEY = "wdgree";
-    public static final String TWA_PATH = "/twa";
-    public static final String TWA_KEY = "twa";
-    public static final String RANK_PATH = "/rank";
-    public static final String RANK_KEY = "rank";
-
-    private static final String TAG = "VORG_watchface";
+    private static final String TAG = "VOR_watchface";
 
     private GoogleApiClient mGoogleApiClient;
-    private ListView mDataItemList;
-    private TextView mIntroText;
-   // private DataItemAdapter mDataItemListAdapter;
     private View mLayout;
     private Handler mHandler;
 
-    private TextView mTextView;
-    private TextView mTime, mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking;
-    private int mDataRec;
+    private TextView mTime, mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale;
+    private int mDataRec;  // Count received data
 
     private final static IntentFilter INTENT_FILTER;
     static {
@@ -91,11 +65,6 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                         new SimpleDateFormat(TIME_FORMAT_DISPLAYED)
                                 .format(Calendar.getInstance().getTime()));
                 mSpeed.setText(String.valueOf(mDataRec));
-                /*
-                mWAngle.setText("--");
-                mWSpeed.setText("--");
-                mRanking.setText("--");
-                */
             }
         }
     };
@@ -135,6 +104,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mTWA = (TextView) stub.findViewById(R.id.mTWA);
                 mWSpeed = (TextView) stub.findViewById(R.id.mBSpeed);
                 mWAngle = (TextView) stub.findViewById(R.id.mWindDegree);
+                mLocale = (TextView) stub.findViewById(R.id.mLocal);
                 mTimeInfoReceiver.onReceive(VORG_watchface.this, registerReceiver(null, INTENT_FILTER));
                 mLayout = findViewById(R.id.lay_rel_inc);
                 mDataRec = 0;
@@ -163,19 +133,15 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         Wearable.NodeApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
+        unregisterReceiver(mTimeInfoReceiver);
+        unregisterReceiver(mBatInfoReceiver);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         LOGD(TAG, "onPause()");
-        //unregisterReceiver(mTimeInfoReceiver);
-        //unregisterReceiver(mBatInfoReceiver);
-        //Wearable.DataApi.removeListener(mGoogleApiClient, this);
-        //Wearable.MessageApi.removeListener(mGoogleApiClient, this);
-        //Wearable.NodeApi.removeListener(mGoogleApiClient, this);
-        //if (mRanking!=null) mRanking.setText("Pause");
-     //   mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -192,25 +158,17 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     protected void onResume() {
         super.onResume();
         LOGD(TAG, "onResume()");
-        //mGoogleApiClient.connect();
-        /*if (mTWA != null){
-            mTWA.setText("Resume");
-        } else   LOGD(TAG,"Resume");*/
-        //registerReceiver(mTimeInfoReceiver, INTENT_FILTER);
-        //registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-    }
+  }
 
 
     @Override
     public void onConnectionSuspended(int cause) {
         LOGD(TAG, "onConnectionSuspended(): Connection to Google API client was suspended");
-        if (mRanking!=null) mRanking.setText("onCSuspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         Log.e(TAG, "onConnectionFailed(): Failed to connect, with result: " + result);
-        if (mRanking!=null) mRanking.setText("onCFail");
     }
 
     private void generateEvent(final String title, final String text) {
@@ -221,7 +179,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
              if (mTWA != null) {
                 mTWA.setText(text);
               } else
-              LOGD(TAG, "EV:"+text.toString());
+              LOGD(TAG, "EV:"+text);
                 // mIntroText.setVisibility(View.INVISIBLE);
                 // mDataItemListAdapter.add(new Event(title, text));
              }
@@ -231,29 +189,22 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         LOGD(TAG, "onDataChanged(): " + dataEvents);
-        //if (mSpeed!=null) mSpeed.setText(String.valueOf(mDataRec));
         final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
         dataEvents.close();
         for (DataEvent event : events) {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 String path = event.getDataItem().getUri().getPath();
-                if (IMAGE_PATH.equals(path)) {
-                    DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
-                    Asset photo = dataMapItem.getDataMap()
-                            .getAsset(IMAGE_KEY);
-                    final Bitmap bitmap = loadBitmapFromAsset(mGoogleApiClient, photo);
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.d(TAG, "Setting background image..");
-                            mLayout.setBackground(new BitmapDrawable(getResources(), bitmap));
-                        }
-                    });
-
-                } else if (COUNT_PATH.equals(path)) {
-                    LOGD(TAG, "Data Changed for COUNT_PATH");
+                if (BD_PATH.equals(path)) {
+                    LOGD(TAG, "Boat Data Changed...");
                     mDataRec++;
                     generateEvent("DataItem Changed", event.getDataItem().getData().toString());
+                    DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
+                    String[] boat_data = dataItem.getDataMap().getStringArray(BD_KEY);
+
+                    for (int i=0;i>boat_data.length;i++){
+                        LOGD(TAG, boat_data[i]);
+                    }
+
                 } else {
                     LOGD(TAG, "Unrecognized path: " + path);
                 }
@@ -261,25 +212,9 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
                 //generateEvent("DataItem Deleted", event.getDataItem().toString());
             } else {
-                //generateEvent("Unknown data event type", "Type = " + event.getType());
+                generateEvent("Unknown data event type", "Type = " + event.getType());
             }
         }
-    }
-
-    /**
-     * Extracts {@link android.graphics.Bitmap} data from the
-     * {@link com.google.android.gms.wearable.Asset}
-     */
-    private Bitmap loadBitmapFromAsset(GoogleApiClient apiClient, Asset asset) {
-        if (asset == null) {
-            throw new IllegalArgumentException("Asset must be non-null");
-        }
-        InputStream assetInputStream = Wearable.DataApi.getFdForAsset(apiClient, asset).await().getInputStream();
-        if (assetInputStream == null) {
-            Log.w(TAG, "Requested an unknown Asset.");
-            return null;
-        }
-        return BitmapFactory.decodeStream(assetInputStream);
     }
 
     @Override
@@ -298,18 +233,6 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     public void onPeerDisconnected(Node node) {
         generateEvent("Node Disconnected", node.getId());
     }
-
-
-    private class Event {
-        String title;
-        String text;
-
-        public Event(String title, String text) {
-            this.title = title;
-            this.text = text;
-        }
-    }
-
 
     public static void LOGD(final String tag, String message) {
         if (Log.isLoggable(tag, Log.DEBUG)) {

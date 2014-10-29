@@ -12,7 +12,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/b1"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
@@ -34,12 +34,19 @@
             android:name="br.com.casadalagoa.vorg.VVorg_settings"
             android:label="@string/title_activity_vvorg_settings" >
         </activity>
-        <activity
+       <!-- <activity
             android:name="br.com.casadalagoa.vorg.VORG_MainMobile"
             android:label="@string/title_activity_vorg__main_mobile" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>-->
+        <activity
+            android:name="br.com.casadalagoa.vorg.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -55,7 +62,6 @@
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
-
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
@@ -64,24 +70,18 @@
         <!-- The SyncAdapter service -->
         <service
             android:name="br.com.casadalagoa.vorg.sync.VORSyncService"
-            android:exported="true" >
+            android:exported="true"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-
+           <!-- <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+            </intent-filter>-->
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-
-        <activity
-            android:name="br.com.casadalagoa.vorg.MainActivity"
-            android:label="@string/title_activity_main" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name="br.com.casadalagoa.vorg.conn.WearCom"
             android:label="@string/title_activity_wear_com" >

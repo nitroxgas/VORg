@@ -24,10 +24,7 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.data.FreezableUtils;
 import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.wearable.DataEvent;
-import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
@@ -48,7 +45,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Vector;
 
 import br.com.casadalagoa.vorg.R;
@@ -57,14 +53,12 @@ import br.com.casadalagoa.vorg.VORG_MainMobile;
 import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
 import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
 
-public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  DataApi.DataListener,
+public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // DataApi.DataListener,
         MessageApi.MessageListener, NodeApi.NodeListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-
-   // private static final int WEATHER_NOTIFICATION_ID = 3004;
 
     public final String LOG_TAG = VORSyncAdapter.class.getSimpleName();
 
@@ -77,18 +71,21 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
 
     public VORSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-        Log.d(LOG_TAG, "Creating SyncAdapter");
+        Log.v(LOG_TAG, "Creating SyncAdapter");
         mContext = context;
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(context)
                     .addApi(Wearable.API)
-                            // Optionally, add additional APIs and scopes if required.
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
+            // Optionally, add additional APIs and scopes if required.
+            //
         }
         mGoogleApiClient.connect();
+        Log.v(LOG_TAG, "Connecting GoogleApiClient");
     }
+
 
     @Override
     public void onPerformSync(Account account, Bundle bundle, String authority,
@@ -299,13 +296,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
         //return;
     }
 
-   /* private void sendData(){
-        // Get Boat preference from pref_boat_key and send data to the watchface
-        Context context = getContext();
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        mWearCon.sendData(Utility.getBoatArray(context.getString(R.string.pref_boat_key)));
-    }*/
 
     private void notifyBoatData(double high, double low, String description, int weatherId) {
         Context context = getContext();
@@ -382,6 +372,8 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(getSyncAccount(context),
                 context.getString(R.string.content_authority), bundle);
+        Log.v("VORGSyncAdapter:", "Sync Performed");
+
     }
 
     /**
@@ -401,6 +393,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
             ContentResolver.addPeriodicSync(account,
                     authority, new Bundle(), syncInterval);
         }
+        Log.v("VORGSyncAdapter:", "Periodic Sync Configured");
     }
 
     /**
@@ -411,6 +404,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
     * @return a fake account.
     */
     public static Account getSyncAccount(Context context) {
+        Log.v("VORGSyncAdapter:", "Getting Sync Account");
         // Get an instance of the Android account manager
         AccountManager accountManager =
                 (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
@@ -446,14 +440,16 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
 
         // Let's do a sync to get things started.
         syncImmediately(context);
+        Log.v("VORGSyncAdapter:", "Account Created");
     }
 
     public static void initializeSyncAdapter(Context context) {
         getSyncAccount(context);
+        Log.v("VORSyncAdapter:", "Initializing SyncAdapter");
     }
 
     //  ###### Wear Connection Implementation
-    private static final String TAG = "SyncWear";
+    private static final String TAG = "VOR_watchface";
 
     private static final String KEY_IN_RESOLUTION = "is_in_resolution";
     private static final int REQUEST_RESOLVE_ERROR = 1000;
@@ -461,6 +457,8 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
     // Patch and data keys to send to watch
     private static final String BD_PATH = "/bd"; // Boat Data
     private static final String BD_KEY = "bd"; // Boat data array!
+
+    private static int count = 5;
 
 
     /**
@@ -517,6 +515,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
     }*/
 
     private void retryConnecting() {
+        Log.v(TAG, "RetryConnecting");
         mIsInResolution = false;
         if (!mGoogleApiClient.isConnecting()) {
             mGoogleApiClient.connect();
@@ -528,9 +527,9 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
      */
     @Override
     public void onConnected(Bundle connectionHint) {
-        Log.i(TAG, "GoogleApiClient connected");
+        Log.v(TAG, "GoogleApiClient connected");
         // TODO: Start making API requests.
-        Wearable.DataApi.addListener(mGoogleApiClient, this);
+       // Wearable.DataApi.addListener(mGoogleApiClient, this);
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.NodeApi.addListener(mGoogleApiClient, this);
     }
@@ -540,7 +539,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
      */
     @Override
     public void onConnectionSuspended(int cause) {
-        Log.i(TAG, "GoogleApiClient connection suspended");
+        Log.v(TAG, "GoogleApiClient connection suspended");
         retryConnecting();
     }
 
@@ -551,7 +550,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
      */
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
+        Log.v(TAG, "GoogleApiClient connection failed: " + result.toString());
         if (!result.hasResolution()) {
             // Show a localized error dialog.
             return;
@@ -567,12 +566,12 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
 
     }
 
-    @Override //DataListener
+  /*  @Override //DataListener
     public void onDataChanged(DataEventBuffer dataEvents) {
-        final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
-        dataEvents.close();
+        *//*final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
+        dataEvents.close();*//*
         Log.v(TAG, "Data Changed");
-    }
+    }*/
 
     @Override //MessageListener
     public void onMessageReceived(final MessageEvent messageEvent) {
@@ -632,18 +631,19 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements  Dat
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
+            Log.v("VORGSyncAdapter:", "New Connection on sendData!");
+            mGoogleApiClient.connect();
         }
-        mGoogleApiClient.connect();
-
         if (mGoogleApiClient.isConnected()) {
             PutDataMapRequest dataMap = PutDataMapRequest.create(BD_PATH);
             dataMap.getDataMap().putStringArray(BD_KEY, boat_data);
+            dataMap.getDataMap().putInt("count", count++);
             PutDataRequest request = dataMap.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, request)
                     .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                         @Override
                         public void onResult(DataApi.DataItemResult dataItemResult) {
-                            Log.v(TAG, "Sending data was successful: " + dataItemResult.getStatus()
+                            Log.v(TAG, "Sending data was successful: " + String.valueOf(count)+" : "+ dataItemResult.getStatus()
                                     .isSuccess());
                         }
                     });
