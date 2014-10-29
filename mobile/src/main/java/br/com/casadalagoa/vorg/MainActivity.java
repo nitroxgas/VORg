@@ -1,23 +1,37 @@
 package br.com.casadalagoa.vorg;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.casadalagoa.vorg.sync.VORSyncAdapter;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity implements BoatFragment.Callback  {
+
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.vor_select_boat);
+        setContentView(R.layout.activity_main);
+        mTwoPane = false;
+        BoatFragment boatFragment =  ((BoatFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_boats));
+        boatFragment.setUseTodayLayout(!mTwoPane);
+
         VORSyncAdapter.initializeSyncAdapter(this);
         VORSyncAdapter.syncImmediately(this);
     }
 
+
+    @Override
+    public void onItemSelected(String date) {
+            return;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

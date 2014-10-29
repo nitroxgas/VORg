@@ -18,7 +18,7 @@
 
         <!--
         <activity
-            android:name="br.com.casadalagoa.vorg.VORgService"
+            android:name="br.com.casadalagoa.vorg.conn.VORgService"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

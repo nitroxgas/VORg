@@ -47,9 +47,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
+import br.com.casadalagoa.vorg.MainActivity;
 import br.com.casadalagoa.vorg.R;
 import br.com.casadalagoa.vorg.Utility;
-import br.com.casadalagoa.vorg.VORG_MainMobile;
+
 import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
 import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
 
@@ -92,7 +93,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                               ContentProviderClient provider, SyncResult syncResult) {
         Log.d(LOG_TAG, "Starting sync");
         // Getting the zipcode to send to the API
-        String locationQuery = Utility.getPreferredLocation(mContext);
+        String locationQuery = Utility.getPreferredBoat(mContext);
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -338,9 +339,9 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
             // Make something interesting happen when the user clicks on the notification.
             // In this case, opening the app is sufficient.
-            Intent resultIntent = new Intent(mContext, VORG_MainMobile.class);
+            Intent resultIntent = new Intent(mContext, MainActivity.class);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
-            stackBuilder.addParentStack(VORG_MainMobile.class);
+            stackBuilder.addParentStack(MainActivity.class);
             stackBuilder.addNextIntent(resultIntent);
             PendingIntent resultPendingIntent =
                     stackBuilder.getPendingIntent(

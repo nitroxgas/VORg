@@ -28,10 +28,10 @@ import java.util.Date;
 import br.com.casadalagoa.vorg.data.BoatContract;
 
 public class Utility {
-    public static String getPreferredLocation(Context context) {
+    public static String getPreferredBoat(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(context.getString(R.string.pref_location_key),
-                context.getString(R.string.pref_location_default));
+        return prefs.getString(context.getString(R.string.pref_boat_key),
+                context.getString(R.string.pref_boat_default));
     }
 
     public static String[] getBoatArray(String boat_pref){
@@ -242,7 +242,7 @@ public class Utility {
             return R.drawable.ic_cloudy;
         }
         */
-        return -1;
+        return R.drawable.common_ic_googleplayservices;
     }
 
     /**
@@ -251,37 +251,9 @@ public class Utility {
      * @param weatherId from OpenWeatherMap API response
      * @return resource id for the corresponding image. -1 if no relation is found.
      */
-    public static int getArtResourceForWeatherCondition(int weatherId) {
-        // Based on weather code data found at:
-        // http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
-        /*
-         Alterar inclir posição do Barco
+    public static int getArtResourceForBoat(int boatId) {
 
+        return R.drawable.alvi_e0001;
 
-        if (weatherId >= 200 && weatherId <= 232) {
-            return R.drawable.art_storm;
-        } else if (weatherId >= 300 && weatherId <= 321) {
-            return R.drawable.art_light_rain;
-        } else if (weatherId >= 500 && weatherId <= 504) {
-            return R.drawable.art_rain;
-        } else if (weatherId == 511) {
-            return R.drawable.art_snow;
-        } else if (weatherId >= 520 && weatherId <= 531) {
-            return R.drawable.art_rain;
-        } else if (weatherId >= 600 && weatherId <= 622) {
-            return R.drawable.art_rain;
-        } else if (weatherId >= 701 && weatherId <= 761) {
-            return R.drawable.art_fog;
-        } else if (weatherId == 761 || weatherId == 781) {
-            return R.drawable.art_storm;
-        } else if (weatherId == 800) {
-            return R.drawable.art_clear;
-        } else if (weatherId == 801) {
-            return R.drawable.art_light_clouds;
-        } else if (weatherId >= 802 && weatherId <= 804) {
-            return R.drawable.art_clouds;
-        }
-        */
-        return -1;
     }
 }

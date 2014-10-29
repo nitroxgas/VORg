@@ -136,7 +136,7 @@ public class BoatContract {
         // Distance to L C ( First Competidor ?)
         public static final String COLUMN_DTLC = "dtlc";
 
-        // LEG Position
+        // LEG Position (10)
         public static final String COLUMN_LEG_STANDING = "legstanding";
 
         // 24h Run
@@ -160,7 +160,7 @@ public class BoatContract {
         // Avg of true wind speed
         public static final String COLUMN_TRUWINDSPEEDAVG = "truwindspeedavg";
 
-        // Speed through water ?
+        // Speed through water ? (18)
         public static final String COLUMN_SPEEDTHROWATER = "speedthrowater";
 
         // Max True Wind Speed
@@ -199,7 +199,7 @@ public class BoatContract {
         }
 
         public static String getDateFromUri(Uri uri) {
-            return uri.getPathSegments().get(2);
+            return uri.getPathSegments().get(1);
         }
 
         /*public static String getStartDateFromUri(Uri uri) {

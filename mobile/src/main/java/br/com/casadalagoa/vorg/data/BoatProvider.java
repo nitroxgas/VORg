@@ -64,7 +64,7 @@ public class BoatProvider extends ContentProvider {
                     BoatContract.BoatEntry.COLUMN_REPORTDATE + " = ? ";
 
     private Cursor getBoatByCodeSetting(Uri uri, String[] projection, String sortOrder) {
-        String locationSetting = BoatContract.BoatEntry.getCodeSettingFromUri(uri);
+        String codeSetting = BoatContract.BoatEntry.getCodeSettingFromUri(uri);
         String startDate = BoatContract.BoatEntry.getDateFromUri(uri);
 
         String[] selectionArgs;
@@ -72,9 +72,9 @@ public class BoatProvider extends ContentProvider {
 
         if (startDate == null) {
             selection = sCodeSettingSelection;
-            selectionArgs = new String[]{locationSetting};
+            selectionArgs = new String[]{codeSetting};
         } else {
-            selectionArgs = new String[]{locationSetting, startDate};
+            selectionArgs = new String[]{codeSetting, startDate};
             selection = sCodeSettingWithReportDateSelection;
         }
 
