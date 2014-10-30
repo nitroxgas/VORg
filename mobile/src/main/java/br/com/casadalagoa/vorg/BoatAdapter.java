@@ -2,11 +2,14 @@ package br.com.casadalagoa.vorg;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -27,17 +30,21 @@ public class BoatAdapter extends CursorAdapter {
      */
     public static class ViewHolder {
         public final ImageView iconView;
-        public final TextView dateView;
-        public final TextView descriptionView;
-        public final TextView highTempView;
-        public final TextView lowTempView;
+        public final TextView dataView;
+        public final TextView nameView;
+        public final TextView rankView;
+        public final TextView completitionView;
+        public final FrameLayout layView;
+        public final LinearLayout lay_itemView;
 
         public ViewHolder(View view) {
             iconView = (ImageView) view.findViewById(R.id.list_item_icon);
-            dateView = (TextView) view.findViewById(R.id.list_item_code);
-            descriptionView = (TextView) view.findViewById(R.id.list_item_name);
-            highTempView = (TextView) view.findViewById(R.id.list_item_rank);
-            lowTempView = (TextView) view.findViewById(R.id.list_item_speed);
+            dataView = (TextView) view.findViewById(R.id.list_item_data);
+            nameView = (TextView) view.findViewById(R.id.list_item_name);
+            rankView = (TextView) view.findViewById(R.id.list_item_rank);
+            completitionView = (TextView) view.findViewById(R.id.list_item_leg_comp);
+            layView = (FrameLayout) view.findViewById(R.id.list_item_lay_img);
+            lay_itemView = (LinearLayout) view.findViewById(R.id.list_item_lay_all);
         }
     }
 
@@ -74,45 +81,46 @@ public class BoatAdapter extends CursorAdapter {
 
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
+        viewHolder.layView.setBackgroundColor(Color.parseColor("#"+cursor.getString(BoatFragment.COL_CODE_COLOR)));
+       // viewHolder.lay_itemView.setBackgroundColor(Color.parseColor("#"+cursor.getString(BoatFragment.COL_CODE_COLOR)));
+
         int viewType = getItemViewType(cursor.getPosition());
         switch (viewType) {
             case VIEW_TYPE_TODAY: {
                 // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getArtResourceForBoat(
-                        cursor.getInt(BoatFragment.COL_BOAT_ID)));
+                        cursor.getInt(BoatFragment.COL_BOAT_CODE)));
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY: {
                 // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
-                        cursor.getInt(BoatFragment.COL_BOAT_ID)));
+                        cursor.getInt(BoatFragment.COL_BOAT_CODE)));
                 break;
             }
         }
+        String dataString = "Speed: "+cursor.getString(BoatFragment.COL_BOAT_SPEEDTHROUGWATER)+"kn  HD:"+cursor.getString(BoatFragment.COL_BOAT_BOATHEADINGTRUE)+"º Wind:"+cursor.getString(BoatFragment.COL_BOAT_TRUEWINDSPEEDMAX)+"kn";
 
-        // Read date from cursor
-        String dateString = cursor.getString(BoatFragment.COL_BOAT_ID);
-        // Find TextView and set formatted date on it
-        viewHolder.dateView.setText(dateString);
+        viewHolder.dataView.setText(dataString);
 
         // Read weather forecast from cursor
         String description = cursor.getString(BoatFragment.COL_CODE_NAME);
         // Find TextView and set weather forecast on it
-        viewHolder.descriptionView.setText(description);
+        viewHolder.nameView.setText(description);
 
         // For accessibility, add a content description to the icon field
         viewHolder.iconView.setContentDescription(description);
 
         // Read user preference for metric or imperial temperature units
-        boolean isMetric = Utility.isMetric(context);
+        // boolean isMetric = Utility.isMetric(context);
 
-        // Read high temperature from cursor
-        String high = cursor.getString(BoatFragment.COL_BOAT_LEGSTANDING);
-        viewHolder.highTempView.setText( high);
+        // Rank
+        String mRank = cursor.getString(BoatFragment.COL_BOAT_LEGSTANDING);
+        viewHolder.rankView.setText(mRank);
 
-        // Read low temperature from cursor
-        String low = cursor.getString(BoatFragment.COL_BOAT_SPEEDTHROUGWATER);
-        viewHolder.lowTempView.setText(low);
+        // Leg Progress
+        String mProgress = cursor.getString(BoatFragment.COL_BOAT_LEGPROGRESS);
+        viewHolder.completitionView.setText(mProgress+"%");
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {

@@ -65,7 +65,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
     // Interval at which to sync with the weather, in milliseconds.
     // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 1000* 60;// * 60;
+    public static final int SYNC_INTERVAL = 1000 * 60 * 5;// * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     private final Context mContext;
@@ -139,6 +139,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                 return;
             }
             ReportJsonStr = buffer.toString();
+            parseJSON(ReportJsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
             // If the code didn't successfully get the boat data, there's no point in attemping
@@ -146,6 +147,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
+                Log.d(LOG_TAG, "Exit closing stream");
             }
             if (reader != null) {
                 try {
@@ -155,6 +157,9 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                 }
             }
         }
+    }
+
+    public void parseJSON(String ReportJsonStr){
 
         // Now we have a String representing the complete forecast in JSON Format.
         // Fortunately parsing is easy:  constructor takes the JSON string and converts it
@@ -192,108 +197,118 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         final String OWM_TRUEWINDDIRECTION = "truewinddirection";
         final String OWM_LATESTSPEEDTHROWATER = "latestspeedthrowater";
         final String OWM_MAXAVGSPEED = "maxavgspeed";
+        if (ReportJsonStr!=null) {
+            try {
 
-        try {
+                JSONObject ReportJson = new JSONObject(ReportJsonStr);
 
-            JSONObject ReportJson = new JSONObject(ReportJsonStr);
+                JSONArray codeArray = ReportJson.getJSONArray(OWM_CODES);
+                JSONObject dataArray = ReportJson.getJSONObject("data");
+                String nextUpdate = ReportJson.getString("nextReport");
+                JSONArray boatArray = dataArray.getJSONArray(OWM_LATEST);
 
-            JSONArray codeArray = ReportJson.getJSONArray(OWM_CODES);
-            JSONObject dataArray = ReportJson.getJSONObject("data");
-            String nextUpdate = ReportJson.getString("nextReport");
-            JSONArray boatArray = dataArray.getJSONArray(OWM_LATEST);
+                Vector<ContentValues> cVVector = new Vector<ContentValues>(codeArray.length());
 
-            Vector<ContentValues> cVVector = new Vector<ContentValues>(codeArray.length());
+                for (int i = 0; i < codeArray.length(); i++) {
+                    // These are the values that will be collected.
+                    String code, name, color;
+                    int codeId;
 
-            for(int i = 0; i < codeArray.length(); i++) {
-                // These are the values that will be collected.
-                String code, name, color;
-                int codeId;
+                    JSONObject codeJson = codeArray.getJSONObject(i);
+                    code = codeJson.getString(OWM_CODE);
+                    name = codeJson.getString(OWM_NAME);
+                    color = codeJson.getString(OWM_COLOR);
 
-                JSONObject codeJson = codeArray.getJSONObject(i);
-                code  = codeJson.getString(OWM_CODE);
-                name  = codeJson.getString(OWM_NAME);
-                color = codeJson.getString(OWM_COLOR);
+                    ContentValues codeValues = new ContentValues();
 
-                ContentValues codeValues = new ContentValues();
+                    codeValues.put(CodeEntry.COLUMN_CODE, code);
+                    codeValues.put(CodeEntry.COLUMN_NAME, name);
+                    codeValues.put(CodeEntry.COLUMN_COLOR, color);
+                    cVVector.add(codeValues);
+                    Log.v(LOG_TAG, "Code: " + code + ", Name: " + name + " Color: " + color);
+                }
+                if (cVVector.size() > 0) {
+                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                    cVVector.toArray(cvArray);
+                    mContext.getContentResolver().bulkInsert(CodeEntry.CONTENT_URI, cvArray);
+                }
 
-                codeValues.put(CodeEntry.COLUMN_CODE, code);
-                codeValues.put(CodeEntry.COLUMN_NAME, name);
-                codeValues.put(CodeEntry.COLUMN_COLOR, color);
-                cVVector.add(codeValues);
-                Log.v(LOG_TAG, "Code: "+ code + ", Name: " + name + " Color: " + color);
+
+                // Get and insert the new boat information into the database
+                Vector<ContentValues> bVVector = new Vector<ContentValues>(21);
+
+                for (int i = 0; i < boatArray.length(); i++) {
+                    // These are the values that will be collected.
+                    String code, reportdate, timeoffix, status, latitude, longitude, dtf, dtlc,
+                            legstanding, twentyfourhourrun, legprogress, dul, boatheadingtrue, smg,
+                            seatemperature, truwindspeedavg, speedthrowater, truewindspeedmax, truewinddirection, latestspeedthrowater,
+                            maxavgspeed;
+
+                    // Get the JSON object representing the day
+                    JSONArray dayForecast = boatArray.getJSONArray(i);
+
+                    // Just to be clear how to populate the vector
+                    code = dayForecast.getString(0);
+                    reportdate = dayForecast.getString(1);
+                    timeoffix = dayForecast.getString(2);
+                    status = dayForecast.getString(3);
+                    longitude = dayForecast.getString(4);
+                    latitude = dayForecast.getString(5);
+                    dtf = dayForecast.getString(6);
+                    dtlc = dayForecast.getString(7);
+                    legstanding = dayForecast.getString(8);
+                    twentyfourhourrun = dayForecast.getString(9);
+                    legprogress = dayForecast.getString(10);
+                    dul = dayForecast.getString(11);
+                    boatheadingtrue = dayForecast.getString(12);
+                    smg = dayForecast.getString(13);
+                    seatemperature = dayForecast.getString(14);
+                    truwindspeedavg = dayForecast.getString(15);
+                    speedthrowater = dayForecast.getString(16);
+                    truewindspeedmax = dayForecast.getString(17);
+                    truewinddirection = dayForecast.getString(18);
+                    latestspeedthrowater = dayForecast.getString(19);
+                    maxavgspeed = dayForecast.getString(19);
+
+                    ContentValues boatValues = new ContentValues();
+
+                    boatValues.put(BoatEntry.COLUMN_BOAT_ID, code);
+                    boatValues.put(BoatEntry.COLUMN_TIMEOFFIX, timeoffix);
+                    boatValues.put(BoatEntry.COLUMN_DUL, dul);
+                    boatValues.put(BoatEntry.COLUMN_REPORTDATE, reportdate);
+                    boatValues.put(BoatEntry.COLUMN_BOATHEADINGTRUE, boatheadingtrue);
+                    boatValues.put(BoatEntry.COLUMN_STATUS, status);
+                    boatValues.put(BoatEntry.COLUMN_SMG, smg);
+                    boatValues.put(BoatEntry.COLUMN_LONGITUDE, longitude);
+                    boatValues.put(BoatEntry.COLUMN_SEATEMPERATURE, seatemperature);
+                    boatValues.put(BoatEntry.COLUMN_LATITUDE, latitude);
+                    boatValues.put(BoatEntry.COLUMN_TRUWINDSPEEDAVG, truwindspeedavg);
+                    boatValues.put(BoatEntry.COLUMN_DTF, dtf);
+                    boatValues.put(BoatEntry.COLUMN_SPEEDTHROWATER, speedthrowater);
+                    boatValues.put(BoatEntry.COLUMN_DTLC, dtlc);
+                    boatValues.put(BoatEntry.COLUMN_TRUEWINDSPEEDMAX, truewindspeedmax);
+                    boatValues.put(BoatEntry.COLUMN_LEG_STANDING, legstanding);
+                    boatValues.put(BoatEntry.COLUMN_TRUEWINDDIRECTION, truewinddirection);
+                    boatValues.put(BoatEntry.COLUMN_TWENTYFOURHOURRUN, twentyfourhourrun);
+                    boatValues.put(BoatEntry.COLUMN_LATESTSPEEDTHROWATER, latestspeedthrowater);
+                    boatValues.put(BoatEntry.COLUMN_LEGPROGRESS, legprogress);
+                    boatValues.put(BoatEntry.COLUMN_MAXAVGSPEED, maxavgspeed);
+
+                    bVVector.add(boatValues);
+                    Log.v(LOG_TAG, "Data: " + dayForecast.toString());
+                }
+                if (bVVector.size() > 0) {
+                    ContentValues[] cvArray = new ContentValues[bVVector.size()];
+                    bVVector.toArray(cvArray);
+                    mContext.getContentResolver().bulkInsert(BoatEntry.CONTENT_URI, cvArray);
+                }
+                Log.d(LOG_TAG, "Sync Data Complete. " + cVVector.size() + " Inserted");
+                sendData(Utility.getBoatArray(mContext.getString(R.string.pref_boat_key)));
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
             }
-            if (cVVector.size() > 0) {
-                ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                cVVector.toArray(cvArray);
-                mContext.getContentResolver().bulkInsert(CodeEntry.CONTENT_URI, cvArray);
-            }
-
-
-
-            // Get and insert the new boat information into the database
-            Vector<ContentValues> bVVector = new Vector<ContentValues>(21);
-
-            for(int i = 0; i < boatArray.length(); i++) {
-                // These are the values that will be collected.
-                String code, reportdate, timeoffix, status, latitude, longitude, dtf, dtlc,
-                        legstanding, twentyfourhourrun, legprogress, dul, boatheadingtrue, smg,
-                        seatemperature, truwindspeedavg, speedthrowater, truewindspeedmax, truewinddirection, latestspeedthrowater,
-                        maxavgspeed;
-
-                // Get the JSON object representing the day
-                JSONArray dayForecast = boatArray.getJSONArray(i);
-
-                // Just to be clear how to populate the vector
-                code = dayForecast.getString(0);
-                reportdate = dayForecast.getString(1);
-                timeoffix = dayForecast.getString(2);
-                status = dayForecast.getString(3);
-                longitude = dayForecast.getString(4);
-                latitude = dayForecast.getString(5);
-                dtf = dayForecast.getString(6);
-                dtlc = dayForecast.getString(7);
-                legstanding = dayForecast.getString(8);
-                twentyfourhourrun = dayForecast.getString(9);
-                legprogress = dayForecast.getString(10);
-                dul = dayForecast.getString(11);
-                boatheadingtrue = dayForecast.getString(12);
-                smg = dayForecast.getString(13);
-                seatemperature = dayForecast.getString(14);
-                truwindspeedavg = dayForecast.getString(15);
-                speedthrowater = dayForecast.getString(16);
-                truewindspeedmax = dayForecast.getString(17);
-                truewinddirection = dayForecast.getString(18);
-                latestspeedthrowater = dayForecast.getString(19);
-                maxavgspeed = dayForecast.getString(19);
-
-                ContentValues boatValues = new ContentValues();
-
-                boatValues.put(BoatEntry.COLUMN_BOAT_ID, code);
-                boatValues.put(BoatEntry.COLUMN_TIMEOFFIX, timeoffix);                  boatValues.put(BoatEntry.COLUMN_DUL, dul);
-                boatValues.put(BoatEntry.COLUMN_REPORTDATE, reportdate);                boatValues.put(BoatEntry.COLUMN_BOATHEADINGTRUE, boatheadingtrue);
-                boatValues.put(BoatEntry.COLUMN_STATUS, status);                        boatValues.put(BoatEntry.COLUMN_SMG, smg);
-                boatValues.put(BoatEntry.COLUMN_LONGITUDE, longitude);                  boatValues.put(BoatEntry.COLUMN_SEATEMPERATURE, seatemperature);
-                boatValues.put(BoatEntry.COLUMN_LATITUDE, latitude);                    boatValues.put(BoatEntry.COLUMN_TRUWINDSPEEDAVG, truwindspeedavg);
-                boatValues.put(BoatEntry.COLUMN_DTF, dtf);                              boatValues.put(BoatEntry.COLUMN_SPEEDTHROWATER, speedthrowater);
-                boatValues.put(BoatEntry.COLUMN_DTLC, dtlc);                            boatValues.put(BoatEntry.COLUMN_TRUEWINDSPEEDMAX, truewindspeedmax);
-                boatValues.put(BoatEntry.COLUMN_LEG_STANDING, legstanding);             boatValues.put(BoatEntry.COLUMN_TRUEWINDDIRECTION, truewinddirection);
-                boatValues.put(BoatEntry.COLUMN_TWENTYFOURHOURRUN, twentyfourhourrun);  boatValues.put(BoatEntry.COLUMN_LATESTSPEEDTHROWATER, latestspeedthrowater);
-                boatValues.put(BoatEntry.COLUMN_LEGPROGRESS, legprogress);              boatValues.put(BoatEntry.COLUMN_MAXAVGSPEED, maxavgspeed);
-
-                bVVector.add(boatValues);
-                Log.v(LOG_TAG, "Data: "+ dayForecast.toString());
-            }
-            if (bVVector.size() > 0) {
-                ContentValues[] cvArray = new ContentValues[bVVector.size()];
-                bVVector.toArray(cvArray);
-                mContext.getContentResolver().bulkInsert(BoatEntry.CONTENT_URI, cvArray);
-            }
-            Log.d(LOG_TAG, "Sync Data Complete. " + cVVector.size() + " Inserted");
-            sendData(Utility.getBoatArray(mContext.getString(R.string.pref_boat_key)));
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
-        }
+        } else Log.d(LOG_TAG, "No String to parse!");
         //return;
     }
 

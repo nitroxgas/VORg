@@ -28,7 +28,7 @@ import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
 public class BoatDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     public static final String DATABASE_NAME = "vor_boat.db";
 
@@ -84,7 +84,7 @@ public class BoatDbHelper extends SQLiteOpenHelper {
 
                 // To assure the application have just one weather entry per day
                 // per location, it's created a UNIQUE constraint with REPLACE strategy
-                " UNIQUE (" + BoatEntry.COLUMN_REPORTDATE + ", " +
+                " UNIQUE (" +
                 BoatEntry.COLUMN_BOAT_ID + ") ON CONFLICT REPLACE);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_CODE_TABLE);

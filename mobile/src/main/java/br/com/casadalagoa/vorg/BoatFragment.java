@@ -70,21 +70,24 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
             BoatEntry.COLUMN_LEGPROGRESS,
             BoatEntry.COLUMN_BOAT_ID,
             BoatContract.CodeEntry.TABLE_NAME+"."+ BoatContract.CodeEntry.COLUMN_NAME,
-            BoatContract.CodeEntry.TABLE_NAME+"."+ BoatContract.CodeEntry.COLUMN_COLOR
+            BoatContract.CodeEntry.TABLE_NAME+"."+ BoatContract.CodeEntry.COLUMN_COLOR,
+            BoatEntry.COLUMN_DUL
     };
 
 
     // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
     // must change.
-    public static final int COL_BOAT_ID = 1;
-    public static final int COL_BOAT_LEGPROGRESS = 6;
-    public static final int COL_BOAT_LEGSTANDING = 2;
-    public static final int COL_BOAT_SPEEDTHROUGWATER = 3;
-    public static final int COL_BOAT_TRUEWINDSPEEDMAX = 4;
+    public static final int COL_BOAT_ID = 0;
+    public static final int COL_BOAT_LEGPROGRESS = 5;
+    public static final int COL_BOAT_LEGSTANDING = 1;
+    public static final int COL_BOAT_SPEEDTHROUGWATER = 2;
+    public static final int COL_BOAT_TRUEWINDSPEEDMAX = 3;
     public static final int COL_CODE_NAME = 7;
-    public static final int COL_BOAT_BOATHEADINGTRUE = 5;
+    public static final int COL_BOAT_BOATHEADINGTRUE = 4;
     public static final int COL_CODE_COLOR = 8;
-
+    public static final int COL_BOAT_CODE = 6;
+    public static final int COL_BOAT_DUL = 9;
+                   //        0            1            2              3                   4             5           6       7           8
     //SQLiteQuery: SELECT boats._id, legstanding, speedthrowater, truewindspeedmax, boatheadingtrue, legprogress, b_code, codes.name, codes.color FROM boats INNER JOIN codes ON boats.b_code = codes.code ORDER BY legstanding ASC
 
 
