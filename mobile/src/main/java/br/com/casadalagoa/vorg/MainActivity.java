@@ -3,7 +3,6 @@ package br.com.casadalagoa.vorg;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import br.com.casadalagoa.vorg.sync.VORSyncAdapter;
 
@@ -23,10 +22,10 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
                 .findFragmentById(R.id.fragment_boats));
         boatFragment.setUseTodayLayout(false);
 
-       // VORSyncAdapter.initializeSyncAdapter(this);
+        VORSyncAdapter.initializeSyncAdapter(this);
+        Utility.getBoatArray(this.getBaseContext(), this.getBaseContext().getString(R.string.pref_boat_key));
        // VORSyncAdapter.syncImmediately(this);
     }
-
 
     @Override
     public void onItemSelected(String date) {
@@ -36,11 +35,11 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -54,5 +53,5 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }

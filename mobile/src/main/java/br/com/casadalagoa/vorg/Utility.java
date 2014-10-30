@@ -17,6 +17,7 @@ package br.com.casadalagoa.vorg;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 
 import java.text.DateFormat;
@@ -34,12 +35,24 @@ public class Utility {
                 context.getString(R.string.pref_boat_default));
     }
 
-    public static String[] getBoatArray(String boat_pref){
-        String[] return_str = {"1","2","3"};
-     if (boat_pref=="1"){
-            return return_str;
-     }
+    public static String[] getBoatArray(Context context, String boat_pref){
+        String[] return_str = {"_id","b_code","reportdate","timeoffixdate","status","latitude","longitude","dtf","dtlc","legstanding","twentyfourhourrun","legprogress","dul","boatheadingtrue","smg","seatemperature","truwindspeedavg","speedthrowater","truewindspeedmax","truewinddirection","latestspeedthrowater","maxavgspeed","_id","code","name","color"};
+        Cursor boat_data = context.getContentResolver().query(BoatContract.BoatEntry.buildBoatCode(boat_pref),null,null,null,null);
+        for (boat_data.moveToFirst(); !boat_data.isAfterLast(); boat_data.moveToNext()) {
+            for (int i = 0; i < 26; i++) {
+                return_str[i] = boat_data.getString(i);
+            }
+        }
+        boat_data.close();
+        //  0    1     2          3             4      5        6         7    8   9             10               11         12   13             14   15             16             17               18              19                  20                  21        22  23    24  25
+        //[_id,b_code,reportdate,timeoffixdate,status,latitude,longitude,dtf,dtlc,legstanding,twentyfourhourrun,legprogress,dul,boatheadingtrue,smg,seatemperature,truwindspeedavg,speedthrowater,truewindspeedmax,truewinddirection,latestspeedthrowater,maxavgspeed,_id,code,name,color]
         return return_str;
+    }
+
+    public static void setPreferredBoat(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.getString(context.getString(R.string.pref_boat_key),
+                context.getString(R.string.pref_boat_default));
     }
 
     public static boolean isMetric(Context context) {
@@ -175,6 +188,9 @@ public class Utility {
     }
 
     public static String getWindHeading(float degrees){
+        // From wind direction in degrees, determine compass direction as a string (e.g NW)
+        // You know what's fun, writing really long if/else statements with tons of possible
+        // conditions.  Seriously, try it!
         String direction = "Unknown";
         if (degrees >= 337.5 || degrees < 22.5) {
             direction = "N";
@@ -196,6 +212,16 @@ public class Utility {
         return direction;
     }
 
+    public static int getFormattedBoatHeading(Context context, String boat_code, String Heading) {
+        String boat_heading="";
+        if (!Heading.contains("null")) {
+            boat_heading = boat_code + "_"+getWindHeading(Float.valueOf(Heading)) + "0001";
+        } else
+            boat_heading = boat_code + "_e0001";
+        String packageName = context.getPackageName();
+        return context.getResources().getIdentifier(boat_heading.toLowerCase(), "drawable", packageName);
+    }
+
     public static String getFormattedWind(Context context, float windSpeed, float degrees) {
         int windFormat;
         if (Utility.isMetric(context)) {
@@ -204,12 +230,7 @@ public class Utility {
             windFormat = R.string.format_wind_mph;
             windSpeed = .621371192237334f * windSpeed;
         }
-
         String direction = getWindHeading(degrees);
-
-        // From wind direction in degrees, determine compass direction as a string (e.g NW)
-        // You know what's fun, writing really long if/else statements with tons of possible
-        // conditions.  Seriously, try it!
         // TODO: Include boat graphics here
 
         return String.format(context.getString(windFormat), windSpeed, direction);
@@ -252,12 +273,7 @@ public class Utility {
         return R.drawable.alvi_e0001;
     }
 
-    /**
-     * Helper method to provide the art resource id according to the weather condition id returned
-     * by the OpenWeatherMap call.
-     * @param weatherId from OpenWeatherMap API response
-     * @return resource id for the corresponding image. -1 if no relation is found.
-     */
+
     public static int getArtResourceForBoat(int boatId) {
 
         return R.drawable.alvi_e0001;

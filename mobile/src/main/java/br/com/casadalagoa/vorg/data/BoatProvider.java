@@ -63,7 +63,7 @@ public class BoatProvider extends ContentProvider {
                     "." + BoatContract.CodeEntry.COLUMN_CODE + " = ? AND " +
                     BoatContract.BoatEntry.COLUMN_REPORTDATE + " = ? ";
 
-    private Cursor getBoatByCodeSetting(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getBoatByCodeSetting(Uri uri, String[] projection) {
         String codeSetting = BoatContract.BoatEntry.getCodeSettingFromUri(uri);
         String[] selectionArgs;
         String selection;
@@ -75,7 +75,7 @@ public class BoatProvider extends ContentProvider {
                 selectionArgs,
                 null,
                 null,
-                sortOrder
+                null
         );
     }
 
@@ -134,7 +134,7 @@ public class BoatProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-                        String sortOrder) {
+                               String sortOrder) {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
         Cursor retCursor;
@@ -147,7 +147,7 @@ public class BoatProvider extends ContentProvider {
             }
             // "Boat/*"
             case BOAT_WITH_CODE: {
-                retCursor = getBoatByCodeSetting(uri, projection, sortOrder);
+                retCursor = getBoatByCodeSetting(uri, projection);
                 break;
             }
             // "Boat"

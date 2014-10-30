@@ -180,8 +180,8 @@ public class BoatContract {
             return CONTENT_URI; //ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildBoatCode(String locationSetting) {
-            return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
+        public static Uri buildBoatCode(String codeSetting) {
+            return CONTENT_URI.buildUpon().appendPath(codeSetting).build();
         }
 
        /* public static Uri buildBoatCodeWithStartDate(

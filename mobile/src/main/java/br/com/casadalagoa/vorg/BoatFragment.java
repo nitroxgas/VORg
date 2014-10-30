@@ -50,6 +50,7 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
     private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
+    private static final String SELECTED_BOAT = "selected_boat";
 
     private static final int BOAT_LOADER = 0;
 

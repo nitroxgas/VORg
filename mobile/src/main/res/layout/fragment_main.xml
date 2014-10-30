@@ -13,7 +13,9 @@
             android:id="@+id/listview_boats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@null" />
+            android:divider="@null"
+            android:clickable="false"
+            android:drawSelectorOnTop="true" />
 
         <TextView
             android:layout_width="match_parent"

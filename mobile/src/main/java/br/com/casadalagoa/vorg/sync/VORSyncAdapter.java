@@ -50,7 +50,6 @@ import java.util.Vector;
 import br.com.casadalagoa.vorg.MainActivity;
 import br.com.casadalagoa.vorg.R;
 import br.com.casadalagoa.vorg.Utility;
-
 import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
 import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
 
@@ -303,7 +302,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                     mContext.getContentResolver().bulkInsert(BoatEntry.CONTENT_URI, cvArray);
                 }
                 Log.d(LOG_TAG, "Sync Data Complete. " + cVVector.size() + " Inserted");
-                sendData(Utility.getBoatArray(mContext.getString(R.string.pref_boat_key)));
+                sendData(Utility.getBoatArray(mContext,"VEST"));
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
@@ -665,5 +664,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                     });
         }
     }
+
 
 }

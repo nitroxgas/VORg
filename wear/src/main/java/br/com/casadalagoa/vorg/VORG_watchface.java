@@ -186,6 +186,23 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         });
     }
 
+    private void updateUI(final String[] boat_data) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mTWA != null) {
+                    mTWA.setText(boat_data[19]);
+                    mLocale.setText(boat_data[5]+"\n"+boat_data[6]);
+                    mRanking.setText(boat_data[9]);
+                    mSpeed.setText(boat_data[17]);
+                    mWSpeed.setText(boat_data[18]);
+                    mWAngle.setText(boat_data[19]);
+                }
+
+            }
+        });
+    }
+
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         LOGD(TAG, "onDataChanged(): " + dataEvents);
@@ -200,11 +217,10 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     generateEvent("DataItem Changed", event.getDataItem().getData().toString());
                     DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
                     String[] boat_data = dataItem.getDataMap().getStringArray(BD_KEY);
-
+                    updateUI(boat_data);
                     for (int i=0;i>boat_data.length;i++){
                         LOGD(TAG, boat_data[i]);
                     }
-
                 } else {
                     LOGD(TAG, "Unrecognized path: " + path);
                 }
