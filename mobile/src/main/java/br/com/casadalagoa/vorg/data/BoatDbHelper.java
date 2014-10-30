@@ -28,7 +28,7 @@ import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
 public class BoatDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 7;
 
     public static final String DATABASE_NAME = "vor_boat.db";
 
@@ -42,7 +42,7 @@ public class BoatDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CodeEntry.TABLE_NAME);
 
         final String SQL_CREATE_CODE_TABLE = "CREATE TABLE " + CodeEntry.TABLE_NAME + " (" +
-                CodeEntry._ID + " INTEGER PRIMARY KEY," +
+                CodeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 CodeEntry.COLUMN_CODE + " TEXT UNIQUE NOT NULL, " +
                 CodeEntry.COLUMN_NAME + " TEXT NOT NULL, " +
                 CodeEntry.COLUMN_COLOR + " TEXT NOT NULL, " +

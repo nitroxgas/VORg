@@ -35,7 +35,6 @@ import java.util.Date;
 
 import br.com.casadalagoa.vorg.data.BoatContract;
 import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
-import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
 import br.com.casadalagoa.vorg.sync.VORSyncAdapter;
 
 /**
@@ -68,20 +67,26 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
             BoatEntry.COLUMN_SPEEDTHROWATER,
             BoatEntry.COLUMN_TRUEWINDSPEEDMAX,
             BoatEntry.COLUMN_BOATHEADINGTRUE,
-            CodeEntry.COLUMN_NAME,
-            BoatEntry.COLUMN_BOAT_ID
+            BoatEntry.COLUMN_LEGPROGRESS,
+            BoatEntry.COLUMN_BOAT_ID,
+            BoatContract.CodeEntry.TABLE_NAME+"."+ BoatContract.CodeEntry.COLUMN_NAME,
+            BoatContract.CodeEntry.TABLE_NAME+"."+ BoatContract.CodeEntry.COLUMN_COLOR
     };
 
 
     // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
     // must change.
-    public static final int COL_BOAT_ID = 0;
-    public static final int COL_BOAT_NAME = 1;
-    public static final int COL_BOAT_LEGSTANDING = 10;
-    public static final int COL_BOAT_SPEEDTHROUGWATER = 18;
-    public static final int COL_BOAT_TRUEWINDSPEEDMAX = 19;
-    public static final int COL_CODE_NAME = 2;
-    public static final int COL_BOAT_BOATHEADINGTRUE = 14;
+    public static final int COL_BOAT_ID = 1;
+    public static final int COL_BOAT_LEGPROGRESS = 6;
+    public static final int COL_BOAT_LEGSTANDING = 2;
+    public static final int COL_BOAT_SPEEDTHROUGWATER = 3;
+    public static final int COL_BOAT_TRUEWINDSPEEDMAX = 4;
+    public static final int COL_CODE_NAME = 7;
+    public static final int COL_BOAT_BOATHEADINGTRUE = 5;
+    public static final int COL_CODE_COLOR = 8;
+
+    //SQLiteQuery: SELECT boats._id, legstanding, speedthrowater, truewindspeedmax, boatheadingtrue, legprogress, b_code, codes.name, codes.color FROM boats INNER JOIN codes ON boats.b_code = codes.code ORDER BY legstanding ASC
+
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -208,7 +213,7 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
         String sortOrder = BoatEntry.COLUMN_LEG_STANDING + " ASC";
 
         mCode = Utility.getPreferredBoat(getActivity());
-        Uri standingUri = BoatEntry.buildBoatCode(mCode);
+        Uri standingUri = BoatEntry.buildBoatUri(1);//  buildBoatCode(mCode);
 
         // Now create and return a CursorLoader that will take care of
         // creating a Cursor for the data being displayed.
@@ -238,7 +243,7 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
-        mUseTodayLayout = useTodayLayout;
+        mUseTodayLayout = false;//useTodayLayout;
         if (mBoatAdapter != null) {
             mBoatAdapter.setUseTodayLayout(mUseTodayLayout);
         }

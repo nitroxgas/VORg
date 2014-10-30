@@ -21,10 +21,10 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
         mTwoPane = false;
         BoatFragment boatFragment =  ((BoatFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_boats));
-        boatFragment.setUseTodayLayout(!mTwoPane);
+        boatFragment.setUseTodayLayout(false);
 
-        VORSyncAdapter.initializeSyncAdapter(this);
-        VORSyncAdapter.syncImmediately(this);
+       // VORSyncAdapter.initializeSyncAdapter(this);
+       // VORSyncAdapter.syncImmediately(this);
     }
 
 

@@ -29,8 +29,8 @@ public class BoatContract {
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
 
-    public static final String PATH_BOAT = "boat";
-    public static final String PATH_CODE = "code";
+    public static final String PATH_BOAT = "boats";
+    public static final String PATH_CODE = "codes";
 
 
 
@@ -78,7 +78,7 @@ public class BoatContract {
                 "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + PATH_CODE;
 
         // Table name
-        public static final String TABLE_NAME = "code";
+        public static final String TABLE_NAME = "codes";
 
         // The code setting string is what will be sent to VOR Site
         // as the location query.
@@ -110,10 +110,10 @@ public class BoatContract {
                 "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + PATH_BOAT;
 
         // Table name
-        public static final String TABLE_NAME = "boat";
+        public static final String TABLE_NAME = "boats";
 
         // BOAT CODE NAME -> Boat ID
-        public static final String COLUMN_BOAT_ID = "code";
+        public static final String COLUMN_BOAT_ID = "b_code";
 
         // Date, stored as Text with format yyyy-MM-dd hh:mm:ss
         public static final String COLUMN_REPORTDATE = "reportdate";
@@ -177,7 +177,7 @@ public class BoatContract {
 
 
         public static Uri buildBoatUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
+            return CONTENT_URI; //ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
         public static Uri buildBoatCode(String locationSetting) {

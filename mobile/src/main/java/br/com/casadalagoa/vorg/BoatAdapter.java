@@ -96,7 +96,7 @@ public class BoatAdapter extends CursorAdapter {
         viewHolder.dateView.setText(dateString);
 
         // Read weather forecast from cursor
-        String description = cursor.getString(BoatFragment.COL_BOAT_NAME);
+        String description = cursor.getString(BoatFragment.COL_CODE_NAME);
         // Find TextView and set weather forecast on it
         viewHolder.descriptionView.setText(description);
 

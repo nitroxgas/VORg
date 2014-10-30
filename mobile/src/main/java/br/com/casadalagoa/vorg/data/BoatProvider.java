@@ -65,19 +65,10 @@ public class BoatProvider extends ContentProvider {
 
     private Cursor getBoatByCodeSetting(Uri uri, String[] projection, String sortOrder) {
         String codeSetting = BoatContract.BoatEntry.getCodeSettingFromUri(uri);
-        String startDate = BoatContract.BoatEntry.getDateFromUri(uri);
-
         String[] selectionArgs;
         String selection;
-
-        if (startDate == null) {
             selection = sCodeSettingSelection;
             selectionArgs = new String[]{codeSetting};
-        } else {
-            selectionArgs = new String[]{codeSetting, startDate};
-            selection = sCodeSettingWithReportDateSelection;
-        }
-
         return sBoatByCodeSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 selection,
@@ -90,13 +81,24 @@ public class BoatProvider extends ContentProvider {
 
     private Cursor getBoatByCodeSettingAndDate(
             Uri uri, String[] projection, String sortOrder) {
-        String locationSetting = BoatContract.BoatEntry.getCodeSettingFromUri(uri);
-        String date = BoatContract.BoatEntry.getDateFromUri(uri);
+        String codeSetting = BoatContract.BoatEntry.getCodeSettingFromUri(uri);
+        return sBoatByCodeSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sCodeSettingSelection,
+                new String[]{codeSetting},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    private Cursor getBoatWithName(
+            Uri uri, String[] projection, String sortOrder) {
 
         return sBoatByCodeSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
-                sCodeSettingAndDaySelection,
-                new String[]{locationSetting, date},
+                null,
+                null,
                 null,
                 null,
                 sortOrder
@@ -150,7 +152,8 @@ public class BoatProvider extends ContentProvider {
             }
             // "Boat"
             case BOAT: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
+                retCursor = getBoatWithName(uri, projection, sortOrder);
+                       /*mOpenHelper.getReadableDatabase().query(
                         BoatContract.BoatEntry.TABLE_NAME,
                         projection,
                         selection,
@@ -158,7 +161,7 @@ public class BoatProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder
-                );
+                );*/
                 break;
             }
             // "CODE/*"
