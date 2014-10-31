@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -44,7 +45,8 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     private View mLayout;
     private Handler mHandler;
 
-    private TextView mTime, mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale;
+    private TextView mTime, mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale, mLegc, mDTL;
+    private ImageView mImg;
     private int mDataRec;  // Count received data
 
     private final static IntentFilter INTENT_FILTER;
@@ -105,6 +107,10 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mWSpeed = (TextView) stub.findViewById(R.id.mBSpeed);
                 mWAngle = (TextView) stub.findViewById(R.id.mWindDegree);
                 mLocale = (TextView) stub.findViewById(R.id.mLocal);
+                mDTL = (TextView) stub.findViewById(R.id.mDTLC);
+                mLegc = (TextView) stub.findViewById(R.id.mLC);
+                mLocale = (TextView) stub.findViewById(R.id.mLocal);
+                mImg = (ImageView) stub.findViewById(R.id.img_boat);
                 mTimeInfoReceiver.onReceive(VORG_watchface.this, registerReceiver(null, INTENT_FILTER));
                 mLayout = findViewById(R.id.lay_rel_inc);
                 mDataRec = 0;
@@ -173,17 +179,14 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
 
     private void generateEvent(final String title, final String text) {
         LOGD(TAG, "NEV:" + title);
-        runOnUiThread(new Runnable() {
+       /* runOnUiThread(new Runnable() {
             @Override
             public void run() {
-             if (mTWA != null) {
-                mTWA.setText(text);
-              } else
               LOGD(TAG, "EV:"+text);
                 // mIntroText.setVisibility(View.INVISIBLE);
                 // mDataItemListAdapter.add(new Event(title, text));
              }
-        });
+        });*/
     }
 
     private void updateUI(final String[] boat_data) {
@@ -191,12 +194,15 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             @Override
             public void run() {
                 if (mTWA != null) {
-                    mTWA.setText(boat_data[19]);
+                    mTWA.setText(boat_data[13]);
                     mLocale.setText(boat_data[5]+"\n"+boat_data[6]);
                     mRanking.setText(boat_data[9]);
-                    mSpeed.setText(boat_data[17]);
-                    mWSpeed.setText(boat_data[18]);
+                    mSpeed.setText(boat_data[16]);
+                    mWSpeed.setText(boat_data[17]);
                     mWAngle.setText(boat_data[19]);
+                    mLegc.setText("LC "+boat_data[11]+"%");
+                    mDTL.setText("DTL"+boat_data[7]+"\nDTLC"+boat_data[8]);
+                    mImg.setImageResource(Utility.getFormattedBoatHeading(getApplicationContext(),boat_data[23],boat_data[13]));
                 }
 
             }
@@ -236,7 +242,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     @Override
     public void onMessageReceived(MessageEvent event) {
         LOGD(TAG, "onMessageReceived: " + event);
-        mTWA.setText("Received");
+       // mTWA.setText("Received");
        generateEvent("Message", event.toString());
     }
 

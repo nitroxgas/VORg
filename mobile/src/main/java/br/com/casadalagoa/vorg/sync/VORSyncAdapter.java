@@ -391,6 +391,17 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
     }
 
+    public static void syncBoatImmediately(Context context,String boat_code) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        ContentResolver.requestSync(getSyncAccount(context),
+                context.getString(R.string.content_authority), bundle);
+        //sendData(Utility.getBoatArray(context, boat_code));
+        Log.v("VORGSyncAdapter:", "Sync Boat Performed");
+
+    }
+
     /**
      * Helper method to schedule the sync adapter periodic execution
      */

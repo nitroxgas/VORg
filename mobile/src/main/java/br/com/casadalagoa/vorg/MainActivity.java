@@ -23,7 +23,7 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
         boatFragment.setUseTodayLayout(false);
 
         VORSyncAdapter.initializeSyncAdapter(this);
-        Utility.getBoatArray(this.getBaseContext(), this.getBaseContext().getString(R.string.pref_boat_key));
+        //Utility.getBoatArray(this.getBaseContext(), this.getBaseContext().getString(R.string.pref_boat_key));
        // VORSyncAdapter.syncImmediately(this);
     }
 
