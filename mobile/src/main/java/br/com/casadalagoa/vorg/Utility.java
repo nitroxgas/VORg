@@ -20,21 +20,14 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import br.com.casadalagoa.vorg.data.BoatContract;
-import br.com.casadalagoa.vorg.sync.VORSyncAdapter;
 
 public class Utility {
 
 
-    public  void sendPreferredBoatNow(Context mContext){
+    /*public  void sendPreferredBoatNow(Context mContext){
         VORSyncAdapter.syncImmediately(mContext, true);
-    }
+    }*/
 
     public static String getPreferredBoat(Context context) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -46,11 +39,13 @@ public class Utility {
         SharedPreferences.Editor mEditor = mPrefs.edit();
         mEditor.putString(context.getString(R.string.pref_boat_key), boat_pref).apply();
     }
+/*
 
     public static String getNextUpdate(Context context) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         return mPrefs.getString(context.getString(R.string.pref_next_report),context.getString(R.string.pref_next_report_def));
     }
+*/
 
     public static void setNextUpdate(Context context, String nextUpdate) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -71,6 +66,7 @@ public class Utility {
         //[_id,b_code,reportdate,timeoffixdate,status,latitude,longitude,dtf,dtlc,legstanding,twentyfourhourrun,legprogress,dul,boatheadingtrue,smg,seatemperature,truwindspeedavg,speedthrowater,truewindspeedmax,truewinddirection,latestspeedthrowater,maxavgspeed,_id,code,name,color]
         return return_str;
     }
+/*
 
     public static boolean isMetric(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -78,8 +74,9 @@ public class Utility {
                 context.getString(R.string.pref_units_metric))
                 .equals(context.getString(R.string.pref_units_metric));
     }
+*/
 
-    public static String formatTemperature(Context context, double temperature, boolean isMetric) {
+ /*   public static String formatTemperature(Context context, double temperature, boolean isMetric) {
         double temp;
         if ( !isMetric ) {
             temp = 9*temperature/5+32;
@@ -93,12 +90,14 @@ public class Utility {
         Date date = BoatContract.getDateFromDb(dateString);
         return DateFormat.getDateInstance().format(date);
     }
-
+*/
     // Format used for storing dates in the database.  ALso used for converting those strings
     // back into date objects for comparison/processing.
-    public static final String DATE_FORMAT = "yyyyMMdd";
+   // public static final String DATE_FORMAT = "yyyyMMdd";
+/*
 
-    /**
+    */
+/**
      * Helper method to convert the database representation of the date into something to display
      * to users.  As classy and polished a user experience as "20140102" is, we can do better.
      *
@@ -106,7 +105,8 @@ public class Utility {
      * @param dateStr The db formatted date string, expected to be of the form specified
      *                in Utility.DATE_FORMAT
      * @return a user-friendly representation of the date.
-     */
+     *//*
+
     public static String getFriendlyDayString(Context context, String dateStr) {
         // The day string for forecast uses the following logic:
         // For today: "Today, June 8"
@@ -143,16 +143,20 @@ public class Utility {
             }
         }
     }
+*/
+/*
 
-    /**
+    */
+/**
      * Given a day, returns just the name to use for that day.
      * E.g "today", "tomorrow", "wednesday".
      *
-     * @param context Context to use for resource localization
-     * @param dateStr The db formatted date string, expected to be of the form specified
+     * //@param context Context to use for resource localization
+     * //@param dateStr The db formatted date string, expected to be of the form specified
      *                in Utility.DATE_FORMAT
      * @return
-     */
+     *//*
+
     public static String getDayName(Context context, String dateStr) {
         SimpleDateFormat dbDateFormat = new SimpleDateFormat(Utility.DATE_FORMAT);
         try {
@@ -184,13 +188,15 @@ public class Utility {
         }
     }
 
-    /**
+    */
+/**
      * Converts db date format to the format "Month day", e.g "June 24".
-     * @param context Context to use for resource localization
-     * @param dateStr The db formatted date string, expected to be of the form specified
+     * //@param context Context to use for resource localization
+     * //@param dateStr The db formatted date string, expected to be of the form specified
      *                in Utility.DATE_FORMAT
      * @return The day in the form of a string formatted "December 6"
-     */
+     *//*
+
     public static String getFormattedMonthDay(Context context, String dateStr) {
         SimpleDateFormat dbDateFormat = new SimpleDateFormat(Utility.DATE_FORMAT);
         try {
@@ -203,6 +209,7 @@ public class Utility {
             return null;
         }
     }
+*/
 
     public static String getWindHeading(float degrees){
         // From wind direction in degrees, determine compass direction as a string (e.g NW)
@@ -230,7 +237,7 @@ public class Utility {
     }
 
     public static int getFormattedBoatHeading(Context context, String boat_code, String Heading) {
-        String boat_heading="";
+        String boat_heading;
         if (!Heading.contains("null")) {
             boat_heading = boat_code + "_"+getWindHeading(Float.valueOf(Heading)) + "0001";
         } else
@@ -238,6 +245,7 @@ public class Utility {
         String packageName = context.getPackageName();
         return context.getResources().getIdentifier(boat_heading.toLowerCase(), "drawable", packageName);
     }
+/*
 
     public static String getFormattedWind(Context context, float windSpeed, float degrees) {
         int windFormat;
@@ -248,21 +256,21 @@ public class Utility {
             windSpeed = .621371192237334f * windSpeed;
         }
         String direction = getWindHeading(degrees);
-        // TODO: Include boat graphics here
-
         return String.format(context.getString(windFormat), windSpeed, direction);
     }
+*/
 
     /**
      * Helper method to provide the icon resource id according to the weather condition id returned
      * by the OpenWeatherMap call.
-     * @param weatherId from OpenWeatherMap API response
+     * //@param weatherId from OpenWeatherMap API response
      * @return resource id for the corresponding icon. -1 if no relation is found.
      */
+    /*
     public static int getIconResourceForWeatherCondition(int weatherId) {
         // Based on weather code data found at:
         // http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
-        /*
+        *//*
         if (weatherId >= 200 && weatherId <= 232) {
             return R.drawable.ic_storm;
         } else if (weatherId >= 300 && weatherId <= 321) {
@@ -286,7 +294,7 @@ public class Utility {
         } else if (weatherId >= 802 && weatherId <= 804) {
             return R.drawable.ic_cloudy;
         }
-        */
+        *//*
         return R.drawable.alvi_e0001;
     }
 
@@ -295,5 +303,5 @@ public class Utility {
 
         return R.drawable.alvi_e0001;
 
-    }
+    }*/
 }

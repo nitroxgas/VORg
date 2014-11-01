@@ -9,15 +9,15 @@ import br.com.casadalagoa.vorg.sync.VORSyncAdapter;
 
 public class MainActivity extends FragmentActivity implements BoatFragment.Callback  {
 
-    private final String LOG_TAG = MainActivity.class.getSimpleName();
+   // private final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private boolean mTwoPane;
+    //private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mTwoPane = false;
+        //mTwoPane = false;
         BoatFragment boatFragment =  ((BoatFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_boats));
         boatFragment.setUseTodayLayout(false);
@@ -29,7 +29,7 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
 
     @Override
     public void onItemSelected(String date) {
-            return;
+
     }
 
     @Override

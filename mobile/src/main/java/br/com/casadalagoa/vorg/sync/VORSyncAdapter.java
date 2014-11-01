@@ -48,7 +48,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+    //private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
     public final String LOG_TAG = VORSyncAdapter.class.getSimpleName();
 
@@ -94,7 +94,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
             BufferedReader reader = null;
 
             // Will contain the raw JSON response as a string.
-            String ReportJsonStr = null;
+            String ReportJsonStr;// = null;
 
             try {
                 // Construct the URL
@@ -113,7 +113,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
                 if (inputStream == null) {
                     // Nothing to do.
                     return;
@@ -125,7 +125,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                     // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                     // But it does make debugging a *lot* easier if you print out the completed
                     // buffer for debugging.
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if (buffer.length() == 0) {

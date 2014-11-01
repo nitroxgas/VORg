@@ -42,11 +42,11 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     private static final String TAG = "VOR_watchface";
 
     private GoogleApiClient mGoogleApiClient;
-   private View mLayout;
+   //private View mLayout;
 
     //private Handler mHandler;
 
-    private TextView mTime, mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale, mLegc, mDTL;
+    private TextView mTime, mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale, mLegc, mDTL, mCenter;
     private ImageView mImg;
     //private int mDataRec;  // Count received data
 
@@ -108,11 +108,18 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mLocale = (TextView) stub.findViewById(R.id.mLocal);
                 mDTL = (TextView) stub.findViewById(R.id.mDTLC);
                 mLegc = (TextView) stub.findViewById(R.id.mLC);
-                mLocale = (TextView) stub.findViewById(R.id.mLocal);
+                mCenter = (TextView) stub.findViewById(R.id.center_txt);
                 mImg = (ImageView) stub.findViewById(R.id.img_boat);
                 mTimeInfoReceiver.onReceive(VORG_watchface.this, registerReceiver(null, INTENT_FILTER));
-                mLayout = findViewById(R.id.lay_rel_inc);
-                //mDataRec = 0;
+               // mLayout = findViewById(R.id.lay_rel_inc);
+                mBattery.setText(""); mTime.setText(""); mRanking.setText("");
+                mSpeed.setText(""); mTWA.setText(""); mWSpeed.setText(""); mWAngle.setText("");
+                mLocale.setText(""); mDTL.setText(""); mLegc.setText("");
+
+                String TIME_FORMAT_DISPLAYED = "HH:mm";
+                mTime.setText(
+                        new SimpleDateFormat(TIME_FORMAT_DISPLAYED)
+                                .format(Calendar.getInstance().getTime()));
 
                   //  Here, we're just calling our onReceive() so it can set the current time.
 
@@ -155,7 +162,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         Wearable.DataApi.addListener(mGoogleApiClient, this);
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.NodeApi.addListener(mGoogleApiClient, this);
-        if (mRanking!=null)  mRanking.setText("C");
+       // if (mRanking!=null)  mRanking.setText("C");
     }
 
 
@@ -199,9 +206,11 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     mSpeed.setText(boat_data[16]);
                     mWSpeed.setText(boat_data[17]);
                     mWAngle.setText(boat_data[19]);
-                    mLegc.setText("LC "+boat_data[11]+"%");
-                    mDTL.setText("DTL"+boat_data[7]+"\nDTLC"+boat_data[8]);
+                    mLegc.setText("L1 "+boat_data[11]+"%");
+                    mDTL.setText("DTLC "+boat_data[7]+"\nDTL "+boat_data[8]);
                     mImg.setImageResource(Utility.getFormattedBoatHeading(getApplicationContext(),boat_data[23],boat_data[13]));
+                    mImg.setVisibility(View.VISIBLE);
+                    mCenter.setText("");
                 }
 
             }
