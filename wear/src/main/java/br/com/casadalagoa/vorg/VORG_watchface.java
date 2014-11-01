@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +26,7 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -42,12 +42,13 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     private static final String TAG = "VOR_watchface";
 
     private GoogleApiClient mGoogleApiClient;
-    private View mLayout;
-    private Handler mHandler;
+   private View mLayout;
+
+    //private Handler mHandler;
 
     private TextView mTime, mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale, mLegc, mDTL;
     private ImageView mImg;
-    private int mDataRec;  // Count received data
+    //private int mDataRec;  // Count received data
 
     private final static IntentFilter INTENT_FILTER;
     static {
@@ -57,16 +58,14 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         INTENT_FILTER.addAction(Intent.ACTION_TIME_CHANGED);
     }
 
-    private final String TIME_FORMAT_DISPLAYED = "HH:mm";
-
     private BroadcastReceiver mTimeInfoReceiver = new BroadcastReceiver(){
         @Override
         public void onReceive(Context arg0, Intent intent) {
             if (mTime!=null) {
+                String TIME_FORMAT_DISPLAYED = "HH:mm";
                 mTime.setText(
                         new SimpleDateFormat(TIME_FORMAT_DISPLAYED)
                                 .format(Calendar.getInstance().getTime()));
-                mSpeed.setText(String.valueOf(mDataRec));
             }
         }
     };
@@ -113,7 +112,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mImg = (ImageView) stub.findViewById(R.id.img_boat);
                 mTimeInfoReceiver.onReceive(VORG_watchface.this, registerReceiver(null, INTENT_FILTER));
                 mLayout = findViewById(R.id.lay_rel_inc);
-                mDataRec = 0;
+                //mDataRec = 0;
 
                   //  Here, we're just calling our onReceive() so it can set the current time.
 
@@ -121,7 +120,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
             }
         });
-        mHandler = new Handler();
+        //mHandler = new Handler();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
@@ -178,7 +177,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     }
 
     private void generateEvent(final String title, final String text) {
-        LOGD(TAG, "NEV:" + title);
+        LOGD(TAG, "NEV:" + title + text);
        /* runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -219,8 +218,8 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 String path = event.getDataItem().getUri().getPath();
                 if (BD_PATH.equals(path)) {
                     LOGD(TAG, "Boat Data Changed...");
-                    mDataRec++;
-                    generateEvent("DataItem Changed", event.getDataItem().getData().toString());
+                    //mDataRec++;
+                    generateEvent("DataItem Changed", Arrays.toString(event.getDataItem().getData()));
                     DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
                     String[] boat_data = dataItem.getDataMap().getStringArray(BD_KEY);
                     updateUI(boat_data);
@@ -232,7 +231,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 }
 
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
-                //generateEvent("DataItem Deleted", event.getDataItem().toString());
+                generateEvent("DataItem Deleted", event.getDataItem().toString());
             } else {
                 generateEvent("Unknown data event type", "Type = " + event.getType());
             }

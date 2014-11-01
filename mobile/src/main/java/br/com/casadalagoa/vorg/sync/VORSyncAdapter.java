@@ -2,23 +2,16 @@ package br.com.casadalagoa.vorg.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,11 +36,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Vector;
 
-import br.com.casadalagoa.vorg.MainActivity;
 import br.com.casadalagoa.vorg.R;
 import br.com.casadalagoa.vorg.Utility;
 import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
@@ -64,7 +54,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
     // Interval at which to sync with the weather, in milliseconds.
     // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 1000 * 60 * 5;// * 60;
+    public static final int SYNC_INTERVAL = 1000 * 60 * 60;// * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     private final Context mContext;
@@ -90,69 +80,75 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     @Override
     public void onPerformSync(Account account, Bundle bundle, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        Log.d(LOG_TAG, "Starting sync");
-        // Getting the zipcode to send to the API
-        String locationQuery = Utility.getPreferredBoat(mContext);
+        if (bundle.getBoolean("JUST_BOAT")) {
+            Log.d(LOG_TAG, "Starting sync just the boat");
+            sendData(Utility.getBoatArray(getContext(),Utility.getPreferredBoat(getContext())));
+        } else {
+            Log.d(LOG_TAG, "Starting sync");
 
-        // These two need to be declared outside the try/catch
-        // so that they can be closed in the finally block.
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
+            // String boatToQuery = Utility.getPreferredBoat(mContext);
 
-        // Will contain the raw JSON response as a string.
-        String ReportJsonStr = null;
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
 
-        try {
-            // Construct the URL
-            final String REPORT_BASE_URL =
-                    "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG1_2014.json";
+            // Will contain the raw JSON response as a string.
+            String ReportJsonStr = null;
 
-            // Not really needed, but if the query someday needs parameters just add them here
-            Uri builtUri = Uri.parse(REPORT_BASE_URL).buildUpon().build();
+            try {
+                // Construct the URL
+                final String REPORT_BASE_URL =
+                        "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG1_2014.json";
 
-            URL url = new URL(builtUri.toString());
+                // Not really needed, but if the query someday needs parameters just add them here
+                Uri builtUri = Uri.parse(REPORT_BASE_URL).buildUpon().build();
 
-            // Create the request to OpenBoatMap, and open the connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+                URL url = new URL(builtUri.toString());
 
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) {
-                // Nothing to do.
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+                // Create the request to OpenBoatMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
-                buffer.append(line + "\n");
-            }
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            if (buffer.length() == 0) {
-                // Stream was empty.  No point in parsing.
-                return;
-            }
-            ReportJsonStr = buffer.toString();
-            parseJSON(ReportJsonStr);
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error ", e);
-            // If the code didn't successfully get the boat data, there's no point in attemping
-            // to parse it.
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-                Log.d(LOG_TAG, "Exit closing stream");
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return;
+                }
+                ReportJsonStr = buffer.toString();
+                parseJSON(ReportJsonStr);
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                // If the code didn't successfully get the boat data, there's no point in attemping
+                // to parse it.
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                    Log.d(LOG_TAG, "Exit closing stream");
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
                 }
             }
         }
@@ -176,7 +172,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         // Boat information.  Each Report info is an element of the "trackslatest" array.
         final String OWM_LATEST = "trackslatest";
 
-        final String OWM_REPORTDATE = "reportdate";
+        /*final String OWM_REPORTDATE = "reportdate";
         final String OWM_TIMEOFFIX = "timeoffix";
         final String OWM_STATUS = "status";
         final String OWM_LATITUDE = "latitude";
@@ -196,6 +192,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         final String OWM_TRUEWINDDIRECTION = "truewinddirection";
         final String OWM_LATESTSPEEDTHROWATER = "latestspeedthrowater";
         final String OWM_MAXAVGSPEED = "maxavgspeed";
+        */
         if (ReportJsonStr!=null) {
             try {
 
@@ -204,6 +201,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                 JSONArray codeArray = ReportJson.getJSONArray(OWM_CODES);
                 JSONObject dataArray = ReportJson.getJSONObject("data");
                 String nextUpdate = ReportJson.getString("nextReport");
+                Utility.setNextUpdate(getContext(), nextUpdate);
                 JSONArray boatArray = dataArray.getJSONArray(OWM_LATEST);
 
                 Vector<ContentValues> cVVector = new Vector<ContentValues>(codeArray.length());
@@ -211,7 +209,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                 for (int i = 0; i < codeArray.length(); i++) {
                     // These are the values that will be collected.
                     String code, name, color;
-                    int codeId;
 
                     JSONObject codeJson = codeArray.getJSONObject(i);
                     code = codeJson.getString(OWM_CODE);
@@ -302,7 +299,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                     mContext.getContentResolver().bulkInsert(BoatEntry.CONTENT_URI, cvArray);
                 }
                 Log.d(LOG_TAG, "Sync Data Complete. " + cVVector.size() + " Inserted");
-                sendData(Utility.getBoatArray(mContext,"VEST"));
+                sendData(Utility.getBoatArray(mContext,Utility.getPreferredBoat(mContext)));
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
@@ -311,6 +308,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         //return;
     }
 
+/*
 
     private void notifyBoatData(double high, double low, String description, int weatherId) {
         Context context = getContext();
@@ -375,33 +373,23 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
             editor.commit();
         }
     }
+*/
 
      /**
      * Helper method to have the sync adapter sync immediately
      *
      * @param context An app context
      */
-    public static void syncImmediately(Context context) {
+    public static void syncImmediately(Context context, Boolean justBoat) {
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        bundle.putBoolean("JUST_BOAT", justBoat);
         ContentResolver.requestSync(getSyncAccount(context),
                 context.getString(R.string.content_authority), bundle);
         Log.v("VORGSyncAdapter:", "Sync Performed");
 
     }
-
-    public static void syncBoatImmediately(Context context,String boat_code) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        ContentResolver.requestSync(getSyncAccount(context),
-                context.getString(R.string.content_authority), bundle);
-        //sendData(Utility.getBoatArray(context, boat_code));
-        Log.v("VORGSyncAdapter:", "Sync Boat Performed");
-
-    }
-
     /**
      * Helper method to schedule the sync adapter periodic execution
      */
@@ -460,12 +448,10 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
         // Schedule the sync for periodic execution
         VORSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
-
         // Without calling setSyncAutomatically, our periodic sync will not be enabled.
         ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
-
         // Let's do a sync to get things started.
-        syncImmediately(context);
+        syncImmediately(context, false);
         Log.v("VORGSyncAdapter:", "Account Created");
     }
 
@@ -477,8 +463,13 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     //  ###### Wear Connection Implementation
     private static final String TAG = "VOR_watchface";
 
-    private static final String KEY_IN_RESOLUTION = "is_in_resolution";
-    private static final int REQUEST_RESOLVE_ERROR = 1000;
+/*
+    private static final int REQUEST_RESOLVE_ERROR;
+
+    static {
+        REQUEST_RESOLVE_ERROR = 1000;
+    }
+*/
 
     // Patch and data keys to send to watch
     private static final String BD_PATH = "/bd"; // Boat Data
@@ -486,11 +477,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
     private static int count = 5;
 
-
-    /**
-     * Request code for auto Google Play Services error resolution.
-     */
-    protected static final int REQUEST_CODE_RESOLUTION = 1;
 
     /**
      * Google API client.
@@ -527,18 +513,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         outState.putBoolean(KEY_IN_RESOLUTION, mIsInResolution);
     }*/
 
-  /*  *//**
-     * Handles Google Play Services resolution callbacks.
-     *//*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_CODE_RESOLUTION:
-                retryConnecting();
-                break;
-        }
-    }*/
+
 
     private void retryConnecting() {
         Log.v(TAG, "RetryConnecting");
@@ -637,6 +612,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
             }
         });*/
     }
+/*
 
     private Collection<String> getNodes() {
         HashSet<String> results = new HashSet<String>();
@@ -648,6 +624,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
         return results;
     }
+*/
 
     public void sendData(String[] boat_data) {
         if (mGoogleApiClient == null) {

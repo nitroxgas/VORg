@@ -15,6 +15,7 @@
  */
 package br.com.casadalagoa.vorg;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -126,7 +127,7 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            updateBoat();
+            VORSyncAdapter.syncImmediately(getActivity(), false);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -153,6 +154,9 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
                 if (cursor != null && cursor.moveToPosition(position)) {
                     ((Callback)getActivity())
                             .onItemSelected(cursor.getString(COL_BOAT_ID));
+                    Context mContext = getActivity().getBaseContext();
+                    Utility.setPreferredBoat(mContext,cursor.getString(COL_BOAT_CODE));
+                    updateBoat();
                 }
                 mPosition = position;
             }
@@ -181,7 +185,7 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
     }
 
     private void updateBoat() {
-        VORSyncAdapter.syncImmediately(getActivity());
+        VORSyncAdapter.syncImmediately(getActivity(), true);
     }
 
     @Override

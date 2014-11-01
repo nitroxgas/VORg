@@ -24,7 +24,7 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
 
         VORSyncAdapter.initializeSyncAdapter(this);
         //Utility.getBoatArray(this.getBaseContext(), this.getBaseContext().getString(R.string.pref_boat_key));
-       // VORSyncAdapter.syncImmediately(this);
+        VORSyncAdapter.syncImmediately(this, false);
     }
 
     @Override

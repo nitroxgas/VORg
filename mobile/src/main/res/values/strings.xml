@@ -9,8 +9,11 @@
     <string name="send_photo">Send Photo</string>
 
     <!-- Key name for storing the configured boat code -->
-    <string name="pref_boat_key" translatable="false">VEST</string>
+    <string name="pref_boat_key" translatable="false">pref_boat</string>
     <string name="pref_boat_default" translatable="false">VEST</string>
+
+    <string name="pref_next_report" translatable="false">pref_next_report</string>
+    <string name="pref_next_report_def" translatable="false">2014-01-01</string>
 
     <!--
          By convention, "action" denotes that this String will be used as the label for an Action,

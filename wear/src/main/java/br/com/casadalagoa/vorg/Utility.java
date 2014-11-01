@@ -27,6 +27,7 @@ public class Utility {
         return return_str;
     }
 
+
     public static String getWindHeading(float degrees){
         // From wind direction in degrees, determine compass direction as a string (e.g NW)
         // You know what's fun, writing really long if/else statements with tons of possible

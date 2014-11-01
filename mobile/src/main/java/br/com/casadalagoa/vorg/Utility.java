@@ -27,12 +27,35 @@ import java.util.Calendar;
 import java.util.Date;
 
 import br.com.casadalagoa.vorg.data.BoatContract;
+import br.com.casadalagoa.vorg.sync.VORSyncAdapter;
 
 public class Utility {
+
+
+    public  void sendPreferredBoatNow(Context mContext){
+        VORSyncAdapter.syncImmediately(mContext, true);
+    }
+
     public static String getPreferredBoat(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(context.getString(R.string.pref_boat_key),
-                context.getString(R.string.pref_boat_default));
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPrefs.getString(context.getString(R.string.pref_boat_key),context.getString(R.string.pref_boat_default));
+    }
+
+    public static void setPreferredBoat(Context context, String boat_pref) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString(context.getString(R.string.pref_boat_key), boat_pref).apply();
+    }
+
+    public static String getNextUpdate(Context context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPrefs.getString(context.getString(R.string.pref_next_report),context.getString(R.string.pref_next_report_def));
+    }
+
+    public static void setNextUpdate(Context context, String nextUpdate) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString(context.getString(R.string.pref_next_report), nextUpdate).apply();
     }
 
     public static String[] getBoatArray(Context context, String boat_pref){
@@ -47,12 +70,6 @@ public class Utility {
         //  0    1     2          3             4      5        6         7    8   9             10               11         12   13             14   15             16             17               18              19                  20                  21        22  23    24  25
         //[_id,b_code,reportdate,timeoffixdate,status,latitude,longitude,dtf,dtlc,legstanding,twentyfourhourrun,legprogress,dul,boatheadingtrue,smg,seatemperature,truwindspeedavg,speedthrowater,truewindspeedmax,truewinddirection,latestspeedthrowater,maxavgspeed,_id,code,name,color]
         return return_str;
-    }
-
-    public static void setPreferredBoat(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs.getString(context.getString(R.string.pref_boat_key),
-                context.getString(R.string.pref_boat_default));
     }
 
     public static boolean isMetric(Context context) {
