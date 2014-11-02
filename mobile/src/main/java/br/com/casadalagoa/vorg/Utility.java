@@ -18,6 +18,7 @@ package br.com.casadalagoa.vorg;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.location.Location;
 import android.preference.PreferenceManager;
 
 import br.com.casadalagoa.vorg.data.BoatContract;
@@ -54,11 +55,18 @@ public class Utility {
     }
 
     public static String[] getBoatArray(Context context, String boat_pref){
+
         String[] return_str = {"_id","b_code","reportdate","timeoffixdate","status","latitude","longitude","dtf","dtlc","legstanding","twentyfourhourrun","legprogress","dul","boatheadingtrue","smg","seatemperature","truwindspeedavg","speedthrowater","truewindspeedmax","truewinddirection","latestspeedthrowater","maxavgspeed","_id","code","name","color"};
         Cursor boat_data = context.getContentResolver().query(BoatContract.BoatEntry.buildBoatCode(boat_pref),null,null,null,null);
         for (boat_data.moveToFirst(); !boat_data.isAfterLast(); boat_data.moveToNext()) {
             for (int i = 0; i < 26; i++) {
                 return_str[i] = boat_data.getString(i);
+                if (i==5){
+                    return_str[i] = Location.convert(Double.valueOf(boat_data.getString(i)), Location.FORMAT_SECONDS);
+                }
+                if (i==6){
+                    return_str[i] = Location.convert(Double.valueOf(boat_data.getString(i)), Location.FORMAT_SECONDS);
+                }
             }
         }
         boat_data.close();

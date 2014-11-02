@@ -16,9 +16,11 @@
 package br.com.casadalagoa.vorg;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -31,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.Date;
 
@@ -46,6 +49,7 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
     private BoatAdapter mBoatAdapter;
 
     private String mCode;
+    private  TextView aboutView;
     private ListView mListView;
     private int mPosition = ListView.INVALID_POSITION;
     private boolean mUseTodayLayout;
@@ -161,6 +165,10 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
                 mPosition = position;
             }
         });
+        Context context = getActivity().getBaseContext();
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        aboutView = (TextView) rootView.findViewById(R.id.aboutView);
+        aboutView.setText(mPrefs.getString(context.getString(R.string.pref_next_report),context.getString(R.string.pref_next_report_def))+"\n"+context.getString(R.string.app_description_text));
 
         // If there's instance state, mine it for useful information.
         // The end-goal here is that the user never knows that turning their device sideways

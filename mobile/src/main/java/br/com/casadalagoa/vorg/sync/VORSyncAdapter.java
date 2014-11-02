@@ -54,7 +54,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
     // Interval at which to sync with the weather, in milliseconds.
     // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 1000 * 60 * 60;// * 60;
+    public static final int SYNC_INTERVAL = 1000 * 60 * 15;// * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     private final Context mContext;
@@ -437,7 +437,8 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
                 // If you don't set android:syncable="true" in
                 // in your <provider> element in the manifest,
-                // then call context.setIsSyncable(account, AUTHORITY, 1)
+                // then call
+                //context.setIsSyncable(account, AUTHORITY, 1)
                 // here.
                 onAccountCreated(newAccount, context);
             }

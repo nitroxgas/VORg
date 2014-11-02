@@ -26,7 +26,6 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -207,7 +206,9 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     mWSpeed.setText(boat_data[17]);
                     mWAngle.setText(boat_data[19]);
                     mLegc.setText("L1 "+boat_data[11]+"%");
-                    mDTL.setText("DTLC "+boat_data[7]+"\nDTL "+boat_data[8]);
+                    /*Long lDtlc = Long.getLong(boat_data[7]);
+                    int iDtl = Integer.getInteger(boat_data[12]);*/
+                    mDTL.setText("DTLC "+boat_data[7]+"\nDTL "+boat_data[12]);
                     mImg.setImageResource(Utility.getFormattedBoatHeading(getApplicationContext(),boat_data[23],boat_data[13]));
                     mImg.setVisibility(View.VISIBLE);
                     mCenter.setText("");
@@ -228,13 +229,21 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 if (BD_PATH.equals(path)) {
                     LOGD(TAG, "Boat Data Changed...");
                     //mDataRec++;
-                    generateEvent("DataItem Changed", Arrays.toString(event.getDataItem().getData()));
+                    //generateEvent("DataItem Changed", Arrays.toString(event.getDataItem().getData()));
                     DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
                     String[] boat_data = dataItem.getDataMap().getStringArray(BD_KEY);
-                    updateUI(boat_data);
-                    for (int i=0;i>boat_data.length;i++){
-                        LOGD(TAG, boat_data[i]);
+                   /* String tmp_str=String.valueOf(boat_data.length);
+                    for (int i=0;i<boat_data.length;i++){
+                        tmp_str+="("+boat_data[i]+")";
                     }
+                    Log.v(TAG, "DATA["+tmp_str+"]");
+                             //  0    1     2          3             4      5        6         7    8   9             10               11        12    13             14   15             16             17               18              19                  20                  21        22  23  24    25
+                            //[_id,b_code,reportdate,timeoffixdate,status,latitude,longitude,dtf,dtlc,legstanding,twentyfourhourrun,legprogress,dul,boatheadingtrue,smg,seatemperature,truwindspeedavg,speedthrowater,truewindspeedmax,truewinddirection,latestspeedthrowater,maxavgspeed,_id,code,name,color]
+                                 0    1       2                     3                 4      5        6         7          8     9   10  11   12       13   14    15   16  17  18   19  20  21   22   23    24           25
+                        //DATA[(818)(TBRU)(2014-11-02 12:40:00)(2014-11-02 12:40:00)(RAC)(-6.68983)(-40.64467)(01258.70)(-00001)(3)(324)(81)(00023.80)(99)(19.8)(null)(21)(20)(21)(330)(20)(20)(818)(TBRU)(Team Brunel)(d3dc3c)]
+
+                    */
+                    updateUI(boat_data);
                 } else {
                     LOGD(TAG, "Unrecognized path: " + path);
                 }
