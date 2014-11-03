@@ -1,6 +1,5 @@
 package br.com.casadalagoa.vorg;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -26,15 +25,27 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
         VORSyncAdapter.initializeSyncAdapter(this);
         //Utility.getBoatArray(this.getBaseContext(), this.getBaseContext().getString(R.string.pref_boat_key));
         VORSyncAdapter.syncImmediately(this, false);
-
-        final ActionBar actionBar = getActionBar();
-        actionBar.setSubtitle("Next Update: "+Utility.getNextUpdate(getBaseContext()));
     }
 
     @Override
     public void onItemSelected(String date) {
 
     }
+/*
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        final ActionBar actionBar = getActionBar();
+        actionBar.setSubtitle("Next Update: "+Utility.getNextUpdate(getBaseContext()));
+    }*/
+
+
+    /*@Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        final ActionBar actionBar = getActionBar();
+        actionBar.setSubtitle("Next Update: "+Utility.getNextUpdate(getBaseContext()));
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

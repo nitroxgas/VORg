@@ -39,7 +39,7 @@ public class BoatDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CodeEntry.TABLE_NAME);
+        //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CodeEntry.TABLE_NAME);
 
         final String SQL_CREATE_CODE_TABLE = "CREATE TABLE " + CodeEntry.TABLE_NAME + " (" +
                 CodeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +

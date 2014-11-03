@@ -54,7 +54,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
     // Interval at which to sync with the weather, in milliseconds.
     // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 1000 * 60 * 15;// * 60;
+    public static final int SYNC_INTERVAL = 1000 * 60; //* 60;// * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     private final Context mContext;
@@ -74,8 +74,8 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         }
         mGoogleApiClient.connect();
         Log.v(LOG_TAG, "Connecting GoogleApiClient");
+        VORSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
     }
-
 
     @Override
     public void onPerformSync(Account account, Bundle bundle, String authority,
@@ -83,7 +83,10 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         if (bundle.getBoolean("JUST_BOAT")) {
             Log.d(LOG_TAG, "Starting sync just the boat");
             sendData(Utility.getBoatArray(getContext(),Utility.getPreferredBoat(getContext())));
-        } else {
+        } else if (!Utility.hasDataToSync(getContext()))
+            Log.d(LOG_TAG, "No data to sync");
+          else
+           {
             Log.d(LOG_TAG, "Starting sync");
 
             // String boatToQuery = Utility.getPreferredBoat(mContext);
@@ -221,7 +224,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                     codeValues.put(CodeEntry.COLUMN_NAME, name);
                     codeValues.put(CodeEntry.COLUMN_COLOR, color);
                     cVVector.add(codeValues);
-                    Log.v(LOG_TAG, "Code: " + code + ", Name: " + name + " Color: " + color);
+                    //Log.v(LOG_TAG, "Code: " + code + ", Name: " + name + " Color: " + color);
                 }
                 if (cVVector.size() > 0) {
                     ContentValues[] cvArray = new ContentValues[cVVector.size()];
@@ -291,7 +294,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                     boatValues.put(BoatEntry.COLUMN_MAXAVGSPEED, maxavgspeed);
 
                     bVVector.add(boatValues);
-                    Log.v(LOG_TAG, "Data: " + dayForecast.toString());
+                    //Log.v(LOG_TAG, "Data: " + dayForecast.toString());
                 }
                 if (bVVector.size() > 0) {
                     ContentValues[] cvArray = new ContentValues[bVVector.size()];
@@ -434,7 +437,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                 if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
                     return null;
                 }
-
                 // If you don't set android:syncable="true" in
                 // in your <provider> element in the manifest,
                 // then call
@@ -446,7 +448,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     }
 
     private static void onAccountCreated(Account newAccount, Context context) {
-
         // Schedule the sync for periodic execution
         VORSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
         // Without calling setSyncAutomatically, our periodic sync will not be enabled.

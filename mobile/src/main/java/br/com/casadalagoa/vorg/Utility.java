@@ -21,6 +21,11 @@ import android.database.Cursor;
 import android.location.Location;
 import android.preference.PreferenceManager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import br.com.casadalagoa.vorg.data.BoatContract;
 
 public class Utility {
@@ -41,10 +46,47 @@ public class Utility {
         mEditor.putString(context.getString(R.string.pref_boat_key), boat_pref).apply();
     }
 
+    public static boolean hasDataToSync(Context context){
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        try {
+            java.util.Date date;
+            SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
+            date = date_f.parse(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
+            //System.out.println(date);
+            //System.out.println(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
+            long update_time = date.getTime();
+            long now_time = System.currentTimeMillis();
+            if (now_time>=update_time)
+                return true;
+            else
+                return false;
+        } catch (ParseException e) {
+            System.out.println(">>>>>"+"date parsing exception");
+        }
+        return true;
+    }
 
     public static String getNextUpdate(Context context) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return mPrefs.getString(context.getString(R.string.pref_next_report),context.getString(R.string.pref_next_report_def));
+        try {
+            java.util.Date date=null;
+            SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
+            date = date_f.parse(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
+            //System.out.println(date);
+            //System.out.println(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
+            long update_time = date.getTime();
+            long now_time = System.currentTimeMillis();
+            //CharSequence text= DateUtils.getRelativeTimeSpanString(update_time, now_time, 0);
+           // System.out.println("Differece: "+text.toString());
+            date_f.applyPattern("HH:mm:ss");
+            date_f.setTimeZone(TimeZone.getDefault());
+            return date_f.format(date).toString();
+        } catch (ParseException e) {
+            System.out.println(">>>>>"+"date parsing exception");
+        }
+        return "";
     }
 
 

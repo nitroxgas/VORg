@@ -13,13 +13,14 @@
     <string name="pref_boat_default" translatable="false">VEST</string>
 
     <string name="pref_next_report" translatable="false">pref_next_report</string>
-    <string name="pref_next_report_def" translatable="false">2014-01-01</string>
+    <string name="pref_next_report_def" translatable="false">2014-01-01 00:00:00</string>
 
     <!--
          By convention, "action" denotes that this String will be used as the label for an Action,
          typically from the action bar.  The ActionBar is limited real estate, so shorter is better.
     -->
     <string name="action_settings">Settings</string>
+
     <string name="action_map">Map Location</string>
     <string name="action_share">Share</string>
     <!-- Menu label to fetch updated weather info from the server -->
