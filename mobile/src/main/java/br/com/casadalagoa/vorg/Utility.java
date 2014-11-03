@@ -40,13 +40,13 @@ public class Utility {
         SharedPreferences.Editor mEditor = mPrefs.edit();
         mEditor.putString(context.getString(R.string.pref_boat_key), boat_pref).apply();
     }
-/*
+
 
     public static String getNextUpdate(Context context) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         return mPrefs.getString(context.getString(R.string.pref_next_report),context.getString(R.string.pref_next_report_def));
     }
-*/
+
 
     public static void setNextUpdate(Context context, String nextUpdate) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -61,11 +61,22 @@ public class Utility {
         for (boat_data.moveToFirst(); !boat_data.isAfterLast(); boat_data.moveToNext()) {
             for (int i = 0; i < 26; i++) {
                 return_str[i] = boat_data.getString(i);
-                if (i==5){
-                    return_str[i] = Location.convert(Double.valueOf(boat_data.getString(i)), Location.FORMAT_SECONDS);
-                }
-                if (i==6){
-                    return_str[i] = Location.convert(Double.valueOf(boat_data.getString(i)), Location.FORMAT_SECONDS);
+                String tmp_str = "";
+                if ((i==5)||(i==6)){
+                    tmp_str = Location.convert(Double.valueOf(boat_data.getString(i)), Location.FORMAT_SECONDS);
+                    if (i==5) {
+                        tmp_str=tmp_str.replace("-","S ");
+                        tmp_str=tmp_str.replace("+","N ");
+                    } else {
+                        tmp_str=tmp_str.replace("-","E ");
+                        tmp_str=tmp_str.replace("+","W ");
+                    }
+                    tmp_str=tmp_str.replaceFirst(":","º");
+                    tmp_str=tmp_str.replaceFirst(":","'");
+                    int idx = tmp_str.lastIndexOf(",");
+                    if (idx>0) tmp_str=tmp_str.substring(0,idx);
+                    tmp_str+="\"";
+                    return_str[i]=tmp_str;
                 }
             }
         }

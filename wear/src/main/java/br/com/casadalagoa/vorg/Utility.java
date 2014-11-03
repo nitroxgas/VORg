@@ -19,15 +19,6 @@ import android.content.Context;
 
 public class Utility {
 
-    public static String[] getBoatArray(String boat_pref){
-        String[] return_str = {"1","2","3"};
-     if (boat_pref=="1"){
-            return return_str;
-     }
-        return return_str;
-    }
-
-
     public static String getWindHeading(float degrees){
         // From wind direction in degrees, determine compass direction as a string (e.g NW)
         // You know what's fun, writing really long if/else statements with tons of possible
