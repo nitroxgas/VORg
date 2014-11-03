@@ -43,7 +43,7 @@
                 android:layout_marginLeft="29dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_content_picture" />
+                android:src="@drawable/ic_vof" />
         </RelativeLayout>
 
         <View
