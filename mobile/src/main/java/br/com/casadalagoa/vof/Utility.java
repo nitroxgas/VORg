@@ -108,13 +108,20 @@ public class Utility {
                 if ((i==5)||(i==6)){
                     tmp_str = Location.convert(Double.valueOf(boat_data.getString(i)), Location.FORMAT_SECONDS);
                     if (i==5) {
-                        tmp_str=tmp_str.replace("-","S ");
-                        tmp_str=tmp_str.replace("+","N ");
-                        tmp_str="R"+tmp_str;
+                        if (tmp_str.startsWith("-"))
+                            tmp_str=tmp_str.replace("-","S ");
+                         else if (tmp_str.startsWith("+"))
+                            tmp_str=tmp_str.replace("+","N ");
+                        else
+                            tmp_str="N "+tmp_str;
                         Log.v("Latitude",boat_data.getString(i) + " -> "+tmp_str);
                     } else {
-                        tmp_str=tmp_str.replace("-","E ");
-                        tmp_str=tmp_str.replace("+","W ");
+                        if (tmp_str.startsWith("-"))
+                            tmp_str=tmp_str.replace("-","E ");
+                        else if (tmp_str.startsWith("+"))
+                            tmp_str=tmp_str.replace("+","W ");
+                        else
+                            tmp_str="W "+tmp_str;
                     }
                     tmp_str=tmp_str.replaceFirst(":","º");
                     tmp_str=tmp_str.replaceFirst(":","'");

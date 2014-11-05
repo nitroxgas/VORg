@@ -88,7 +88,7 @@
             android:textSize="36dp"
             android:textIsSelectable="false"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -131,7 +131,10 @@
             android:singleLine="false"
             android:text="Waiting\nManual\nor Auto\nSync"
             android:gravity="center"
-            android:textStyle="bold" />
+            android:textColor="@color/light_grey"
+            android:shadowColor="@color/black"
+            android:background="@color/transparent"
+            android:autoText="false" />
 
         <TextView
             android:layout_width="40dp"

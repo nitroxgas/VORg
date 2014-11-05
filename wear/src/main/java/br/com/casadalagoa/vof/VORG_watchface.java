@@ -114,6 +114,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mBattery.setText(""); mTime.setText(""); mRanking.setText("");
                 mSpeed.setText(""); mTWA.setText(""); mWSpeed.setText(""); mWAngle.setText("");
                 mLocale.setText(""); mDTL.setText(""); mLegc.setText("");
+                mCenter.setText(getString(R.string.wait));
 
                 String TIME_FORMAT_DISPLAYED = "HH:mm";
                 mTime.setText(
@@ -211,7 +212,13 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     mDTL.setText("DTLC "+boat_data[7]+"\nDTL "+boat_data[12]);
                     mImg.setImageResource(Utility.getFormattedBoatHeading(getApplicationContext(),boat_data[23],boat_data[13]));
                     mImg.setVisibility(View.VISIBLE);
-                    mCenter.setText("");
+                    if (boat_data[4].equals("FIN")) {
+                        mCenter.setBackgroundColor(getResources().getColor(R.color.semitransparent_grey));
+                        mCenter.setText(boat_data[9] + "º\n" + getString(R.string.has_finished));
+                    }
+                    else
+                        mCenter.setText("");
+                    mCenter.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                 }
 
             }

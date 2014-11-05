@@ -10,10 +10,10 @@
 
     <!-- Key name for storing the configured boat code -->
     <string name="pref_boat_key" translatable="false">pref_boat</string>
-    <string name="pref_boat_default" translatable="false">VEST</string>
+    <string name="pref_boat_default" translatable="false">ADOR</string>
 
     <string name="pref_next_report" translatable="false">pref_next_report</string>
-    <string name="pref_next_report_def" translatable="false">2014-01-01 01:00:00</string>
+    <string name="pref_next_report_def" translatable="false">2014-01-01 00:00:00</string>
 
     <!--
          By convention, "action" denotes that this String will be used as the label for an Action,
