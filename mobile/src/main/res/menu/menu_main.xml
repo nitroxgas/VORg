@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="br.com.casadalagoa.vorg.MainActivity">
+    tools:context="br.com.casadalagoa.vof.MainActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_refresh"
         android:orderInCategory="100" android:showAsAction="never" />
 </menu>

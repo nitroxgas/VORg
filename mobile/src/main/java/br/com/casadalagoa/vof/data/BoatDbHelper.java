@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.casadalagoa.vorg.data;
+package br.com.casadalagoa.vof.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
-import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
+import br.com.casadalagoa.vof.data.BoatContract.BoatEntry;
+import br.com.casadalagoa.vof.data.BoatContract.CodeEntry;
 
 /**
  * Manages a local database for boat data.

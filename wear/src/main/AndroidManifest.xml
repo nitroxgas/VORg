@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.casadalagoa.vorg" >
+    package="br.com.casadalagoa.vof" >
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -15,7 +15,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".VORG_watchface"
+            android:name="br.com.casadalagoa.vof.VORG_watchface"
             android:allowEmbedded="true" android:label="Volvo Ocean Race Face" >
             <meta-data android:name="com.google.android.clockwork.home.preview" android:resource="@drawable/watchface_preview"/>
             <intent-filter>
@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
            <!-- <intent-filter>
-                <action android:name="br.com.casadalagoa.vorg.BOATDATA"/>
+                <action android:name="vofBOATDATA"/>
             </intent-filter>
            -->
         </activity>

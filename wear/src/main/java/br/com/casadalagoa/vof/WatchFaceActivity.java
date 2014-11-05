@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vorg;
+package br.com.casadalagoa.vof;
 
 /**
  * Created by George A. Silva on 20/10/2014.

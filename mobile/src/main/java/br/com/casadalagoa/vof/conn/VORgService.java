@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vorg.conn;
+package br.com.casadalagoa.vof.conn;
 
 import android.app.Activity;
 import android.content.DialogInterface;

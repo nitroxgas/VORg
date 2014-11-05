@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vorg;
+package br.com.casadalagoa.vof;
 
 import android.content.Context;
 import android.database.Cursor;

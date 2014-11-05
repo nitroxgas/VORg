@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vorg.sync;
+package br.com.casadalagoa.vof.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -38,10 +38,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
-import br.com.casadalagoa.vorg.R;
-import br.com.casadalagoa.vorg.Utility;
-import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
-import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
+import br.com.casadalagoa.vof.R;
+import br.com.casadalagoa.vof.Utility;
+import br.com.casadalagoa.vof.data.BoatContract.BoatEntry;
+import br.com.casadalagoa.vof.data.BoatContract.CodeEntry;
 
 public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // DataApi.DataListener,
         MessageApi.MessageListener, NodeApi.NodeListener,
@@ -54,7 +54,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
     // Interval at which to sync with the weather, in milliseconds.
     // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 1000 * 60; //* 60;// * 60;
+    public static final int SYNC_INTERVAL = 1000 * 60 * 1;// * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     private final Context mContext;

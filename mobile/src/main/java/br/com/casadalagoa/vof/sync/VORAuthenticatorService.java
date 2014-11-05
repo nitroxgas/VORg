@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vorg.sync;
+package br.com.casadalagoa.vof.sync;
 
 import android.app.Service;
 import android.content.Intent;

@@ -1,8 +1,8 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/fragment_boats"
-android:name="br.com.casadalagoa.vorg.BoatFragment"
+android:name="br.com.casadalagoa.vof.BoatFragment"
 android:layout_width="fill_parent"
 android:layout_height="fill_parent"
-tools:context="br.com.casadalagoa.vorg.BoatFragment"
+tools:context="br.com.casadalagoa.vof.BoatFragment"
 tools:layout="@android:layout/list_content" />

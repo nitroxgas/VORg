@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.casadalagoa.vorg;
+package br.com.casadalagoa.vof;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import br.com.casadalagoa.vorg.data.BoatContract;
+import br.com.casadalagoa.vof.data.BoatContract;
 
 public class Utility {
 
@@ -109,6 +110,8 @@ public class Utility {
                     if (i==5) {
                         tmp_str=tmp_str.replace("-","S ");
                         tmp_str=tmp_str.replace("+","N ");
+                        tmp_str="R"+tmp_str;
+                        Log.v("Latitude",boat_data.getString(i) + " -> "+tmp_str);
                     } else {
                         tmp_str=tmp_str.replace("-","E ");
                         tmp_str=tmp_str.replace("+","W ");

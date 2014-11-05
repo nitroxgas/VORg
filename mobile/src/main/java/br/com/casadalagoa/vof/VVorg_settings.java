@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vorg;
+package br.com.casadalagoa.vof;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -2,13 +2,13 @@
 
     <!-- These settings headers are only used on tablets. -->
 
-    <header android:fragment="br.com.casadalagoa.vorg.VVorg_settings$GeneralPreferenceFragment"
+    <header android:fragment="br.com.casadalagoa.vof.VVorg_settings$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
-    <header android:fragment="br.com.casadalagoa.vorg.VVorg_settings$NotificationPreferenceFragment"
+    <header android:fragment="br.com.casadalagoa.vof.VVorg_settings$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
 
-    <header android:fragment="br.com.casadalagoa.vorg.VVorg_settings$DataSyncPreferenceFragment"
+    <header android:fragment="br.com.casadalagoa.vof.VVorg_settings$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync" />
 
 </preference-headers>

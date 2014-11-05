@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.casadalagoa.vorg;
+package br.com.casadalagoa.vof;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -35,8 +35,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
-import br.com.casadalagoa.vorg.data.BoatContract.BoatEntry;
-import br.com.casadalagoa.vorg.data.BoatContract.CodeEntry;
+import br.com.casadalagoa.vof.data.BoatContract.BoatEntry;
+import br.com.casadalagoa.vof.data.BoatContract.CodeEntry;
 
 public class FetchBoatTask extends AsyncTask<String, Void, Void> {
 

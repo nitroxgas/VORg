@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.casadalagoa.vorg" >
+    package="br.com.casadalagoa.vof" >
 
     <!-- This permission is necessary in order to perform network access. -->
     <uses-permission android:name="android.permission.INTERNET" />
-
     <!-- Permissions required by the sync adapter -->
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
@@ -18,7 +17,7 @@
 
         <!--
         <activity
-            android:name="br.com.casadalagoa.vorg.conn.VORgService"
+            android:name="vofconn.VORgService"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,11 +30,11 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="br.com.casadalagoa.vorg.VVorg_settings"
+            android:name="br.com.casadalagoa.vof.VVorg_settings"
             android:label="@string/title_activity_vvorg_settings" >
         </activity>
        <!-- <activity
-            android:name="br.com.casadalagoa.vorg.VORG_MainMobile"
+            android:name="vofVORG_MainMobile"
             android:label="@string/title_activity_vorg__main_mobile" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,7 +42,7 @@
             </intent-filter>
         </activity>-->
         <activity
-            android:name="br.com.casadalagoa.vorg.MainActivity"
+            android:name="br.com.casadalagoa.vof.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,13 +51,14 @@
         </activity>
 
         <provider
-            android:name="br.com.casadalagoa.vorg.data.BoatProvider"
+            android:name="br.com.casadalagoa.vof.data.BoatProvider"
             android:authorities="@string/content_authority"
             android:exported="false"
             android:syncable="true" />
 
         <!-- SyncAdapter's dummy authentication service -->
-        <service android:name="br.com.casadalagoa.vorg.sync.VORAuthenticatorService" >
+        <service android:name="br.com.casadalagoa.vof.sync.VORAuthenticatorService"
+            android:icon="@drawable/ic_vof">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -69,9 +69,10 @@
 
         <!-- The SyncAdapter service -->
         <service
-            android:name="br.com.casadalagoa.vorg.sync.VORSyncService"
+            android:name="br.com.casadalagoa.vof.sync.VORSyncService"
             android:exported="true"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:icon="@drawable/ic_vof">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -83,7 +84,7 @@
                 android:resource="@xml/syncadapter" />
         </service>
         <!--<activity
-            android:name="br.com.casadalagoa.vorg.conn.WearCom"
+            android:name="vofconn.WearCom"
             android:label="@string/title_activity_wear_com" >
         </activity>-->
     </application>

@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vorg.data;
+package br.com.casadalagoa.vof.data;
 
 import android.content.ContentUris;
 import android.net.Uri;
@@ -17,7 +17,7 @@ public class BoatContract {
     // relationship between a domain name and its website.  A convenient string to use for the
     // content authority is the package name for the app, which is guaranteed to be unique on the
     // device.
-    public static final String CONTENT_AUTHORITY = "br.com.casadalagoa.vorg";
+    public static final String CONTENT_AUTHORITY = "br.com.casadalagoa.vof";
 
     // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
     // the content provider.

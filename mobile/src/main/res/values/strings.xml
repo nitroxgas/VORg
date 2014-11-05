@@ -13,7 +13,7 @@
     <string name="pref_boat_default" translatable="false">VEST</string>
 
     <string name="pref_next_report" translatable="false">pref_next_report</string>
-    <string name="pref_next_report_def" translatable="false">2014-01-01 00:00:00</string>
+    <string name="pref_next_report_def" translatable="false">2014-01-01 01:00:00</string>
 
     <!--
          By convention, "action" denotes that this String will be used as the label for an Action,
@@ -102,8 +102,8 @@
     <string name="format_share">        Weather for <xliff:g id="date">%1$s</xliff:g> in <xliff:g id="location">%2$s</xliff:g>:
         A high of <xliff:g id="high">%3$s</xliff:g> and low of <xliff:g id="low">%4$s</xliff:g></string>
     <!-- SyncAdapter related -->
-    <string name="sync_account_type">vorg.casadalagoa.com.br</string>
-    <string name="content_authority">"br.com.casadalagoa.vorg"</string>
+    <string name="sync_account_type">vof.casadalagoa.com.br</string>
+    <string name="content_authority">"br.com.casadalagoa.vof"</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_wear_com">WearCom</string>
     <string name="app_description_text">Chose one of the Teams above to follow with your smartwatch.\n Note that the app in your phone need the sync option enabled in order to refresh the data.\nThis is not an  Volvo Ocean Race software!\nFor more detailed info about the adventure and the teams, please install the awesome Volvo Ocean Race App from Google Play: https://play.google.com/store/apps/details?id=com.muevaelvolante.vor </string>
