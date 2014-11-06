@@ -131,9 +131,8 @@
             android:singleLine="false"
             android:text="Waiting\nManual\nor Auto\nSync"
             android:gravity="center"
-            android:textColor="@color/light_grey"
+            android:textColor="@color/white"
             android:shadowColor="@color/black"
-            android:background="@color/transparent"
             android:autoText="false" />
 
         <TextView

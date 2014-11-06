@@ -104,10 +104,11 @@ public class Utility {
         for (boat_data.moveToFirst(); !boat_data.isAfterLast(); boat_data.moveToNext()) {
             for (int i = 0; i < 26; i++) {
                 return_str[i] = boat_data.getString(i);
-                String tmp_str = "";
+                if (return_str[i].contains("null")) return_str[i]="NA";
+                String tmp_str;
                 if ((i==5)||(i==6)){
                     tmp_str = Location.convert(Double.valueOf(boat_data.getString(i)), Location.FORMAT_SECONDS);
-                    if (i==5) {
+                    if (i==6) {
                         if (tmp_str.startsWith("-"))
                             tmp_str=tmp_str.replace("-","S ");
                          else if (tmp_str.startsWith("+"))
@@ -117,11 +118,11 @@ public class Utility {
                         Log.v("Latitude",boat_data.getString(i) + " -> "+tmp_str);
                     } else {
                         if (tmp_str.startsWith("-"))
-                            tmp_str=tmp_str.replace("-","E ");
+                            tmp_str=tmp_str.replace("-","W ");
                         else if (tmp_str.startsWith("+"))
-                            tmp_str=tmp_str.replace("+","W ");
+                            tmp_str=tmp_str.replace("+","E ");
                         else
-                            tmp_str="W "+tmp_str;
+                            tmp_str="E "+tmp_str;
                     }
                     tmp_str=tmp_str.replaceFirst(":","º");
                     tmp_str=tmp_str.replaceFirst(":","'");
