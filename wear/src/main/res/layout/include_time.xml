@@ -157,7 +157,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="S 33º24&apos;40&quot;\nE 33º24&apos;40&quot;"
             android:id="@+id/mLocal"
-            android:gravity="center"
+            android:gravity="right"
             android:textColor="@color/green"
             android:textSize="12sp"
             android:textIsSelectable="false"

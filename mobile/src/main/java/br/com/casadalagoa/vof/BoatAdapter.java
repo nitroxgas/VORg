@@ -82,7 +82,7 @@ public class BoatAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         viewHolder.layView.setBackgroundColor(Color.parseColor("#"+cursor.getString(BoatFragment.COL_CODE_COLOR)));
-       // viewHolder.lay_itemView.setBackgroundColor(Color.parseColor("#"+cursor.getString(BoatFragment.COL_CODE_COLOR)));
+        //viewHolder.lay_itemView.setBackgroundColor(Color.parseColor("#"+cursor.getString(BoatFragment.COL_CODE_COLOR)));
 
         int viewType = getItemViewType(cursor.getPosition());
         switch (viewType) {
@@ -121,6 +121,7 @@ public class BoatAdapter extends CursorAdapter {
         // Leg Progress
         String mProgress = cursor.getString(BoatFragment.COL_BOAT_LEGPROGRESS);
         viewHolder.completitionView.setText(mProgress+"%");
+
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
@@ -135,5 +136,10 @@ public class BoatAdapter extends CursorAdapter {
     @Override
     public int getViewTypeCount() {
         return VIEW_TYPE_COUNT;
+    }
+
+    @Override
+    protected void onContentChanged() {
+        super.onContentChanged();
     }
 }

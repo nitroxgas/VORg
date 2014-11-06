@@ -33,19 +33,22 @@
             android:name="br.com.casadalagoa.vof.VVorg_settings"
             android:label="@string/title_activity_vvorg_settings" >
         </activity>
-       <!-- <activity
+        <!--
+        <activity
             android:name="vofVORG_MainMobile"
             android:label="@string/title_activity_vorg__main_mobile" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>-->
+        </activity>
+        -->
         <activity
             android:name="br.com.casadalagoa.vof.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -57,11 +60,13 @@
             android:syncable="true" />
 
         <!-- SyncAdapter's dummy authentication service -->
-        <service android:name="br.com.casadalagoa.vof.sync.VORAuthenticatorService"
-            android:icon="@drawable/ic_vof">
+        <service
+            android:name="br.com.casadalagoa.vof.sync.VORAuthenticatorService"
+            android:icon="@drawable/ic_vof" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
@@ -71,22 +76,34 @@
         <service
             android:name="br.com.casadalagoa.vof.sync.VORSyncService"
             android:exported="true"
-            android:label="@string/app_name"
-            android:icon="@drawable/ic_vof">
+            android:icon="@drawable/ic_vof"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-           <!-- <intent-filter>
+            <!--
+            <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-        <!--<activity
+        <!--
+        <activity
             android:name="vofconn.WearCom"
             android:label="@string/title_activity_wear_com" >
-        </activity>-->
+        </activity>
+        -->
+        <activity
+            android:name="br.com.casadalagoa.vof.about_activity"
+            android:label="@string/title_activity_about_activity"
+            android:parentActivityName="br.com.casadalagoa.vof.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.casadalagoa.vof.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

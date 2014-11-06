@@ -1,8 +1,10 @@
 package br.com.casadalagoa.vof;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import br.com.casadalagoa.vof.sync.VORSyncAdapter;
 
@@ -18,12 +20,11 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //mTwoPane = false;
-        BoatFragment boatFragment =  ((BoatFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_boats));
-        boatFragment.setUseTodayLayout(false);
+        /*BoatFragment boatFragment =  ((BoatFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_boats));*/
+
 
         VORSyncAdapter.initializeSyncAdapter(this);
-        //Utility.getBoatArray(this.getBaseContext(), this.getBaseContext().getString(R.string.pref_boat_key));
         VORSyncAdapter.syncImmediately(this, false);
     }
 
@@ -50,23 +51,27 @@ public class MainActivity extends FragmentActivity implements BoatFragment.Callb
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
-    /*@Override
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            VORSyncAdapter.syncImmediately(this);
+            VORSyncAdapter.syncImmediately(this, false);
             return true;
         }
-
+        if (id == R.id.action_about) {
+            startActivity(new Intent(this, about_activity.class));
+            return true;
+        }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
+
+
 }

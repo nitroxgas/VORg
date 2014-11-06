@@ -46,7 +46,7 @@ public class Utility {
 
     public static int getFormattedBoatHeading(Context context, String boat_code, String Heading) {
         String boat_heading="";
-        if (!Heading.contains("null")) {
+        if (!Heading.contains("NA")) {
             boat_heading = boat_code + "_"+getWindHeading(Float.valueOf(Heading)) + "0001";
         } else
             boat_heading = boat_code + "_e0001";

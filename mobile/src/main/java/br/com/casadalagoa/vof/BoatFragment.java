@@ -16,6 +16,7 @@
 package br.com.casadalagoa.vof;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,17 +24,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.Date;
 
 import br.com.casadalagoa.vof.data.BoatContract;
 import br.com.casadalagoa.vof.data.BoatContract.BoatEntry;
@@ -47,13 +44,12 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
     private BoatAdapter mBoatAdapter;
 
     private String mCode;
-    private TextView aboutView,nextUpdateView;
     private ListView mListView;
     private int mPosition = ListView.INVALID_POSITION;
-    private boolean mUseTodayLayout;
+   //private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
-    private static final String SELECTED_BOAT = "selected_boat";
+    //private static final String SELECTED_BOAT = "selected_boat";
 
     private static final int BOAT_LOADER = 0;
 
@@ -90,7 +86,7 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
     public static final int COL_BOAT_BOATHEADINGTRUE = 4;
     public static final int COL_CODE_COLOR = 8;
     public static final int COL_BOAT_CODE = 6;
-    public static final int COL_BOAT_DUL = 9;
+    //public static final int COL_BOAT_DUL = 9;
                    //        0            1            2              3                   4             5           6       7           8
     //SQLiteQuery: SELECT boats._id, legstanding, speedthrowater, truewindspeedmax, boatheadingtrue, legprogress, b_code, codes.name, codes.color FROM boats INNER JOIN codes ON boats.b_code = codes.code ORDER BY legstanding ASC
 
@@ -117,23 +113,11 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
         setHasOptionsMenu(true);
     }
 
-    @Override
+  /*  @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            VORSyncAdapter.syncImmediately(getActivity(), false);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -154,21 +138,15 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = mBoatAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
-                    ((Callback)getActivity())
+                    ((Callback) getActivity())
                             .onItemSelected(cursor.getString(COL_BOAT_ID));
                     Context mContext = getActivity().getBaseContext();
-                    Utility.setPreferredBoat(mContext,cursor.getString(COL_BOAT_CODE));
+                    Utility.setPreferredBoat(mContext, cursor.getString(COL_BOAT_CODE));
                     updateBoat();
                 }
                 mPosition = position;
             }
         });
-        Context context = getActivity().getBaseContext();
-        //SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        nextUpdateView = (TextView) rootView.findViewById(R.id.nextUpdateView);
-        nextUpdateView.setText("Next Update: " + Utility.getNextUpdate(context));
-       // aboutView = (TextView) rootView.findViewById(R.id.aboutView);
-       // aboutView.setText(mPrefs.getString(context.getString(R.string.pref_next_report),context.getString(R.string.pref_next_report_def))+"\n"+context.getString(R.string.app_description_text));
 
         // If there's instance state, mine it for useful information.
         // The end-goal here is that the user never knows that turning their device sideways
@@ -181,7 +159,7 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
 
-        mBoatAdapter.setUseTodayLayout(mUseTodayLayout);
+        //mBoatAdapter.setUseTodayLayout(mUseTodayLayout);
 
         return rootView;
     }
@@ -223,7 +201,7 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
         // To only show current and future dates, get the String representation for today,
         // and filter the query to return weather only for dates after or including today.
         // Only return data after today.
-        String startDate = BoatContract.getDbDateString(new Date());
+        //String startDate = BoatContract.getDbDateString(new Date());
 
         // Sort order:  Ascending, by date.
         String sortOrder = BoatEntry.COLUMN_LEG_STANDING + " ASC";
@@ -251,7 +229,18 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
             // to, do so now.
             mListView.smoothScrollToPosition(mPosition);
         }
+        try {
+            Context context = getActivity().getBaseContext();
 
+            View rootView = getView();
+            TextView nextUpdateView;
+            nextUpdateView = (TextView) rootView.findViewById(R.id.nextUpdateView);
+            if (nextUpdateView != null) {
+                nextUpdateView.setText("Next Update: " + Utility.getNextUpdate(context));
+            }
+        } catch (NullPointerException e){
+            Log.e("BoatFragment:", "No view to show update");
+        }
     }
 
     @Override
@@ -259,11 +248,15 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
         mBoatAdapter.swapCursor(null);
     }
 
-    public void setUseTodayLayout(boolean useTodayLayout) {
+   /* public void setUseTodayLayout(boolean useTodayLayout) {
         mUseTodayLayout = false;//useTodayLayout;
         if (mBoatAdapter != null) {
             mBoatAdapter.setUseTodayLayout(mUseTodayLayout);
         }
-    }
+    }*/
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 }

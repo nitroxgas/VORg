@@ -7,7 +7,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:background="@drawable/bg_grei">
 
         <TextView
             android:layout_width="match_parent"
@@ -24,24 +25,24 @@
             android:id="@+id/listview_boats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@null"
-            android:clickable="false"
-            android:drawSelectorOnTop="true" />
+            android:divider="@color/common_action_bar_splitter"
+            android:choiceMode="singleChoice"
+            android:dividerHeight="1dp"
+            android:background="#AAFFFFFF" />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:textAppearance="@android:style/TextAppearance.Holo.Widget.ActionBar.Title"
+            android:layout_height="wrap_content"
             android:text="@string/app_description_text"
-            android:id="@+id/aboutView"
-            android:background="#000000"
-            android:layout_weight="3"
+            android:id="@+id/textView2"
             android:textColor="#ffffffff"
             android:textColorLink="@android:color/secondary_text_light"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:textIsSelectable="false"
             android:linksClickable="true"
-            android:gravity="center|fill_horizontal|fill_vertical" />
+            android:gravity="center|fill_horizontal|center_horizontal|fill_vertical"
+            android:autoLink="web"
+            android:textAlignment="center"                         />
 
     </LinearLayout>
 

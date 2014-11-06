@@ -11,7 +11,6 @@
     <!-- Key name for storing the configured boat code -->
     <string name="pref_boat_key" translatable="false">pref_boat</string>
     <string name="pref_boat_default" translatable="false">ADOR</string>
-
     <string name="pref_next_report" translatable="false">pref_next_report</string>
     <string name="pref_next_report_def" translatable="false">2014-01-01 00:00:00</string>
 
@@ -20,11 +19,12 @@
          typically from the action bar.  The ActionBar is limited real estate, so shorter is better.
     -->
     <string name="action_settings">Settings</string>
-
     <string name="action_map">Map Location</string>
     <string name="action_share">Share</string>
     <!-- Menu label to fetch updated weather info from the server -->
-    <string name="action_refresh" translatable="false">Refresh</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_about" >About</string>
+
     <string name="title_activity_detail">Details</string>
     <string name="title_activity_settings">Settings</string>
 
@@ -33,8 +33,6 @@
 
     <!-- Key name for storing location in SharedPreferences [CHAR LIMIT=NONE] -->
     <string name="pref_location_key" translatable="false">location</string>
-
-
 
     <!-- Default postal code for location preference [CHAR LIMIT=NONE] -->
     <string name="pref_location_default" translatable="false">94043</string>
@@ -106,6 +104,9 @@
     <string name="content_authority">"br.com.casadalagoa.vof"</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_wear_com">WearCom</string>
-    <string name="app_description_text">Chose one of the Teams above to follow with your smartwatch.\n Note that the app in your phone need the sync option enabled in order to refresh the data.\nThis is not an  Volvo Ocean Race software!\nFor more detailed info about the adventure and the teams, please install the awesome Volvo Ocean Race App from Google Play: https://play.google.com/store/apps/details?id=com.muevaelvolante.vor </string>
+    <string name="app_description_text">Change your watchface to Volvo Ocean Face and chose one of the Teams above to follow with your watch.</string>
+    <string name="app_about_text">This is not an  Volvo Ocean Race software!\nFor more detailed info about the adventure and the teams, please install the awesome \bVolvo Ocean Race App from Google Play: \n https://play.google.com/store/apps/details?id=com.muevaelvolante.vor </string>
+    <string name="title_activity_about_activity">About</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
