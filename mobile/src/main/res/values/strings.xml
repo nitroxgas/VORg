@@ -105,7 +105,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_wear_com">WearCom</string>
     <string name="app_description_text">Change your watch face to Volvo Ocean Face and chose one of the Teams below to follow with your watch.</string>
-    <string name="app_about_text">This is not an  Volvo Ocean Race software!\nFor more detailed info about the adventure and the teams, please install the awesome \bVolvo Ocean Race App from Google Play: \n https://play.google.com/store/apps/details?id=com.muevaelvolante.vor </string>
+    <string name="app_about_text">This is not an  Volvo Ocean Race software!\nFor more detailed info about the adventure and the teams, please install the awesome Volvo Ocean Race App from Google Play: \n http://goo.gl/fUpUhi </string>
     <string name="title_activity_about_activity">About</string>
     <string name="hello_world">Hello world!</string>
     <string name="vof_name">Volvo Ocean Watch Face</string>

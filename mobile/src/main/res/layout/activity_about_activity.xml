@@ -14,17 +14,17 @@
         android:id="@+id/textView"
         android:textColor="#ffffffff"
         android:textColorLink="@android:color/secondary_text_light"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:textIsSelectable="false"
         android:linksClickable="true"
-        android:gravity="center|fill_horizontal|center_horizontal|fill_vertical"
+        android:gravity="center|center_horizontal"
         android:autoLink="web"
-        android:textAlignment="center"                 />
+        android:textAlignment="center" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton"
+        android:id="@+id/btn_google_play"
         android:layout_gravity="center"
         android:src="@drawable/en_generic_rgb_wo_45"
         android:layout_centerHorizontal="true"
