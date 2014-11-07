@@ -8,7 +8,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/bg_grei">
+        android:background="#66000000">
 
         <TextView
             android:layout_width="match_parent"
@@ -28,9 +28,10 @@
             android:choiceMode="singleChoice"
             android:background="#AAFFFFFF"
             android:divider="@android:color/transparent"
-            android:dividerHeight="@dimen/activity_horizontal_margin"
-            android:drawSelectorOnTop="true"
-            android:padding="5sp" />
+            android:dividerHeight="3dp"
+            android:drawSelectorOnTop="false"
+            android:padding="4sp"
+            android:headerDividersEnabled="true" />
 
         <TextView
             android:layout_width="match_parent"

@@ -18,7 +18,7 @@ import android.widget.TextView;
 public class BoatAdapter extends CursorAdapter {
 
     private static final int VIEW_TYPE_COUNT = 2;
-    private static final int VIEW_TYPE_TODAY = 0;
+    private static final int VIEW_TYPE_DESC = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
 
     // Flag to determine if we want to use a separate view for "today".
@@ -57,8 +57,8 @@ public class BoatAdapter extends CursorAdapter {
         int viewType = getItemViewType(cursor.getPosition());
         int layoutId = -1;
         switch (viewType) {
-            case VIEW_TYPE_TODAY: {
-                layoutId = R.layout.list_item;
+            case VIEW_TYPE_DESC: {
+                layoutId = R.layout.list_item_description;
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY: {
@@ -66,12 +66,9 @@ public class BoatAdapter extends CursorAdapter {
                 break;
             }
         }
-
         View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
-
         ViewHolder viewHolder = new ViewHolder(view);
         view.setTag(viewHolder);
-
         return view;
     }
 
@@ -85,42 +82,40 @@ public class BoatAdapter extends CursorAdapter {
 
         int viewType = getItemViewType(cursor.getPosition());
         switch (viewType) {
-            case VIEW_TYPE_TODAY: {
+            case VIEW_TYPE_DESC: {
                 // Get weather icon
-                viewHolder.iconView.setImageResource(Utility.getFormattedBoatHeading(this.mContext,
-                        cursor.getString(BoatFragment.COL_BOAT_CODE), cursor.getString(BoatFragment.COL_BOAT_BOATHEADINGTRUE)) );
+                viewHolder.nameView.setText(R.string.app_description_text);
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY: {
                 // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getFormattedBoatHeading(this.mContext,
                         cursor.getString(BoatFragment.COL_BOAT_CODE), cursor.getString(BoatFragment.COL_BOAT_BOATHEADINGTRUE)));
+                String dataString = "Speed: "+cursor.getString(BoatFragment.COL_BOAT_SPEEDTHROUGWATER)+"kn  HD:"+cursor.getString(BoatFragment.COL_BOAT_BOATHEADINGTRUE)+"º Wind:"+cursor.getString(BoatFragment.COL_BOAT_TRUEWINDSPEEDMAX)+"kn";
+
+                viewHolder.dataView.setText(dataString);
+
+                // Read weather forecast from cursor
+                String description = cursor.getString(BoatFragment.COL_CODE_NAME);
+                // Find TextView and set weather forecast on it
+                viewHolder.nameView.setText(description);
+
+                // For accessibility, add a content description to the icon field
+                viewHolder.iconView.setContentDescription(description);
+
+                // Read user preference for metric or imperial temperature units
+                // boolean isMetric = Utility.isMetric(context);
+
+                // Rank
+                String mRank = cursor.getString(BoatFragment.COL_BOAT_LEGSTANDING);
+                viewHolder.rankView.setText(mRank);
+
+                // Leg Progress
+                String mProgress = cursor.getString(BoatFragment.COL_BOAT_LEGPROGRESS);
+                viewHolder.completitionView.setText(mProgress+"%");
                 break;
             }
         }
-        String dataString = "Speed: "+cursor.getString(BoatFragment.COL_BOAT_SPEEDTHROUGWATER)+"kn  HD:"+cursor.getString(BoatFragment.COL_BOAT_BOATHEADINGTRUE)+"º Wind:"+cursor.getString(BoatFragment.COL_BOAT_TRUEWINDSPEEDMAX)+"kn";
-
-        viewHolder.dataView.setText(dataString);
-
-        // Read weather forecast from cursor
-        String description = cursor.getString(BoatFragment.COL_CODE_NAME);
-        // Find TextView and set weather forecast on it
-        viewHolder.nameView.setText(description);
-
-        // For accessibility, add a content description to the icon field
-        viewHolder.iconView.setContentDescription(description);
-
-        // Read user preference for metric or imperial temperature units
-        // boolean isMetric = Utility.isMetric(context);
-
-        // Rank
-        String mRank = cursor.getString(BoatFragment.COL_BOAT_LEGSTANDING);
-        viewHolder.rankView.setText(mRank);
-
-        // Leg Progress
-        String mProgress = cursor.getString(BoatFragment.COL_BOAT_LEGPROGRESS);
-        viewHolder.completitionView.setText(mProgress+"%");
-
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
@@ -129,7 +124,7 @@ public class BoatAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return (position == 0 && mUseTodayLayout) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position == 0 && mUseTodayLayout) ? VIEW_TYPE_DESC : VIEW_TYPE_FUTURE_DAY;
     }
 
     @Override

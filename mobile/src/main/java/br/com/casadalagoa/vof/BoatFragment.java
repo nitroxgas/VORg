@@ -128,20 +128,23 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
         mBoatAdapter = new BoatAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
+        View descView = inflater.inflate(R.layout.list_item_description,container,false);
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.listview_boats);
+        mListView.addHeaderView(descView);
         mListView.setAdapter(mBoatAdapter);
+        mBoatAdapter.setUseTodayLayout(false);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = mBoatAdapter.getCursor();
-                if (cursor != null && cursor.moveToPosition(position)) {
+                if (cursor != null && cursor.moveToPosition(position-1)) {
                     ((Callback) getActivity())
                             .onItemSelected(cursor.getString(COL_BOAT_ID));
                     Context mContext = getActivity().getBaseContext();
                     Utility.setPreferredBoat(mContext, cursor.getString(COL_BOAT_CODE));
+                    //Log.v("ListItemClick",cursor.getString(COL_BOAT_CODE));
                     updateBoat();
                 }
                 mPosition = position;
