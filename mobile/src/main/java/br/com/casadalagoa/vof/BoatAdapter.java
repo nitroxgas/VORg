@@ -2,7 +2,6 @@ package br.com.casadalagoa.vof;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,7 +80,7 @@ public class BoatAdapter extends CursorAdapter {
 
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        viewHolder.layView.setBackgroundColor(Color.parseColor("#"+cursor.getString(BoatFragment.COL_CODE_COLOR)));
+        //viewHolder.layView.setBackgroundColor(Color.parseColor("#"+cursor.getString(BoatFragment.COL_CODE_COLOR)));
         //viewHolder.lay_itemView.setBackgroundColor(Color.parseColor("#"+cursor.getString(BoatFragment.COL_CODE_COLOR)));
 
         int viewType = getItemViewType(cursor.getPosition());

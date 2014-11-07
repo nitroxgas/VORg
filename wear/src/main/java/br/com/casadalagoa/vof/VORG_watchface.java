@@ -213,7 +213,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     mImg.setImageResource(Utility.getFormattedBoatHeading(getApplicationContext(),boat_data[23],boat_data[13]));
                     mImg.setVisibility(View.VISIBLE);
                     if (boat_data[4].equals("FIN")) {
-                        mCenter.setBackgroundColor(getResources().getColor(R.color.back_dark));
+                        //mCenter.setBackgroundColor(getResources().getColor(R.color.back_dark));
                         mCenter.setText(boat_data[9] + "º\n" + getString(R.string.has_finished));
                     }
                     else {

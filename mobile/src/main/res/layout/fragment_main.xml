@@ -25,10 +25,12 @@
             android:id="@+id/listview_boats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@color/common_action_bar_splitter"
             android:choiceMode="singleChoice"
-            android:dividerHeight="1dp"
-            android:background="#AAFFFFFF" />
+            android:background="#AAFFFFFF"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="@dimen/activity_horizontal_margin"
+            android:drawSelectorOnTop="true"
+            android:padding="5sp" />
 
         <TextView
             android:layout_width="match_parent"

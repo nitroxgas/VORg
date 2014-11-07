@@ -98,6 +98,11 @@ public class Utility {
                 String tmp_str;
                 if ((i==5)||(i==6)){
                     tmp_str = Location.convert(Double.valueOf(boat_data.getString(i)), Location.FORMAT_SECONDS);
+                    tmp_str=tmp_str.replaceFirst(":","º ");
+                    tmp_str=tmp_str.replaceFirst(":","' ");
+                    int idx = tmp_str.lastIndexOf(",");
+                    if (idx>0) tmp_str=tmp_str.substring(0,idx);
+                    tmp_str+="\" ";
                     if (i==6) {
                         if (tmp_str.startsWith("-"))
                             tmp_str = tmp_str.replace("-", " ") + " S";
@@ -108,11 +113,6 @@ public class Utility {
                             tmp_str=tmp_str.replace("-"," ") + " W";
                         else
                             tmp_str=tmp_str.replace("+"," ") + " E";
-                    tmp_str=tmp_str.replaceFirst(":","º");
-                    tmp_str=tmp_str.replaceFirst(":","'");
-                    int idx = tmp_str.lastIndexOf(",");
-                    if (idx>0) tmp_str=tmp_str.substring(0,idx);
-                    tmp_str+="\"";
                     return_str[i]=tmp_str;
                 }
             }
