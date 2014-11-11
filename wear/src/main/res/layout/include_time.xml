@@ -115,9 +115,10 @@
             android:gravity="center"
             android:layout_alignWithParentIfMissing="false"
             android:layout_alignParentRight="false"
-            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/mTWA"
-            android:layout_marginRight="6dp" />
+            android:layout_marginRight="6dp"
+            android:layout_alignBottom="@+id/mTWA"
+            android:layout_marginBottom="4dp" />
 
         <TextView
             android:layout_width="70dp"
@@ -173,7 +174,8 @@
             android:textIsSelectable="false"
             android:layout_alignTop="@+id/mLC"
             android:layout_marginLeft="15dp"
-            android:gravity="left" />
+            android:gravity="left"
+            android:layout_marginTop="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -185,21 +187,22 @@
             android:gravity="center"
             android:layout_alignBottom="@+id/center_txt"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="-10dp" />
 
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textClock"
             android:textStyle="bold"
-            android:typeface="serif"
             android:textSize="32sp"
             android:textIsSelectable="false"
             android:format24Hour="HH:mm"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:visibility="visible"
-            android:gravity="bottom" />
+            android:gravity="bottom"
+            android:typeface="normal" />
 
         <TextClock
             android:layout_width="wrap_content"
@@ -207,7 +210,7 @@
             android:id="@+id/textClock2"
             android:format24Hour=":ss"
             android:layout_alignBottom="@+id/textClock"
-            android:typeface="serif"
+            android:typeface="normal"
             android:layout_alignTop="@+id/textClock"
             android:layout_alignParentEnd="false"
             android:layout_toRightOf="@+id/textClock"

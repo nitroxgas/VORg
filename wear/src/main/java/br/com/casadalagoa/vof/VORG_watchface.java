@@ -130,6 +130,13 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mSpeed.setText(""); mTWA.setText(""); mWSpeed.setText(""); mWAngle.setText("");
                 mLocale.setText(""); mDTL.setText(""); mLegc.setText("");
                 mCenter.setText(getString(R.string.wait));
+/*
+                Typeface typeFace=Typeface.createFromAsset(getAssets(),"fonts/woff2.ttf");
+                TextClock mTextClock = (TextClock) stub.findViewById(R.id.textClock);
+                TextClock mTextClock2 = (TextClock) stub.findViewById(R.id.textClock2);
+                mTextClock.setTypeface(typeFace);
+                mTextClock2.setTypeface(typeFace);
+*/
 
                 mNextEventDate = null;
                 mNextEvent = "";
@@ -233,14 +240,14 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     mDTL.setText("DTLC "+boat_data[7]+"\nDTL "+boat_data[12]);
                     mImg.setImageResource(Utility.getFormattedBoatHeading(getApplicationContext(),boat_data[23],boat_data[13]));
                     mImg.setVisibility(View.VISIBLE);
-                    if (boat_data[4].equals("FIN")) {
+                    /*if (boat_data[4].equals("FIN")) {
                         //mCenter.setBackgroundColor(getResources().getColor(R.color.back_dark));
-                        mCenter.setText(boat_data[9] + "º\n" + getString(R.string.has_finished));
+                       // mCenter.setText(boat_data[9] + "º\n" + getString(R.string.has_finished));
                     }
-                    else {
+                    else {*/
                         mCenter.setText("");
                         mCenter.setBackgroundColor(getResources().getColor(R.color.transparent));
-                    }
+                    //}
                 }
 
             }
