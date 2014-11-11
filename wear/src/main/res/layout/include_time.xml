@@ -28,13 +28,13 @@
             android:id="@+id/img_boat"
             android:src="@drawable/alvi_e0001"
             android:layout_marginLeft="70dp"
-            android:layout_marginTop="15dp"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="false"
             android:layout_alignParentEnd="false"
             android:visibility="visible"
             android:contentDescription="@string/app_name"
             android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginBottom="-10dp" />
 
 
@@ -67,7 +67,8 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="false"
             android:layout_above="@+id/mTWA"
-            android:layout_toLeftOf="@+id/mTWA" />
+            android:layout_alignRight="@+id/mTWA"
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:layout_width="35dp"
@@ -79,11 +80,11 @@
             android:textColor="#FFFFFFFF"
             android:textStyle="bold"
             android:background="@drawable/compass"
-            android:layout_alignParentEnd="false"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentStart="false"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="-15dp"
-            android:layout_centerVertical="true" />
+            android:layout_alignParentRight="false"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -112,10 +113,11 @@
             android:singleLine="true"
             android:background="@drawable/wingdegree"
             android:gravity="center"
-            android:layout_marginLeft="-20dp"
             android:layout_alignParentRight="false"
             android:layout_below="@+id/mTWA"
-            android:layout_toLeftOf="@+id/mTWA" />
+            android:layout_alignRight="@+id/mTWA"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:layout_width="70dp"
@@ -140,8 +142,8 @@
             android:gravity="center"
             android:singleLine="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp" />
+            android:layout_alignParentLeft="false"
+            android:layout_marginLeft="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -156,8 +158,9 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentBottom="false"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="15dp"
-            android:layout_alignBottom="@+id/img_boat" />
+            android:layout_marginBottom="30dp"
+            android:layout_alignBottom="@+id/img_boat"
+            android:typeface="monospace" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -208,7 +211,7 @@
             android:layout_toRightOf="@+id/textClock"
             android:layout_alignBottom="@+id/textClock"
             android:typeface="serif"
-            android:gravity="start|bottom"
+            android:gravity="bottom"
             android:layout_alignTop="@+id/textClock" />
 
     </RelativeLayout>
