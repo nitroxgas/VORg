@@ -63,42 +63,52 @@ public class Utility {
         mEditor.putString(context.getString(R.string.pref_next_event_time_key), boat_pref).apply();
     }
 
+    public static boolean getNextEventShow(Context context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPrefs.getString(context.getString(R.string.pref_next_event_show_key),context.getString(R.string.pref_next_event_show_default)).equals("true");
+    }
+
+    public static void setNextEventShow(Context context, String boat_pref) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString(context.getString(R.string.pref_next_event_show_key), boat_pref).apply();
+    }
+
     public static boolean hasDataToSync(Context context){
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        try {
-            java.util.Date date;
-            SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-            date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
-            date = date_f.parse(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
-            //System.out.println(date);
-            //System.out.println(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
-            long update_time = date.getTime();
-            long now_time = System.currentTimeMillis();
-            return now_time >= update_time;
-        } catch (ParseException e) {
-            System.out.println(">>>>>"+"date parsing exception");
+        String mNextUpdatePref = mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def));
+        //Log.v("HasDataToSync", mNextUpdatePref);
+        if (!mNextUpdatePref.equals("")) {
+            try {
+                java.util.Date date;
+                SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+                date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
+                date = date_f.parse(mNextUpdatePref);
+                long update_time = date.getTime();
+                long now_time = System.currentTimeMillis();
+                return now_time >= update_time;
+            } catch (ParseException e) {
+                System.out.println("HasDataToSync" + "date parsing exception");
+            }
         }
         return true;
     }
 
     public static String getNextUpdate(Context context) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        try {
-            java.util.Date date;
-            SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-            date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
-            date = date_f.parse(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
-            //System.out.println(date);
-            //System.out.println(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
-            /*long update_time = date.getTime();
-            long now_time = System.currentTimeMillis();*/
-            //CharSequence text= DateUtils.getRelativeTimeSpanString(update_time, now_time, 0);
-           // System.out.println("Differece: "+text.toString());
-            date_f.applyPattern("HH:mm:ss");
-            date_f.setTimeZone(TimeZone.getDefault());
-            return date_f.format(date);
-        } catch (ParseException e) {
-            System.out.println(">>>>>"+"date parsing exception");
+        String mNextUpdatePref = mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def));
+        if (!mNextUpdatePref.equals("")) {
+            try {
+                java.util.Date date;
+                SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+                date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
+                date = date_f.parse(mNextUpdatePref);
+                date_f.applyPattern("HH:mm:ss");
+                date_f.setTimeZone(TimeZone.getDefault());
+                return date_f.format(date);
+            } catch (ParseException e) {
+                System.out.println("GetNextUpdate" + "date parsing exception");
+            }
         }
         return "";
     }
@@ -107,6 +117,11 @@ public class Utility {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor mEditor = mPrefs.edit();
         mEditor.putString(context.getString(R.string.pref_next_report), nextUpdate).apply();
+    }
+
+    public static int getCurrentLeg(Context context){
+
+       return 2;
     }
 
     public static String[] getBoatArray(Context context, String boat_pref){

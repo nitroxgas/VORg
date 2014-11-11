@@ -101,8 +101,17 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
             try {
                 // Construct the URL
-                final String REPORT_BASE_URL =
-                        "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG1_2014.json";
+                final String REPORT_BASE_URL ;
+                switch (Utility.getCurrentLeg(getContext())) {
+                    case 1:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG1_2014.json";
+                        break;
+                    case 2:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG2_2014.json";
+                        break;
+                    default:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG1_2014.json";
+                }
 
                 // Not really needed, but if the query someday needs parameters just add them here
                 Uri builtUri = Uri.parse(REPORT_BASE_URL).buildUpon().build();
@@ -621,9 +630,9 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         if (mGoogleApiClient.isConnected()) {
             PutDataMapRequest dataMap = PutDataMapRequest.create(BD_PATH);
             dataMap.getDataMap().putStringArray(BD_KEY, boat_data);
-            dataMap.getDataMap().putInt("count", count++);
             dataMap.getDataMap().putString("next_event_title", Utility.getNextEventTitle(getContext()));
             dataMap.getDataMap().putString("next_event_time", Utility.getNextEventTime(getContext()));
+            dataMap.getDataMap().putBoolean("show_countdown", Utility.getNextEventShow(getContext()));
             PutDataRequest request = dataMap.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, request)
                     .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {

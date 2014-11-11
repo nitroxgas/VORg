@@ -16,7 +16,6 @@
 package br.com.casadalagoa.vof;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -63,12 +62,7 @@ public class Utility {
         try {
             java.util.Date date;
             SimpleDateFormat date_f = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss ZZZ");
-            //date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
-            Log.v("Util", nextEventStr);
             date = date_f.parse(nextEventStr);
-            Log.v("Util",date.toString());
-            //System.out.println(date);
-            //System.out.println(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
             return date;
         } catch (ParseException e) {
             System.out.println(">>>>>"+"date parsing exception");

@@ -140,11 +140,17 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = mBoatAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position-1)) {
-                    ((Callback) getActivity())
-                            .onItemSelected(cursor.getString(COL_BOAT_ID));
                     Context mContext = getActivity().getBaseContext();
-                    Utility.setPreferredBoat(mContext, cursor.getString(COL_BOAT_CODE));
-                    //Log.v("ListItemClick",cursor.getString(COL_BOAT_CODE));
+                    if (cursor.getPosition()==1){
+                        String show = Utility.getNextEventShow(mContext) ? "true" : "false";
+                        Utility.setNextEventShow(mContext, show);
+                    } else {
+                        ((Callback) getActivity())
+                                .onItemSelected(cursor.getString(COL_BOAT_ID));
+
+                        Utility.setPreferredBoat(mContext, cursor.getString(COL_BOAT_CODE));
+                        //Log.v("ListItemClick",cursor.getString(COL_BOAT_CODE));
+                    }
                     updateBoat();
                 }
                 mPosition = position;
@@ -232,17 +238,19 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
             // to, do so now.
             mListView.smoothScrollToPosition(mPosition);
         }
-        try {
-            Context context = getActivity().getBaseContext();
+        Context context = getActivity().getBaseContext();
+        String mNextUpdate = Utility.getNextUpdate(context);
+        Log.v("BoatFragment","("+mNextUpdate+")");
+        if (!mNextUpdate.equals("")) {
+            try {
+                View rootView = getView();
+                TextView nextUpdateView;
+                nextUpdateView = (TextView) rootView.findViewById(R.id.nextUpdateView);
+                nextUpdateView.setText("Next Update: " + mNextUpdate);
 
-            View rootView = getView();
-            TextView nextUpdateView;
-            nextUpdateView = (TextView) rootView.findViewById(R.id.nextUpdateView);
-            if (nextUpdateView != null) {
-                nextUpdateView.setText("Next Update: " + Utility.getNextUpdate(context));
+            } catch (NullPointerException e) {
+                Log.e("BoatFragment:", "No view to show update");
             }
-        } catch (NullPointerException e){
-            Log.e("BoatFragment:", "No view to show update");
         }
     }
 

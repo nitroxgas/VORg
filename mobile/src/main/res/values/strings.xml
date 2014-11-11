@@ -15,8 +15,22 @@
     <string name="pref_next_event_title_default" translatable="false">Cape Town In-Port Race</string>
     <string name="pref_next_event_time_key" translatable="false">countdownFinishTime</string>
     <string name="pref_next_event_time_default" translatable="false">Nov 15, 2014 12:00:00 +0000</string>
+    <string name="pref_next_event_show_key" translatable="false">show_countdown</string>
+    <string name="pref_next_event_show_default" translatable="false">false</string>
     <string name="pref_next_report" translatable="false">pref_next_report</string>
     <string name="pref_next_report_def" translatable="false">2014-01-01 00:00:00</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">vof.casadalagoa.com.br</string>
+    <string name="content_authority">"br.com.casadalagoa.vof"</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_wear_com">WearCom</string>
+    <string name="app_description_text">Change your watch face to Volvo Ocean Face and chose one of the Teams below to follow with your watch.\nClick here to show/hide a countdown to the next event.</string>
+    <string name="app_about_text">This is not an  Volvo Ocean Race software!\nFor more detailed info about the adventure and the teams, please install the awesome Volvo Ocean Race App from Google Play: \n http://goo.gl/fUpUhi </string>
+    <string name="app_wait_data">Wait for data....</string>
+    <string name="title_activity_about_activity">About</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="vof_name">Volvo Ocean Watch Face</string>
 
     <!--
          By convention, "action" denotes that this String will be used as the label for an Action,
@@ -103,16 +117,6 @@
     <!-- Share format [CHAR LIMIT=NONE] -->
     <string name="format_share">        Weather for <xliff:g id="date">%1$s</xliff:g> in <xliff:g id="location">%2$s</xliff:g>:
         A high of <xliff:g id="high">%3$s</xliff:g> and low of <xliff:g id="low">%4$s</xliff:g></string>
-    <!-- SyncAdapter related -->
-    <string name="sync_account_type">vof.casadalagoa.com.br</string>
-    <string name="content_authority">"br.com.casadalagoa.vof"</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_wear_com">WearCom</string>
-    <string name="app_description_text">Change your watch face to Volvo Ocean Face and chose one of the Teams below to follow with your watch.</string>
-    <string name="app_about_text">This is not an  Volvo Ocean Race software!\nFor more detailed info about the adventure and the teams, please install the awesome Volvo Ocean Race App from Google Play: \n http://goo.gl/fUpUhi </string>
-    <string name="app_wait_data">Wait for data....</string>
-    <string name="title_activity_about_activity">About</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="vof_name">Volvo Ocean Watch Face</string>
+
 
 </resources>

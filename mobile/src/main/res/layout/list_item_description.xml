@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fontFamily="sans-serif-condensed"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_margin="3dp"
         android:text="@string/app_description_text"
         android:textAlignment="center"
