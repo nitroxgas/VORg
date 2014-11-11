@@ -27,7 +27,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/img_boat"
             android:src="@drawable/alvi_e0001"
-            android:layout_marginLeft="70dp"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="false"
             android:layout_alignParentEnd="false"
@@ -35,30 +34,30 @@
             android:contentDescription="@string/app_name"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="-10dp" />
+            android:layout_marginBottom="-5dp" />
 
 
         <TextView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:text="10"
             android:id="@+id/mBSpeed"
             android:textColor="#FFFFFFFF"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:gravity="center"
             android:background="@drawable/boat"
             android:textStyle="bold"
             android:layout_alignParentEnd="false"
             android:layout_alignParentStart="false"
             android:layout_above="@+id/mRank"
-            android:layout_marginLeft="20dp"
-            android:layout_below="@+id/textClock" />
+            android:layout_marginLeft="30dp"
+            android:layout_marginBottom="5dp" />
 
         <TextView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:text="10"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:id="@+id/mWSpeed"
             android:textColor="#FFFFFFFF"
             android:gravity="center"
@@ -68,11 +67,12 @@
             android:layout_alignParentRight="false"
             android:layout_above="@+id/mTWA"
             android:layout_alignRight="@+id/mTWA"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="5dp" />
 
         <TextView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:text="220"
             android:textSize="14sp"
             android:id="@+id/mTWA"
@@ -82,9 +82,9 @@
             android:background="@drawable/compass"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="false"
-            android:layout_alignParentRight="false"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp" />
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
             android:id="@+id/watch_battery"
             android:textColor="#FF0000"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textIsSelectable="false"
             android:layout_toLeftOf="@+id/textClock"
@@ -113,11 +113,11 @@
             android:singleLine="true"
             android:background="@drawable/wingdegree"
             android:gravity="center"
-            android:layout_alignParentRight="false"
-            android:layout_below="@+id/mTWA"
-            android:layout_alignRight="@+id/mTWA"
             android:layout_alignWithParentIfMissing="false"
-            android:layout_marginRight="10dp" />
+            android:layout_alignParentRight="false"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/mTWA"
+            android:layout_marginRight="6dp" />
 
         <TextView
             android:layout_width="70dp"
@@ -131,8 +131,8 @@
             android:shadowColor="@color/black"             />
 
         <TextView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="1"
             android:id="@+id/mRank"
             android:textColor="@android:color/white"
@@ -143,7 +143,7 @@
             android:singleLine="true"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="false"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -168,12 +168,12 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="DTLC 5000\nDTC 30"
             android:id="@+id/mDTLC"
-            android:gravity="center"
             android:textColor="@color/green"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textIsSelectable="false"
-            android:layout_below="@+id/mRank"
-            android:layout_marginLeft="15dp" />
+            android:layout_alignTop="@+id/mLC"
+            android:layout_marginLeft="15dp"
+            android:gravity="left" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -183,11 +183,9 @@
             android:textColor="@color/green"
             android:textSize="14sp"
             android:gravity="center"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentStart="false"
-            android:layout_below="@+id/mDTLC"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="25dp" />
+            android:layout_alignBottom="@+id/center_txt"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp" />
 
         <TextClock
             android:layout_width="wrap_content"
@@ -201,18 +199,19 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:visibility="visible"
-            android:gravity="center|bottom" />
+            android:gravity="bottom" />
 
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textClock2"
             android:format24Hour=":ss"
-            android:layout_toRightOf="@+id/textClock"
             android:layout_alignBottom="@+id/textClock"
             android:typeface="serif"
-            android:gravity="bottom"
-            android:layout_alignTop="@+id/textClock" />
+            android:layout_alignTop="@+id/textClock"
+            android:layout_alignParentEnd="false"
+            android:layout_toRightOf="@+id/textClock"
+            android:gravity="center_vertical|left" />
 
     </RelativeLayout>
 

@@ -222,12 +222,12 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             public void run() {
                 if (mTWA != null) {
                     mTWA.setText(boat_data[13]);
-                    mLocale.setText(boat_data[6]+"  -  "+boat_data[5]);
+                    mLocale.setText(boat_data[6]+"     "+boat_data[5]);
                     mRanking.setText(boat_data[9]);
                     mSpeed.setText(boat_data[16]);
                     mWSpeed.setText(boat_data[17]);
                     mWAngle.setText(boat_data[19]);
-                    mLegc.setText("Leg "+boat_data[11]+"%");
+                    mLegc.setText("Leg\n"+boat_data[11]+"%");
                     /*Long lDtlc = Long.getLong(boat_data[7]);
                     int iDtl = Integer.getInteger(boat_data[12]);*/
                     mDTL.setText("DTLC "+boat_data[7]+"\nDTL "+boat_data[12]);
