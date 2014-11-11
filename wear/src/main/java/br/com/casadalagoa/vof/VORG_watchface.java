@@ -27,6 +27,7 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -47,6 +48,8 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
 
     private TextView mTime, mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale, mLegc, mDTL, mCenter;
     private ImageView mImg;
+    private String mNextEvent, mNextEventTime;
+    private Date mNextEventDate;
     //private int mDataRec;  // Count received data
 
     private final static IntentFilter INTENT_FILTER;
@@ -65,6 +68,19 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mTime.setText(
                         new SimpleDateFormat(TIME_FORMAT_DISPLAYED)
                                 .format(Calendar.getInstance().getTime()));
+
+                if (mNextEventDate!=null){
+                    long event_time = mNextEventDate.getTime();
+                    long now_time = System.currentTimeMillis();
+                    long until_time = event_time - now_time;
+                    int n = (int)((until_time)/(1000L));
+                    int daysLeft = n/(60*60*24);
+                    int hoursLeft = (n/3600)-(daysLeft*24);
+                    int minutesLeft = (n/60)-((hoursLeft*60)+(daysLeft*24*60));
+                    int secondsLeft = (n)-((minutesLeft*60)+(hoursLeft*60*60)+(daysLeft*24*60*60));
+                    mCenter.setText(String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "+String.valueOf(secondsLeft)+"s ");
+                    Log.v(TAG, String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "+String.valueOf(secondsLeft)+"s ");
+                }
             }
         }
     };
@@ -98,7 +114,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
                 mBattery = (TextView) stub.findViewById(R.id.watch_battery);
-                mTime = (TextView) stub.findViewById(R.id.watch_time);
+               // mTime = (TextView) stub.findViewById(R.id.watch_time);
                 mRanking = (TextView) stub.findViewById(R.id.mRank);
                 mSpeed = (TextView) stub.findViewById(R.id.mWSpeed);
                 mTWA = (TextView) stub.findViewById(R.id.mTWA);
@@ -109,21 +125,26 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mLegc = (TextView) stub.findViewById(R.id.mLC);
                 mCenter = (TextView) stub.findViewById(R.id.center_txt);
                 mImg = (ImageView) stub.findViewById(R.id.img_boat);
-                mTimeInfoReceiver.onReceive(VORG_watchface.this, registerReceiver(null, INTENT_FILTER));
-               // mLayout = findViewById(R.id.lay_rel_inc);
-                mBattery.setText(""); mTime.setText(""); mRanking.setText("");
+               // mLayout = findViewById(R.id.lay_rel_inc);  mTime.setText("");
+                mBattery.setText(""); mRanking.setText("");
                 mSpeed.setText(""); mTWA.setText(""); mWSpeed.setText(""); mWAngle.setText("");
                 mLocale.setText(""); mDTL.setText(""); mLegc.setText("");
                 mCenter.setText(getString(R.string.wait));
 
-                String TIME_FORMAT_DISPLAYED = "HH:mm";
+                mNextEventDate = null;
+                mNextEvent = "";
+                mNextEventTime = "";
+
+               // mTimeInfoReceiver.onReceive(VORG_watchface.this, registerReceiver(null, INTENT_FILTER));
+
+            /*    String TIME_FORMAT_DISPLAYED = "HH:mm";
                 mTime.setText(
                         new SimpleDateFormat(TIME_FORMAT_DISPLAYED)
                                 .format(Calendar.getInstance().getTime()));
-
+*/
                   //  Here, we're just calling our onReceive() so it can set the current time.
 
-                registerReceiver(mTimeInfoReceiver, INTENT_FILTER);
+               // registerReceiver(mTimeInfoReceiver, INTENT_FILTER);
                 registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
             }
         });
@@ -145,7 +166,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         Wearable.NodeApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
-        unregisterReceiver(mTimeInfoReceiver);
+        //unregisterReceiver(mTimeInfoReceiver);
         unregisterReceiver(mBatInfoReceiver);
 
     }
@@ -201,12 +222,12 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             public void run() {
                 if (mTWA != null) {
                     mTWA.setText(boat_data[13]);
-                    mLocale.setText(boat_data[6]+"\n"+boat_data[5]);
+                    mLocale.setText(boat_data[6]+" - "+boat_data[5]);
                     mRanking.setText(boat_data[9]);
                     mSpeed.setText(boat_data[16]);
                     mWSpeed.setText(boat_data[17]);
                     mWAngle.setText(boat_data[19]);
-                    mLegc.setText("L1 "+boat_data[11]+"%");
+                    mLegc.setText("Leg "+boat_data[11]+"%");
                     /*Long lDtlc = Long.getLong(boat_data[7]);
                     int iDtl = Integer.getInteger(boat_data[12]);*/
                     mDTL.setText("DTLC "+boat_data[7]+"\nDTL "+boat_data[12]);
@@ -240,6 +261,10 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     //generateEvent("DataItem Changed", Arrays.toString(event.getDataItem().getData()));
                     DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());
                     String[] boat_data = dataItem.getDataMap().getStringArray(BD_KEY);
+                    mNextEvent = dataItem.getDataMap().getString("next_event_title");
+                    mNextEventTime = dataItem.getDataMap().getString("next_event_time");
+                    mNextEventDate = Utility.NextEventDate(mNextEventTime);
+                    Log.v(TAG, mNextEventTime);
                    /* String tmp_str=String.valueOf(boat_data.length);
                     for (int i=0;i<boat_data.length;i++){
                         tmp_str+="("+boat_data[i]+")";

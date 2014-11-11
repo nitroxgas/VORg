@@ -16,6 +16,11 @@
 package br.com.casadalagoa.vof;
 
 import android.content.Context;
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Utility {
 
@@ -52,6 +57,23 @@ public class Utility {
             boat_heading = boat_code + "_e0001";
         String packageName = context.getPackageName();
         return context.getResources().getIdentifier(boat_heading.toLowerCase(), "drawable", packageName);
+    }
+
+    public static Date NextEventDate(String nextEventStr){
+        try {
+            java.util.Date date;
+            SimpleDateFormat date_f = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss ZZZ");
+            //date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
+            Log.v("Util", nextEventStr);
+            date = date_f.parse(nextEventStr);
+            Log.v("Util",date.toString());
+            //System.out.println(date);
+            //System.out.println(mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def)));
+            return date;
+        } catch (ParseException e) {
+            System.out.println(">>>>>"+"date parsing exception");
+        }
+        return null;
     }
 
 

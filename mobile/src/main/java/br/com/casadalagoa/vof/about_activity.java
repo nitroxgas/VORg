@@ -1,6 +1,8 @@
 package br.com.casadalagoa.vof;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,7 +19,8 @@ public class about_activity extends Activity {
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Uri uri = Uri.parse("http://goo.gl/fUpUhi");
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
             }
         });
 

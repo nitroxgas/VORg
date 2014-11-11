@@ -41,6 +41,28 @@ public class Utility {
         mEditor.putString(context.getString(R.string.pref_boat_key), boat_pref).apply();
     }
 
+    public static String getNextEventTitle(Context context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPrefs.getString(context.getString(R.string.pref_next_event_title_key),context.getString(R.string.pref_next_event_title_default));
+    }
+
+    public static void setNextEventTitle(Context context, String boat_pref) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString(context.getString(R.string.pref_next_event_title_key), boat_pref).apply();
+    }
+
+    public static String getNextEventTime(Context context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPrefs.getString(context.getString(R.string.pref_next_event_time_key),context.getString(R.string.pref_next_event_time_default));
+    }
+
+    public static void setNextEventTime(Context context, String boat_pref) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString(context.getString(R.string.pref_next_event_time_key), boat_pref).apply();
+    }
+
     public static boolean hasDataToSync(Context context){
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         try {

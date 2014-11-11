@@ -175,27 +175,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         // Boat information.  Each Report info is an element of the "trackslatest" array.
         final String OWM_LATEST = "trackslatest";
 
-        /*final String OWM_REPORTDATE = "reportdate";
-        final String OWM_TIMEOFFIX = "timeoffix";
-        final String OWM_STATUS = "status";
-        final String OWM_LATITUDE = "latitude";
-        final String OWM_LONGITUDE = "longitude";
-        final String OWM_DTF = "dtf";
-        final String OWM_DTLC = "dtlc";
-        final String OWM_LEGSTANDING = "legstanding";
-        final String OWM_TWENTYFOURHOURRUN = "twentyfourhourrun";
-        final String OWM_LEGPROGRESS = "legprogress";
-        final String OWM_DUL = "dul";
-        final String OWM_BOATHEADINGTRUE = "boatheadingtrue";
-        final String OWM_SMG = "smg";
-        final String OWM_SEATEMPERATURE = "seatemperature";
-        final String OWM_TRUWINDSPEEDAVG = "truwindspeedavg";
-        final String OWM_SPEEDTHROWATER = "speedthrowater";
-        final String OWM_TRUEWINDSPEEDMAX = "truewindspeedmax";
-        final String OWM_TRUEWINDDIRECTION = "truewinddirection";
-        final String OWM_LATESTSPEEDTHROWATER = "latestspeedthrowater";
-        final String OWM_MAXAVGSPEED = "maxavgspeed";
-        */
         if (ReportJsonStr!=null) {
             try {
 
@@ -643,6 +622,8 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
             PutDataMapRequest dataMap = PutDataMapRequest.create(BD_PATH);
             dataMap.getDataMap().putStringArray(BD_KEY, boat_data);
             dataMap.getDataMap().putInt("count", count++);
+            dataMap.getDataMap().putString("next_event_title", Utility.getNextEventTitle(getContext()));
+            dataMap.getDataMap().putString("next_event_time", Utility.getNextEventTime(getContext()));
             PutDataRequest request = dataMap.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, request)
                     .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
