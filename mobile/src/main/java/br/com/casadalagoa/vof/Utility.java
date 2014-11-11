@@ -120,8 +120,18 @@ public class Utility {
     }
 
     public static int getCurrentLeg(Context context){
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String mLeg = mPrefs.getString(context.getString(R.string.pref_leg_key),"2");
+        if (mLeg!=null)
+            return Integer.parseInt(mLeg);
+          else
+            return 2;
+    }
 
-       return 2;
+    public static void setCurrentLeg(Context context, String boat_pref) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString(context.getString(R.string.pref_leg_key), boat_pref).apply();
     }
 
     public static String[] getBoatArray(Context context, String boat_pref){

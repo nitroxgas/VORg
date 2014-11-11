@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_about_text"
-        android:id="@+id/textView"
+        android:id="@+id/mAbout"
         android:textColor="#ffffffff"
         android:textColorLink="@android:color/secondary_text_light"
         android:textSize="24sp"
@@ -28,7 +28,7 @@
         android:layout_gravity="center"
         android:src="@drawable/en_generic_rgb_wo_45"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/mAbout"
         android:contentDescription="Volvo Ocean Race App" />
 
 </RelativeLayout>

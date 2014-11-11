@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 
 public class about_activity extends Activity {
@@ -24,7 +26,21 @@ public class about_activity extends Activity {
             }
         });
 
-
+        TextView mTextView;
+        mTextView = (TextView) findViewById(R.id.mAbout);
+        mTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int leg = Utility.getCurrentLeg(getBaseContext());
+                String strLeg;
+                if (leg == 1) strLeg = "2";
+                else strLeg = "1";
+                Utility.setCurrentLeg(getBaseContext(), strLeg);
+                Utility.setNextUpdate(getBaseContext(),"2014-01-01 00:00:00");
+                Log.v("About Leg:", strLeg);
+                return true;
+            }
+        });
     }
 
 
