@@ -25,8 +25,6 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -46,11 +44,11 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
 
     //private Handler mHandler;
 
-    private TextView mTime, mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale, mLegc, mDTL, mCenter, mNextEventView;
+    private TextView mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale, mLegc, mDTL, mDTLC, mCenter, mNextEventView;
     private ImageView mImg;
     private String mNextEvent, mNextEventTime;
     private Date mNextEventDate;
-    private boolean mNextEventShow;
+    private boolean mNextEventShow, mTimeIntentFlag;
     //private int mDataRec;  // Count received data
 
     private final static IntentFilter INTENT_FILTER;
@@ -61,29 +59,26 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         INTENT_FILTER.addAction(Intent.ACTION_TIME_CHANGED);
     }
 
+    private void setCountDown(){
+        if (mNextEventDate!=null){
+            long event_time = mNextEventDate.getTime();
+            long now_time = System.currentTimeMillis();
+            long until_time = event_time - now_time;
+            int n = (int)((until_time)/(1000L));
+            int daysLeft = n/(60*60*24);
+            int hoursLeft = (n/3600)-(daysLeft*24);
+            int minutesLeft = (n/60)-((hoursLeft*60)+(daysLeft*24*60));
+            //int secondsLeft = (n)-((minutesLeft*60)+(hoursLeft*60*60)+(daysLeft*24*60*60));
+            mNextEventView.setText("Next Event\n"+mNextEvent+"\n"+String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
+            Log.v(TAG, String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
+        }
+    }
+
     private BroadcastReceiver mTimeInfoReceiver = new BroadcastReceiver(){
         @Override
         public void onReceive(Context arg0, Intent intent) {
-            if (mTime!=null) {
-                String TIME_FORMAT_DISPLAYED = "HH:mm";
-                mTime.setText(
-                        new SimpleDateFormat(TIME_FORMAT_DISPLAYED)
-                                .format(Calendar.getInstance().getTime()));
-
-                if (mNextEventDate!=null){
-                    long event_time = mNextEventDate.getTime();
-                    long now_time = System.currentTimeMillis();
-                    long until_time = event_time - now_time;
-                    int n = (int)((until_time)/(1000L));
-                    int daysLeft = n/(60*60*24);
-                    int hoursLeft = (n/3600)-(daysLeft*24);
-                    int minutesLeft = (n/60)-((hoursLeft*60)+(daysLeft*24*60));
-                    int secondsLeft = (n)-((minutesLeft*60)+(hoursLeft*60*60)+(daysLeft*24*60*60));
-                    mCenter.setText(String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "+String.valueOf(secondsLeft)+"s ");
-                    Log.v(TAG, String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "+String.valueOf(secondsLeft)+"s ");
-                }
+               setCountDown();
             }
-        }
     };
 
     private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver(){
@@ -115,14 +110,14 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
                 mBattery = (TextView) stub.findViewById(R.id.watch_battery);
-               // mTime = (TextView) stub.findViewById(R.id.watch_time);
+                mDTLC = (TextView) stub.findViewById(R.id.mDTLC);
                 mRanking = (TextView) stub.findViewById(R.id.mRank);
                 mSpeed = (TextView) stub.findViewById(R.id.mWSpeed);
                 mTWA = (TextView) stub.findViewById(R.id.mTWA);
                 mWSpeed = (TextView) stub.findViewById(R.id.mBSpeed);
                 mWAngle = (TextView) stub.findViewById(R.id.mWindDegree);
                 mLocale = (TextView) stub.findViewById(R.id.mLocal);
-                mDTL = (TextView) stub.findViewById(R.id.mDTLC);
+                mDTL = (TextView) stub.findViewById(R.id.mDTL);
                 mLegc = (TextView) stub.findViewById(R.id.mLC);
                 mCenter = (TextView) stub.findViewById(R.id.center_txt);
                 mImg = (ImageView) stub.findViewById(R.id.img_boat);
@@ -130,23 +125,15 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                         // mLayout = findViewById(R.id.lay_rel_inc);  mTime.setText("");
                 mBattery.setText(""); mRanking.setText("");
                 mSpeed.setText(""); mTWA.setText(""); mWSpeed.setText(""); mWAngle.setText("");
-                mLocale.setText(""); mDTL.setText(""); mLegc.setText("");
+                mLocale.setText(""); mDTL.setText(""); mDTLC.setText(""); mLegc.setText("");
                 mNextEventView.setText(getString(R.string.wait));
-               /* Typeface typeFace = Typeface.createFromFile("fonts/strait.ttf");//     createFromAsset(getAssets(), "strait.ttf");
-                TextClock mTextClock = (TextClock) stub.findViewById(R.id.textClock);
-                TextClock mTextClock2 = (TextClock) stub.findViewById(R.id.textClock2);
-                mTextClock.setTypeface(typeFace);
-                mTextClock2.setTypeface(typeFace);*/
 
-                mCenter.setText("");
-                mCenter.setBackgroundColor(getResources().getColor(R.color.transparent));
                 mNextEventDate = null;
                 mNextEvent = "";
                 mNextEventTime = "";
                 mNextEventShow = false;
-
-
-               // mTimeInfoReceiver.onReceive(VORG_watchface.this, registerReceiver(null, INTENT_FILTER));
+                mTimeIntentFlag = false;
+                mTimeInfoReceiver.onReceive(VORG_watchface.this, registerReceiver(null, INTENT_FILTER));
 
             /*    String TIME_FORMAT_DISPLAYED = "HH:mm";
                 mTime.setText(
@@ -169,6 +156,13 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         LOGD(TAG, "onCreated()");
     }
 
+    public void mUnregisterTimeReceiver(){
+        if (mTimeIntentFlag){
+            unregisterReceiver(mTimeInfoReceiver);
+            mTimeIntentFlag = false;
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -177,7 +171,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         Wearable.NodeApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
-        //unregisterReceiver(mTimeInfoReceiver);
+        mUnregisterTimeReceiver();
         unregisterReceiver(mBatInfoReceiver);
 
     }
@@ -238,12 +232,12 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     mSpeed.setText(boat_data[16]);
                     mWSpeed.setText(boat_data[17]);
                     mWAngle.setText(boat_data[19]);
-                    mLegc.setText("Leg\n"+boat_data[11]+"%");
-                    /*Long lDtlc = Long.getLong(boat_data[7]);
-                    int iDtl = Integer.getInteger(boat_data[12]);*/
-                    mDTL.setText("DTLC "+boat_data[7]+"\nDTL "+boat_data[12]);
+                    mLegc.setText("LC\n"+boat_data[11]+"%");
+                    mDTLC.setText("DTF "+boat_data[7]);
+                    mDTL.setText("DTL "+boat_data[12]);
                     mImg.setImageResource(Utility.getFormattedBoatHeading(getApplicationContext(),boat_data[23],boat_data[13]));
                     mImg.setVisibility(View.VISIBLE);
+                    mCenter.setText("");
                     /*if (boat_data[4].equals("FIN")) {
                         //mCenter.setBackgroundColor(getResources().getColor(R.color.back_dark));
                        // mCenter.setText(boat_data[9] + "º\n" + getString(R.string.has_finished));
@@ -252,9 +246,12 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     //}
                     if (mNextEventShow) {
                         mNextEventView.setVisibility(View.VISIBLE);
-                        mNextEventView.setText("Next Event\n"+mNextEvent+"\n"+mNextEventTime);
+                        setCountDown();
+                        registerReceiver(mTimeInfoReceiver, INTENT_FILTER);
+                        mTimeIntentFlag = true;
                     } else {
                         mNextEventView.setVisibility(View.INVISIBLE);
+                        mUnregisterTimeReceiver();
                     }
                 }
 

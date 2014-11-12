@@ -30,7 +30,7 @@
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="false"
             android:layout_alignParentEnd="false"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:contentDescription="@string/app_name"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
@@ -50,7 +50,7 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentStart="false"
             android:layout_above="@+id/mRank"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="35dp"
             android:layout_marginBottom="5dp" />
 
         <TextView
@@ -87,22 +87,6 @@
             android:layout_marginRight="10dp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="100%"
-            android:id="@+id/watch_battery"
-            android:textColor="#FF0000"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textIsSelectable="false"
-            android:layout_toLeftOf="@+id/textClock"
-            android:layout_alignBottom="@+id/textClock"
-            android:layout_alignTop="@+id/textClock"
-            android:layout_marginRight="3dp" />
-
-        <TextView
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:text="180"
@@ -129,7 +113,8 @@
             android:text="Waiting\nManual\nor Auto\nSync"
             android:gravity="center"
             android:textColor="@color/white"
-            android:shadowColor="@color/black"             />
+            android:shadowColor="@color/black"
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="45dp"
@@ -144,7 +129,7 @@
             android:singleLine="true"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="false"
-            android:layout_marginLeft="15dp" />
+            android:layout_marginLeft="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -167,42 +152,93 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="DTLC 5000\nDTC 30"
+            android:text="DTLC 5000"
             android:id="@+id/mDTLC"
             android:textColor="@color/green"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:textIsSelectable="false"
-            android:layout_alignTop="@+id/mLC"
-            android:layout_marginLeft="15dp"
-            android:gravity="left"
-            android:layout_marginTop="5dp" />
+            android:layout_above="@+id/mLocal"
+            android:layout_toStartOf="@+id/center_txt"
+            android:layout_marginBottom="34dp"
+            android:textAlignment="gravity"
+            android:gravity="center"
+            android:layout_marginRight="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LC 99%"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="DTL 5000"
+            android:id="@+id/mDTL"
+            android:textColor="@color/green"
+            android:textSize="12sp"
+            android:textIsSelectable="false"
+            android:layout_above="@+id/mLocal"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentStart="false"
+            android:layout_toRightOf="@+id/center_txt"
+            android:layout_marginBottom="34dp"
+            android:layout_marginLeft="5dp"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LC\n99%"
             android:id="@+id/mLC"
             android:textColor="@color/green"
             android:textSize="14sp"
             android:gravity="center"
-            android:layout_alignBottom="@+id/center_txt"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="-10dp" />
+            android:layout_alignBottom="@+id/mRank"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentEnd="false"
+            android:layout_alignTop="@+id/mRank"
+            android:layout_toRightOf="@+id/mRank"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="3dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Next Event\nCape Town In-Port Race\n in 3d 20h 50m 20s"
+            android:id="@+id/mCountDown"
+            android:textSize="20sp"
+            android:textIsSelectable="false"
+            android:gravity="center"
+            android:background="#77000000"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="100%"
+            android:id="@+id/watch_battery"
+            android:textColor="#FF0000"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textIsSelectable="false"
+            android:layout_toLeftOf="@+id/textClock"
+            android:layout_alignBottom="@+id/textClock"
+            android:layout_alignTop="@+id/textClock"
+            android:layout_marginRight="3dp" />
 
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textClock"
             android:textStyle="bold"
-            android:textSize="32sp"
+            android:textSize="34sp"
             android:textIsSelectable="false"
             android:format24Hour="HH:mm"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:visibility="visible"
-            android:gravity="bottom|right"
-            android:typeface="normal" />
+            android:gravity="bottom|end"
+            android:textAlignment="gravity" />
 
         <TextClock
             android:layout_width="wrap_content"
@@ -210,23 +246,12 @@
             android:id="@+id/textClock2"
             android:format24Hour=":ss"
             android:layout_alignBottom="@+id/textClock"
-            android:typeface="normal"
             android:layout_alignTop="@+id/textClock"
             android:layout_alignParentEnd="false"
             android:layout_toRightOf="@+id/textClock"
-            android:gravity="bottom|left" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Next Event\nCape Town In-Port Race\n in 3d 20h 50m 20s"
-            android:id="@+id/mCountDown"
-            android:textSize="16sp"
-            android:textIsSelectable="false"
-            android:gravity="center_horizontal"
-            android:background="@color/back_dark"
-            android:layout_alignParentStart="true"
-            android:layout_above="@+id/mDTLC" />
+            android:gravity="left"
+            android:layout_marginTop="17dp"
+            android:textAlignment="gravity" />
 
     </RelativeLayout>
 
