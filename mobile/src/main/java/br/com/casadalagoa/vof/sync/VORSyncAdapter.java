@@ -89,6 +89,8 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
            {
             Log.d(LOG_TAG, "Starting sync");
 
+            syncHeader();
+
             // String boatToQuery = Utility.getPreferredBoat(mContext);
 
             // These two need to be declared outside the try/catch
@@ -108,6 +110,27 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                         break;
                     case 2:
                         REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG2_2014.json";
+                        break;
+                    case 3:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG3_2014.json";
+                        break;
+                    case 4:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG4_2014.json";
+                        break;
+                    case 5:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG5_2014.json";
+                        break;
+                    case 6:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG6_2014.json";
+                        break;
+                    case 7:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG7_2014.json";
+                        break;
+                    case 8:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG8_2014.json";
+                        break;
+                    case 9:
+                        REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG9_2014.json";
                         break;
                     default:
                         REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG1_2014.json";
@@ -164,6 +187,80 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                 }
             }
         }
+    }
+
+    public void syncHeader(){
+
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
+
+        String ReportJsonStr;// = null;
+
+        try {
+            // Construct the URL
+            final String REPORT_BASE_URL = "http://www.volvooceanrace.com/en/headerData.json" ;
+            // Not really needed, but if the query someday needs parameters just add them here
+            Uri builtUri = Uri.parse(REPORT_BASE_URL).buildUpon().build();
+            URL url = new URL(builtUri.toString());
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+            // Read the input stream into a String
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuilder buffer = new StringBuilder();
+            if (inputStream == null) {
+                // Nothing to do.
+                return;
+            }
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line).append("\n");
+            }
+            if (buffer.length() == 0) {
+                // Stream was empty.  No point in parsing.
+                return;
+            }
+            ReportJsonStr = buffer.toString();
+            parseHeaderJSON(ReportJsonStr);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error ", e);
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+                Log.d(LOG_TAG, "Exit closing stream");
+            }
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (final IOException e) {
+                    Log.e(LOG_TAG, "Error closing stream", e);
+                }
+            }
+        }
+    }
+
+    public void parseHeaderJSON(String ReportJsonStr){
+
+        final String HD_DATA = "headerData";
+        final String HD_Title  = "title_mobile";
+        final String HD_FinishTime  = "countdownFinishTime";
+
+        if (ReportJsonStr!=null) {
+            try {
+                JSONObject ReportJson = new JSONObject(ReportJsonStr);
+                JSONObject headerData = ReportJson.getJSONObject(HD_DATA);
+                String nextEventDay = headerData.getString(HD_FinishTime);
+                String nextEventTitle = headerData.getString(HD_Title);
+                Utility.setNextEventTime(getContext(), nextEventDay);
+                Utility.setNextEventTitle(getContext(), nextEventTitle);
+                Log.d(LOG_TAG, "Sync Header Complete. ");
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+        } else Log.d(LOG_TAG, "No String to parse!");
+        //return;
     }
 
     public void parseJSON(String ReportJsonStr){

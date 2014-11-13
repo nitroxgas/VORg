@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -78,7 +79,7 @@ public class Utility {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         String mNextUpdatePref = mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def));
         //Log.v("HasDataToSync", mNextUpdatePref);
-        if (!mNextUpdatePref.equals("")) {
+        if (!mNextUpdatePref.equals("")&&(!mNextUpdatePref.contains("null"))) {
             try {
                 java.util.Date date;
                 SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
@@ -88,7 +89,7 @@ public class Utility {
                 long now_time = System.currentTimeMillis();
                 return now_time >= update_time;
             } catch (ParseException e) {
-                System.out.println("HasDataToSync" + "date parsing exception");
+                Log.e("HasDataToSync","date parsing exception",e);
             }
         }
         return true;
@@ -97,7 +98,10 @@ public class Utility {
     public static String getNextUpdate(Context context) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         String mNextUpdatePref = mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def));
-        if (!mNextUpdatePref.equals("")) {
+
+        Log.v("GetNextUpdate",mNextUpdatePref);
+
+        if ((!mNextUpdatePref.isEmpty())&&(!mNextUpdatePref.contains("null"))) {
             try {
                 java.util.Date date;
                 SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
@@ -107,25 +111,65 @@ public class Utility {
                 date_f.setTimeZone(TimeZone.getDefault());
                 return date_f.format(date);
             } catch (ParseException e) {
-                System.out.println("GetNextUpdate" + "date parsing exception");
+                Log.e("getNextUpdate","date parsing exception",e);
             }
         }
+
         return "";
     }
 
     public static void setNextUpdate(Context context, String nextUpdate) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor mEditor = mPrefs.edit();
+        //if ((nextUpdate.contains("null"))||(nextUpdate.isEmpty())) nextUpdate=context.getString(R.string.pref_next_report_def);
         mEditor.putString(context.getString(R.string.pref_next_report), nextUpdate).apply();
     }
 
     public static int getCurrentLeg(Context context){
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String mLeg = mPrefs.getString(context.getString(R.string.pref_leg_key),"2");
-        if (mLeg!=null)
-            return Integer.parseInt(mLeg);
-          else
-            return 2;
+        int retorno = 1;
+        try {
+            java.util.Date date;
+            SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
+            date = date_f.parse("2014-11-19 00:01:00");
+            Long now = System.currentTimeMillis();
+            if ( now > date.getTime() ){
+                retorno++;
+                date = date_f.parse("2015-01-03 00:01:00");
+                if ( now>date.getTime()){
+                    retorno++;
+                    date = date_f.parse("2015-02-08 00:01:00");
+                    if ( now >date.getTime()){
+                        retorno++;
+                        date = date_f.parse("2015-03-15 00:01:00");
+                        if ( now >date.getTime()){
+                            retorno++;
+                            date = date_f.parse("2015-04-19 00:01:00");
+                            if ( now >date.getTime()){
+                                retorno++;
+                                date = date_f.parse("2015-05-17 00:01:00");
+                                if ( now >date.getTime()){
+                                    retorno++;
+                                    date = date_f.parse("2015-06-07 00:01:00");
+                                    if ( now >date.getTime()){
+                                        retorno++;
+                                        date = date_f.parse("2015-06-16 00:01:00");
+                                        if ( now >date.getTime()){
+                                            retorno++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // date_f.format(date);
+        } catch (ParseException e) {
+            Log.e("getCurrentLeg","date parsing exception",e);
+        }
+        Log.v("GetCurrentLeg",String.valueOf(retorno));
+        return retorno;
     }
 
     public static void setCurrentLeg(Context context, String boat_pref) {
@@ -149,7 +193,7 @@ public class Utility {
                     tmp_str=tmp_str.replaceFirst(":","' ");
                     int idx = tmp_str.lastIndexOf(",");
                     if (idx>0) tmp_str=tmp_str.substring(0,idx);
-                    tmp_str+="\" ";
+                    tmp_str+="\"";
                     if (i==6) {
                         if (tmp_str.startsWith("-"))
                             tmp_str = tmp_str.replace("-", " ") + " S";

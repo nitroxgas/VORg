@@ -15,7 +15,7 @@
         android:layout_width="110dp"
         android:layout_height="100dp"
         android:id="@+id/imageView2"
-        android:src="@drawable/ic_vof"
+        android:src="@drawable/watchface_preview"
         android:paddingLeft="5dp"
         android:layout_marginLeft="5dp"
         android:contentDescription="@string/vof_name" />
@@ -23,7 +23,7 @@
     <TextView
         android:id="@+id/list_item_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
         android:textSize="16sp"
         android:layout_margin="3dp"

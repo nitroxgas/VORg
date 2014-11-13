@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Volvo Ocean Face</string>
+    <string name="action_about">Sur</string>
+    <string name="action_refresh">Reposer</string>
+    <string name="speed">Vitesse</string>
+    <string name="start">Début</string>
+    <string name="title_activity_about_activity">Sur</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="wind">Vent</string>
+    <string name="heading">Direction</string>
+    <string name="app_description_text">Changez votre visage de la montre à la Volvo Ocean visage et choisir l\'une des équipes ci-dessous pour suivre avec votre montre.\nCliquez ici pour afficher/masquer un compte à rebours pour le prochain événement.</string>
+    <string name="app_wait_data">En attente de données...</string>
+    <string name="app_about_text">Cela ne veut pas d\'un logiciel de la Volvo Ocean Race\nPour informations plus détaillées sur l\'aventure et les équipes, se il vous plaît installer le génial Volvo Ocean Race App de Google Play:\nhttp://goo.gl/fUpUhi</string>
+</resources>

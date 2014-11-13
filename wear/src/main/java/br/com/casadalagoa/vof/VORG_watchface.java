@@ -46,7 +46,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
 
     private TextView mBattery, mTWA, mWAngle, mWSpeed, mSpeed, mRanking, mLocale, mLegc, mDTL, mDTLC, mCenter, mNextEventView;
     private ImageView mImg;
-    private String mNextEvent, mNextEventTime;
+    private String mNextEvent, mNextEventTime, mNextEventLang;
     private Date mNextEventDate;
     private boolean mNextEventShow, mTimeIntentFlag;
     //private int mDataRec;  // Count received data
@@ -69,8 +69,8 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             int hoursLeft = (n/3600)-(daysLeft*24);
             int minutesLeft = (n/60)-((hoursLeft*60)+(daysLeft*24*60));
             //int secondsLeft = (n)-((minutesLeft*60)+(hoursLeft*60*60)+(daysLeft*24*60*60));
-            mNextEventView.setText("Next Event\n"+mNextEvent+"\n"+String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
-            Log.v(TAG, String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
+            mNextEventView.setText(mNextEventLang+"\n"+mNextEvent+"\n"+String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
+            //Log.v(TAG, String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
         }
     }
 
@@ -127,7 +127,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                 mSpeed.setText(""); mTWA.setText(""); mWSpeed.setText(""); mWAngle.setText("");
                 mLocale.setText(""); mDTL.setText(""); mDTLC.setText(""); mLegc.setText("");
                 mNextEventView.setText(getString(R.string.wait));
-
+                mNextEventLang = getString(R.string.next_event);
                 mNextEventDate = null;
                 mNextEvent = "";
                 mNextEventTime = "";
@@ -268,7 +268,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 String path = event.getDataItem().getUri().getPath();
                 if (BD_PATH.equals(path)) {
-                    LOGD(TAG, "Boat Data Changed...");
+                    //LOGD(TAG, "Boat Data Changed...");
                     //mDataRec++;
                     //generateEvent("DataItem Changed", Arrays.toString(event.getDataItem().getData()));
                     DataMapItem dataItem = DataMapItem.fromDataItem (event.getDataItem());

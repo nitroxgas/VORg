@@ -2,11 +2,15 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name">Volvo Ocean Face</string>
-    <string name="title_activity_vorg__main_mobile">VOR WatchFace</string>
-    <string name="start_wearable_activity">Start Wearable Activity</string>
+    <string name="title_activity_vorg__main_mobile" translatable="false">VOR WatchFace</string>
+    <string name="start_wearable_activity" translatable="false">Start Wearable Activity</string>
     <string name="start">Start</string>
-    <string name="take_photo">Take a Photo</string>
-    <string name="send_photo">Send Photo</string>
+    <string name="take_photo" translatable="false">Take a Photo</string>
+    <string name="send_photo" translatable="false">Send Photo</string>
+    <string name="speed">Speed</string>
+    <string name="wind">Wind</string>
+    <string name="heading">Heading</string>
+    <string name="version_name" translatable="false">VOFFree</string>
 
     <!-- Key name for storing the configured boat code -->
     <string name="pref_boat_key" translatable="false">pref_boat</string>
@@ -18,38 +22,38 @@
     <string name="pref_next_event_show_key" translatable="false">show_countdown</string>
     <string name="pref_next_event_show_default" translatable="false">false</string>
     <string name="pref_next_report" translatable="false">pref_next_report</string>
-    <string name="pref_next_report_def" translatable="false">2014-01-01 00:00:00</string>
+    <string name="pref_next_report_def" translatable="false">null</string>
     <string name="pref_leg_key" translatable="false">legkey</string>
     <string name="pref_leg_def" translatable="false">1</string>
 
     <!-- SyncAdapter related -->
-    <string name="sync_account_type">vof.casadalagoa.com.br</string>
-    <string name="content_authority">"br.com.casadalagoa.vof"</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_wear_com">WearCom</string>
+    <string name="sync_account_type" translatable="false">vof.casadalagoa.com.br</string>
+    <string name="content_authority" translatable="false">"br.com.casadalagoa.vof"</string>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="title_activity_wear_com" translatable="false">WearCom</string>
     <string name="app_description_text">Change your watch face to Volvo Ocean Face and chose one of the Teams below to follow with your watch.\nClick here to show/hide a countdown to the next event.</string>
-    <string name="app_about_text">This is not an  Volvo Ocean Race software!\nFor more detailed info about the adventure and the teams, please install the awesome Volvo Ocean Race App from Google Play: \n http://goo.gl/fUpUhi </string>
-    <string name="app_wait_data">Wait for data....</string>
+    <string name="app_about_text">This is not an Volvo Ocean Race software!\nFor more detailed info about the adventure and the teams, please install the awesome Volvo Ocean Race App from Google Play: \n http://goo.gl/fUpUhi</string>
+    <string name="app_wait_data">Waiting for data....</string>
     <string name="title_activity_about_activity">About</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="vof_name">Volvo Ocean Watch Face</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
+    <string name="vof_name" translatable="false">Volvo Ocean Watch Face</string>
 
     <!--
          By convention, "action" denotes that this String will be used as the label for an Action,
          typically from the action bar.  The ActionBar is limited real estate, so shorter is better.
     -->
     <string name="action_settings">Settings</string>
-    <string name="action_map">Map Location</string>
-    <string name="action_share">Share</string>
+
+    <string name="action_share" translatable="false">Share</string>
     <!-- Menu label to fetch updated weather info from the server -->
     <string name="action_refresh">Refresh</string>
     <string name="action_about" >About</string>
 
-    <string name="title_activity_detail">Details</string>
+    <string name="title_activity_detail" translatable="false">Details</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Label for the location preference [CHAR LIMIT=30] -->
-    <string name="pref_location_label">Location</string>
+    <string name="pref_location_label" translatable="false">Location</string>
 
     <!-- Key name for storing location in SharedPreferences [CHAR LIMIT=NONE] -->
     <string name="pref_location_key" translatable="false">location</string>
@@ -58,29 +62,29 @@
     <string name="pref_location_default" translatable="false">94043</string>
 
     <!-- Strings related to Notification preference -->
-    <string name="pref_last_notification">last_sync</string>
+    <string name="pref_last_notification" translatable="false">last_sync</string>
 
     <!-- Notification Format -->
-    <string name="format_notification">        Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s</xliff:g>         Low: <xliff:g id="low">%3$s</xliff:g></string>
+    <string name="format_notification" translatable="false">        Forecast: <xliff:g id="condition">%1$s</xliff:g> High: <xliff:g id="high">%2$s</xliff:g>         Low: <xliff:g id="low">%3$s</xliff:g></string>
 
     <!-- Strings related to Notification Enabled preference -->
     <string name="pref_enable_notifications_key" translatable="false">enable_notifications</string>
-    <string name="pref_enable_notifications_label">Weather Notifications</string>
-    <string name="pref_enable_notifications_true">Enabled</string>
-    <string name="pref_enable_notifications_false">Not Enabled</string>
+    <string name="pref_enable_notifications_label" translatable="false">Weather Notifications</string>
+    <string name="pref_enable_notifications_true" translatable="false">Enabled</string>
+    <string name="pref_enable_notifications_false" translatable="false">Not Enabled</string>
     <string name="pref_enable_notifications_default" translatable="false">true</string>
 
     <!-- Strings for formatting weather-related data -->
 
 
     <!-- Label for the temperature units preference [CHAR LIMIT=30] -->
-    <string name="pref_units_label">Temperature Units</string>
+    <string name="pref_units_label" translatable="false">Temperature Units</string>
 
     <!-- Label for metric option in temperature unit preference [CHAR LIMIT=25] -->
-    <string name="pref_units_label_metric">Metric</string>
+    <string name="pref_units_label_metric" translatable="false">Metric</string>
 
     <!-- Label for imperial option in temperature unit preference [CHAR LIMIT=25] -->
-    <string name="pref_units_label_imperial">Imperial</string>
+    <string name="pref_units_label_imperial" translatable="false">Imperial</string>
 
     <!-- Key name for temperature unit preference in SharedPreferences [CHAR LIMIT=NONE] -->
     <string name="pref_units_key" translatable="false">units</string>
@@ -92,32 +96,32 @@
     <string name="pref_units_imperial" translatable="false">imperial</string>
 
     <!-- Language-specific constants -->
-    <string name="today">Today</string>
+    <string name="today" translatable="false">Today</string>
 
     <!-- For labelling tomorrow's forecast [CHAR LIMIT=15] -->
-    <string name="tomorrow">Tomorrow</string>
+    <string name="tomorrow" translatable="false">Tomorrow</string>
 
     <!-- Date format [CHAR LIMIT=NONE] -->
-    <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
+    <string name="format_full_friendly_date" translatable="false"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
 
     <!-- Strings for formatting weather-related data -->
     <!-- Temperature format [CHAR LIMIT=5 -->
-    <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
+    <string name="format_temperature" translatable="false"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
 
     <!-- Windspeed formats -->
     <!-- Wind in mph [CHAR LIMIT=25] -->
-    <string name="format_wind_mph">        Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g></string>
+    <string name="format_wind_mph" translatable="false">        Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g></string>
     <!-- Wind in kph [CHAR LIMIT=25] -->
-    <string name="format_wind_kmh">        Wind: <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g></string>
+    <string name="format_wind_kmh" translatable="false">        Wind: <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g></string>
 
     <!-- Pressure format CHAR LIMIT=25] -->
-    <string name="format_pressure">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
+    <string name="format_pressure" translatable="false">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
 
     <!-- Humidity format CHAR LIMIT=25] -->
-    <string name="format_humidity">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%</string>
+    <string name="format_humidity" translatable="false">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%</string>
 
     <!-- Share format [CHAR LIMIT=NONE] -->
-    <string name="format_share">        Weather for <xliff:g id="date">%1$s</xliff:g> in <xliff:g id="location">%2$s</xliff:g>:
+    <string name="format_share" translatable="false">        Weather for <xliff:g id="date">%1$s</xliff:g> in <xliff:g id="location">%2$s</xliff:g>:
         A high of <xliff:g id="high">%3$s</xliff:g> and low of <xliff:g id="low">%4$s</xliff:g></string>
 
 

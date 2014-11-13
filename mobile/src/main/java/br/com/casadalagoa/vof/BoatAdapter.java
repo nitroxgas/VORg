@@ -91,7 +91,7 @@ public class BoatAdapter extends CursorAdapter {
                 // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getFormattedBoatHeading(this.mContext,
                         cursor.getString(BoatFragment.COL_BOAT_CODE), cursor.getString(BoatFragment.COL_BOAT_BOATHEADINGTRUE)));
-                String dataString = "Speed: "+cursor.getString(BoatFragment.COL_BOAT_SPEEDTHROUGWATER)+"kn  HD:"+cursor.getString(BoatFragment.COL_BOAT_BOATHEADINGTRUE)+"º Wind:"+cursor.getString(BoatFragment.COL_BOAT_TRUEWINDSPEEDMAX)+"kn";
+                String dataString = context.getString(R.string.speed)+": "+cursor.getString(BoatFragment.COL_BOAT_SPEEDTHROUGWATER)+"kn "+context.getString(R.string.heading)+":"+cursor.getString(BoatFragment.COL_BOAT_BOATHEADINGTRUE)+"º "+context.getString(R.string.wind)+":"+cursor.getString(BoatFragment.COL_BOAT_TRUEWINDSPEEDMAX)+"kn";
 
                 viewHolder.dataView.setText(dataString);
 

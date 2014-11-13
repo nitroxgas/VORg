@@ -237,14 +237,13 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
         }
         Context context = getActivity().getBaseContext();
         String mNextUpdate = Utility.getNextUpdate(context);
-        Log.v("BoatFragment","("+mNextUpdate+")");
+        //Log.v("BoatFragment","("+mNextUpdate+")");
         if (!mNextUpdate.equals("")) {
             try {
                 View rootView = getView();
                 TextView nextUpdateView;
                 nextUpdateView = (TextView) rootView.findViewById(R.id.nextUpdateView);
                 nextUpdateView.setText("Next Update: " + mNextUpdate);
-
             } catch (NullPointerException e) {
                 Log.e("BoatFragment:", "No view to show update");
             }

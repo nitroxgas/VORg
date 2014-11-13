@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Volvo Ocean Race Face</string>
+    <string name="app_name">Volvo Ocean Face</string>
     <string name="has_finished">Lieu</string>
     <string name="wait">Attente\nde données</string>
+    <string name="next_event">Prochain Évén</string>
 </resources>
