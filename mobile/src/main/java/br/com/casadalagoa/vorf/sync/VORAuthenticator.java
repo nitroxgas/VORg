@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vof.sync;
+package br.com.casadalagoa.vorf.sync;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;

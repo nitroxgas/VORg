@@ -27,8 +27,8 @@
     <string name="pref_leg_def" translatable="false">1</string>
 
     <!-- SyncAdapter related -->
-    <string name="sync_account_type" translatable="false">vof.casadalagoa.com.br</string>
-    <string name="content_authority" translatable="false">"br.com.casadalagoa.vof"</string>
+    <string name="sync_account_type" translatable="false">vorf.casadalagoa.com.br</string>
+    <string name="content_authority" translatable="false">"br.com.casadalagoa.vorf"</string>
     <string name="title_activity_main" translatable="false">MainActivity</string>
     <string name="title_activity_wear_com" translatable="false">WearCom</string>
     <string name="app_description_text">Change your watch face to Volvo Ocean Face and chose one of the Teams below to follow with your watch.\nClick here to show/hide a countdown to the next event.</string>

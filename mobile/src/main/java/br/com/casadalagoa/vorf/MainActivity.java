@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vof;
+package br.com.casadalagoa.vorf;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import br.com.casadalagoa.vof.sync.VORSyncAdapter;
+import br.com.casadalagoa.vorf.sync.VORSyncAdapter;
 
 
 public class MainActivity extends FragmentActivity implements BoatFragment.Callback  {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.casadalagoa.vof;
+package br.com.casadalagoa.vorf;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -32,9 +32,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import br.com.casadalagoa.vof.data.BoatContract;
-import br.com.casadalagoa.vof.data.BoatContract.BoatEntry;
-import br.com.casadalagoa.vof.sync.VORSyncAdapter;
+import br.com.casadalagoa.vorf.data.BoatContract;
+import br.com.casadalagoa.vorf.data.BoatContract.BoatEntry;
+import br.com.casadalagoa.vorf.sync.VORSyncAdapter;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link android.widget.ListView} layout.

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.casadalagoa.vof;
+package br.com.casadalagoa.vorf;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import br.com.casadalagoa.vof.data.BoatContract;
+import br.com.casadalagoa.vorf.data.BoatContract;
 
 public class Utility {
 

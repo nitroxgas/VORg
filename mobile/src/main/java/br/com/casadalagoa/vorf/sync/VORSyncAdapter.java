@@ -1,4 +1,4 @@
-package br.com.casadalagoa.vof.sync;
+package br.com.casadalagoa.vorf.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -7,10 +7,8 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -38,10 +36,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
-import br.com.casadalagoa.vof.R;
-import br.com.casadalagoa.vof.Utility;
-import br.com.casadalagoa.vof.data.BoatContract.BoatEntry;
-import br.com.casadalagoa.vof.data.BoatContract.CodeEntry;
+import br.com.casadalagoa.vorf.R;
+import br.com.casadalagoa.vorf.Utility;
+import br.com.casadalagoa.vorf.data.BoatContract.BoatEntry;
+import br.com.casadalagoa.vorf.data.BoatContract.CodeEntry;
 
 public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // DataApi.DataListener,
         MessageApi.MessageListener, NodeApi.NodeListener,
@@ -54,7 +52,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
     // Interval at which to sync with the weather, in milliseconds.
     // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 1000 * 60 * 1;// * 60;
+    public static final int SYNC_INTERVAL = 1000 * 60 * 5;// * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
     private final Context mContext;
@@ -485,16 +483,16 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
         Account account = getSyncAccount(context);
         String authority = context.getString(R.string.content_authority);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
                     syncPeriodic(syncInterval, flexTime).
                     setSyncAdapter(account, authority).build();
             ContentResolver.requestSync(request);
-        } else {
+        } else {*/
             ContentResolver.addPeriodicSync(account,
                     authority, new Bundle(), syncInterval);
-        }
+       // }
         Log.v("VORGSyncAdapter:", "Periodic Sync Configured");
     }
 
@@ -548,7 +546,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     }
 
     //  ###### Wear Connection Implementation
-    private static final String TAG = "VOR_watchface";
+    private static final String TAG = "VOR_WEARConnect";
 
 /*
     private static final int REQUEST_RESOLVE_ERROR;
@@ -616,7 +614,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.v(TAG, "GoogleApiClient connected");
-        // TODO: Start making API requests.
        // Wearable.DataApi.addListener(mGoogleApiClient, this);
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.NodeApi.addListener(mGoogleApiClient, this);

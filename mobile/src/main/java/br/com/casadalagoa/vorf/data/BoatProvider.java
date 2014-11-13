@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.casadalagoa.vof.data;
+package br.com.casadalagoa.vorf.data;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;

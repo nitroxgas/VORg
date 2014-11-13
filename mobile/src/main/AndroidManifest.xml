@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.casadalagoa.vof"
+    package="br.com.casadalagoa.vorf"
     android:versionCode="1" android:versionName="@string/app_name">
 
     <!-- This permission is necessary in order to perform network access. -->
@@ -32,7 +32,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="br.com.casadalagoa.vof.VVorg_settings"
+            android:name="br.com.casadalagoa.vorf.VVorg_settings"
             android:label="@string/title_activity_vvorg_settings" >
         </activity>
         <!--
@@ -46,7 +46,7 @@
         </activity>
         -->
         <activity
-            android:name="br.com.casadalagoa.vof.MainActivity"
+            android:name="br.com.casadalagoa.vorf.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,14 +55,14 @@
         </activity>
 
         <provider
-            android:name="br.com.casadalagoa.vof.data.BoatProvider"
+            android:name="br.com.casadalagoa.vorf.data.BoatProvider"
             android:authorities="@string/content_authority"
             android:exported="false"
             android:syncable="true" />
 
         <!-- SyncAdapter's dummy authentication service -->
         <service
-            android:name="br.com.casadalagoa.vof.sync.VORAuthenticatorService"
+            android:name="br.com.casadalagoa.vorf.sync.VORAuthenticatorService"
             android:icon="@drawable/ic_launcher" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -74,7 +74,7 @@
 
         <!-- The SyncAdapter service -->
         <service
-            android:name="br.com.casadalagoa.vof.sync.VORSyncService"
+            android:name="br.com.casadalagoa.vorf.sync.VORSyncService"
             android:exported="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name" >
@@ -97,12 +97,12 @@
         </activity>
         -->
         <activity
-            android:name="br.com.casadalagoa.vof.about_activity"
+            android:name="br.com.casadalagoa.vorf.about_activity"
             android:label="@string/title_activity_about_activity"
-            android:parentActivityName="br.com.casadalagoa.vof.MainActivity" >
+            android:parentActivityName="br.com.casadalagoa.vorf.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.casadalagoa.vof.MainActivity" />
+                android:value="br.com.casadalagoa.vorf.MainActivity" />
         </activity>
     </application>
 
