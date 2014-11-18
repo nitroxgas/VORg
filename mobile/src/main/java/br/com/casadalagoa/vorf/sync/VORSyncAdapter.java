@@ -54,6 +54,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
     public static final int SYNC_INTERVAL = 1000 * 60 * 5;// * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
+    private static final String START_ACTIVITY_PATH = "/start-activity";
 
     private final Context mContext;
 
@@ -661,16 +662,9 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     @Override //MessageListener
     public void onMessageReceived(final MessageEvent messageEvent) {
         Log.v(TAG, "Message Received!");
-        // A message from watch was received
-        /*
-        Implement the handler if UI interaction will be necessary
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });*/
-
+        if (messageEvent.getPath().equalsIgnoreCase(START_ACTIVITY_PATH)){
+            syncImmediately(getContext(),false);
+        }
     }
 
     @Override //NodeListener

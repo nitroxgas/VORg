@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.data.FreezableUtils;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
@@ -25,7 +27,9 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -36,6 +40,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     // Patch and data keys to send to watch
     private static final String BD_PATH = "/bd"; // Boat Data
     private static final String BD_KEY = "bd"; // Boat data array!
+    private static final String START_ACTIVITY_PATH = "/start-activity";
 
     private static final String TAG = "VOR_watchface";
 
@@ -188,6 +193,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         Wearable.DataApi.addListener(mGoogleApiClient, this);
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.NodeApi.addListener(mGoogleApiClient, this);
+        new StartWearableActivityTask().execute();
        // if (mRanking!=null)  mRanking.setText("C");
     }
 
@@ -309,6 +315,21 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
        generateEvent("Message", event.toString());
     }
 
+    private void sendStartActivityMessage(String node) {
+        Wearable.MessageApi.sendMessage(
+                mGoogleApiClient, node, START_ACTIVITY_PATH, new byte[0]).setResultCallback(
+                new ResultCallback<MessageApi.SendMessageResult>() {
+                    @Override
+                    public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                        if (!sendMessageResult.getStatus().isSuccess()) {
+                            Log.e(TAG, "Failed to send message with status code: "
+                                    + sendMessageResult.getStatus().getStatusCode());
+                        }
+                    }
+                }
+        );
+    }
+
     @Override
     public void onPeerConnected(Node node) {
         generateEvent("Node Connected", node.getId());
@@ -326,5 +347,29 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         Log.v(tag, message);
     }
 
+
+    private Collection<String> getNodes() {
+        HashSet<String> results = new HashSet<String>();
+        NodeApi.GetConnectedNodesResult nodes =
+                Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+
+        for (Node node : nodes.getNodes()) {
+            results.add(node.getId());
+        }
+
+        return results;
+    }
+
+    private class StartWearableActivityTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... args) {
+            Collection<String> nodes = getNodes();
+            for (String node : nodes) {
+                sendStartActivityMessage(node);
+            }
+            return null;
+        }
+    }
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Volvo Ocean Face</string>
+    <string name="app_name">Volvo Ocean Watch</string>
     <string name="action_about">Acerca</string>
     <string name="action_refresh">Refrescar</string>
     <string name="speed">Velocidad</string>

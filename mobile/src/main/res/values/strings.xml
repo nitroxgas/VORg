@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name">Volvo Ocean Face</string>
+    <string name="app_name">Volvo Ocean Watch</string>
+    <string name="app_sync_name" translatable="false">Volvo Ocean Sync Service</string>
     <string name="title_activity_vorg__main_mobile" translatable="false">VOR WatchFace</string>
     <string name="start_wearable_activity" translatable="false">Start Wearable Activity</string>
     <string name="start">Start</string>
@@ -36,7 +37,7 @@
     <string name="app_wait_data">Waiting for data....</string>
     <string name="title_activity_about_activity">About</string>
     <string name="hello_world" translatable="false">Hello world!</string>
-    <string name="vof_name" translatable="false">Volvo Ocean Watch Face</string>
+    <string name="vof_name" translatable="false">Volvo Ocean Watch</string>
 
     <!--
          By convention, "action" denotes that this String will be used as the label for an Action,
