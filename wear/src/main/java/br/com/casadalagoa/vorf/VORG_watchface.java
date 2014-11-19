@@ -74,7 +74,13 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             int hoursLeft = (n/3600)-(daysLeft*24);
             int minutesLeft = (n/60)-((hoursLeft*60)+(daysLeft*24*60));
             //int secondsLeft = (n)-((minutesLeft*60)+(hoursLeft*60*60)+(daysLeft*24*60*60));
-            mNextEventView.setText(mNextEventLang+"\n"+mNextEvent+"\n"+String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
+            String countDownStr=mNextEventLang+"\n"+mNextEvent+"\n";
+            if (minutesLeft<0){
+                minutesLeft = minutesLeft * -1;
+                hoursLeft = hoursLeft * -1;
+                countDownStr=mNextEvent+"\n";
+            }
+            mNextEventView.setText(countDownStr+String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
             //Log.v(TAG, String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
         }
     }
