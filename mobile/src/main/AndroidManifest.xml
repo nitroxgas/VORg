@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.casadalagoa.vorf"
-    android:versionCode="2" android:versionName="@string/app_name">
+    android:versionCode="1" android:versionName="@string/app_name">
 
     <!-- This permission is necessary in order to perform network access. -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -32,10 +32,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
+       <!-- <activity
             android:name="br.com.casadalagoa.vorf.VVorg_settings"
             android:label="@string/title_activity_vvorg_settings" >
-        </activity>
+        </activity>-->
         <!--
         <activity
             android:name="vofVORG_MainMobile"
@@ -82,23 +82,19 @@
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-            </intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>-->
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action._BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-        <!--
-        <activity
-            android:name="vofconn.WearCom"
-            android:label="@string/title_activity_wear_com" >
-        </activity>
-        -->
+
         <activity
             android:name="br.com.casadalagoa.vorf.about_activity"
             android:label="@string/title_activity_about_activity"

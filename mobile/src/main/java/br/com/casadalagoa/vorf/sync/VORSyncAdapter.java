@@ -395,73 +395,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         //return;
     }
 
-/*
-
-    private void notifyBoatData(double high, double low, String description, int weatherId) {
-        Context context = getContext();
-        //checking the last update and notify if it' the first of the day
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String displayNotificationsKey = context.getString(R.string.pref_enable_notifications_key);
-
-        // If notifications are enabled in preferences...
-        boolean defaultForNotifications =
-                Boolean.parseBoolean(context.getString(R.string.pref_enable_notifications_default));
-        boolean notificationsEnabled =
-                prefs.getBoolean(displayNotificationsKey, defaultForNotifications);
-
-        // AND it's been at least 24h since the last notification was displayed
-        String lastNotificationKey = context.getString(R.string.pref_last_notification);
-        long lastNotification = prefs.getLong(lastNotificationKey, 0);
-        boolean timeToNotify = (System.currentTimeMillis() - lastNotification >= DAY_IN_MILLIS);
-
-        if (notificationsEnabled && timeToNotify) {
-            // Last sync was more than 1 day ago, let's send a notification with the weather.
-
-            int iconId = Utility.getIconResourceForWeatherCondition(weatherId);
-            String title = mContext.getString(R.string.app_name);
-
-            boolean isMetric = Utility.isMetric(mContext);
-
-            // Define the text of the forecast.
-            String contentText = String.format(mContext.getString(R.string.format_notification),
-                    description,
-                    Utility.formatTemperature(mContext, high, isMetric),
-                    Utility.formatTemperature(mContext, low, isMetric));
-
-            // NotificationCompatBuilder is a very convenient way to build backward-compatible
-            // notifications.  Just throw in some data.
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(mContext)
-                            .setSmallIcon(iconId)
-                            .setContentTitle(title)
-                            .setContentText(contentText);
-
-            // Make something interesting happen when the user clicks on the notification.
-            // In this case, opening the app is sufficient.
-            Intent resultIntent = new Intent(mContext, MainActivity.class);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
-            stackBuilder.addParentStack(MainActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent =
-                    stackBuilder.getPendingIntent(
-                            0,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
-            mBuilder.setContentIntent(resultPendingIntent);
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getContext()
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
-            // mId allows you to update the notification later on.
-          //  mNotificationManager.notify(WEATHER_NOTIFICATION_ID, mBuilder.build());
-
-            //refreshing last sync
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putLong(lastNotificationKey, System.currentTimeMillis());
-            editor.commit();
-        }
-    }
-*/
-
      /**
      * Helper method to have the sync adapter sync immediately
      *
@@ -618,6 +551,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
        // Wearable.DataApi.addListener(mGoogleApiClient, this);
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.NodeApi.addListener(mGoogleApiClient, this);
+        //sendData(Utility.getBoatArray(getContext(),Utility.getPreferredBoat(getContext())));
     }
 
     /**
@@ -663,7 +597,8 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     public void onMessageReceived(final MessageEvent messageEvent) {
         Log.v(TAG, "Message Received!");
         if (messageEvent.getPath().equalsIgnoreCase(START_ACTIVITY_PATH)){
-            syncImmediately(getContext(),false);
+            syncImmediately(getContext(),true);
+            //sendData(Utility.getBoatArray(getContext(),Utility.getPreferredBoat(getContext())));
         }
     }
 
@@ -721,6 +656,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
             dataMap.getDataMap().putString("next_event_title", Utility.getNextEventTitle(getContext()));
             dataMap.getDataMap().putString("next_event_time", Utility.getNextEventTime(getContext()));
             dataMap.getDataMap().putBoolean("show_countdown", Utility.getNextEventShow(getContext()));
+            dataMap.getDataMap().putInt("counter", count++);  // Just to be certain that the ondatachanged will be called on the watch!
             PutDataRequest request = dataMap.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, request)
                     .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
@@ -735,3 +671,71 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
 
 }
+
+
+/*
+
+    private void notifyBoatData(double high, double low, String description, int weatherId) {
+        Context context = getContext();
+        //checking the last update and notify if it' the first of the day
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String displayNotificationsKey = context.getString(R.string.pref_enable_notifications_key);
+
+        // If notifications are enabled in preferences...
+        boolean defaultForNotifications =
+                Boolean.parseBoolean(context.getString(R.string.pref_enable_notifications_default));
+        boolean notificationsEnabled =
+                prefs.getBoolean(displayNotificationsKey, defaultForNotifications);
+
+        // AND it's been at least 24h since the last notification was displayed
+        String lastNotificationKey = context.getString(R.string.pref_last_notification);
+        long lastNotification = prefs.getLong(lastNotificationKey, 0);
+        boolean timeToNotify = (System.currentTimeMillis() - lastNotification >= DAY_IN_MILLIS);
+
+        if (notificationsEnabled && timeToNotify) {
+            // Last sync was more than 1 day ago, let's send a notification with the weather.
+
+            int iconId = Utility.getIconResourceForWeatherCondition(weatherId);
+            String title = mContext.getString(R.string.app_name);
+
+            boolean isMetric = Utility.isMetric(mContext);
+
+            // Define the text of the forecast.
+            String contentText = String.format(mContext.getString(R.string.format_notification),
+                    description,
+                    Utility.formatTemperature(mContext, high, isMetric),
+                    Utility.formatTemperature(mContext, low, isMetric));
+
+            // NotificationCompatBuilder is a very convenient way to build backward-compatible
+            // notifications.  Just throw in some data.
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(mContext)
+                            .setSmallIcon(iconId)
+                            .setContentTitle(title)
+                            .setContentText(contentText);
+
+            // Make something interesting happen when the user clicks on the notification.
+            // In this case, opening the app is sufficient.
+            Intent resultIntent = new Intent(mContext, MainActivity.class);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
+            stackBuilder.addParentStack(MainActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getContext()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            // mId allows you to update the notification later on.
+          //  mNotificationManager.notify(WEATHER_NOTIFICATION_ID, mBuilder.build());
+
+            //refreshing last sync
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putLong(lastNotificationKey, System.currentTimeMillis());
+            editor.commit();
+        }
+    }
+*/

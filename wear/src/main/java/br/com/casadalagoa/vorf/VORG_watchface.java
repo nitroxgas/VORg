@@ -42,7 +42,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
     private static final String BD_KEY = "bd"; // Boat data array!
     private static final String START_ACTIVITY_PATH = "/start-activity";
 
-    private static final String TAG = "VOR_watchface";
+    private static final String TAG = "VOR_WatchFace";
 
     private GoogleApiClient mGoogleApiClient;
    //private View mLayout;
@@ -283,7 +283,6 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     mNextEventTime = dataItem.getDataMap().getString("next_event_time");
                     mNextEventDate = Utility.NextEventDate(mNextEventTime);
                     mNextEventShow = dataItem.getDataMap().getBoolean("show_countdown");
-
                    /* String tmp_str=String.valueOf(boat_data.length);
                     for (int i=0;i<boat_data.length;i++){
                         tmp_str+="("+boat_data[i]+")";
@@ -324,7 +323,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                         if (!sendMessageResult.getStatus().isSuccess()) {
                             Log.e(TAG, "Failed to send message with status code: "
                                     + sendMessageResult.getStatus().getStatusCode());
-                        }
+                        } else Log.v(TAG,"Message to start sent "+ sendMessageResult.getStatus().getStatusCode());
                     }
                 }
         );
@@ -352,11 +351,9 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
         HashSet<String> results = new HashSet<String>();
         NodeApi.GetConnectedNodesResult nodes =
                 Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-
         for (Node node : nodes.getNodes()) {
             results.add(node.getId());
         }
-
         return results;
     }
 
@@ -368,6 +365,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             for (String node : nodes) {
                 sendStartActivityMessage(node);
             }
+            Log.v(TAG,"Nodes treated!");
             return null;
         }
     }

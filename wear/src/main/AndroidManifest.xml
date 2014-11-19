@@ -16,7 +16,7 @@
 
         <activity
             android:name="br.com.casadalagoa.vorf.VORG_watchface"
-            android:allowEmbedded="true" android:label="Volvo Ocean Race Face" >
+            android:allowEmbedded="true" android:label="Volvo Ocean Watch" >
             <meta-data android:name="com.google.android.clockwork.home.preview" android:resource="@drawable/watchface_preview"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,10 +26,6 @@
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-           <!-- <intent-filter>
-                <action android:name="vofBOATDATA"/>
-            </intent-filter>
-           -->
         </activity>
     </application>
 
