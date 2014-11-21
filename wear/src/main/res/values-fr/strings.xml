@@ -4,4 +4,5 @@
     <string name="has_finished">Lieu</string>
     <string name="wait">Attente\nde données</string>
     <string name="next_event">Prochain Évén</string>
+    <string name="next_report">Prochain rapport</string>
 </resources>

@@ -78,8 +78,10 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
             if (minutesLeft<0){
                 minutesLeft = minutesLeft * -1;
                 hoursLeft = hoursLeft * -1;
+                daysLeft = daysLeft * -1;
                 countDownStr=mNextEvent+"\n";
             }
+            if (mNextEvent.contains("NxtUpdate")) countDownStr=getString(R.string.next_report)+"\n";
             mNextEventView.setText(countDownStr+String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
             //Log.v(TAG, String.valueOf(daysLeft)+"d "+String.valueOf(hoursLeft)+"h "+String.valueOf(minutesLeft)+"m "); //+String.valueOf(secondsLeft)+"s "
         }

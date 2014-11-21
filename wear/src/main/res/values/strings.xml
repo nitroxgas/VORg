@@ -5,5 +5,6 @@
     <string name="has_finished">Place</string>
     <string name="wait">Waiting for data</string>
     <string name="next_event">Next Event</string>
+    <string name="next_report">Next Update</string>
 
 </resources>

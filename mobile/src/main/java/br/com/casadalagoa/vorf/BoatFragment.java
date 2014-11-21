@@ -138,10 +138,26 @@ public class BoatFragment extends Fragment implements LoaderCallbacks<Cursor> {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Context mContext = getActivity().getBaseContext();
-                if (position==0){
+                if (position==0) {
                     String show = Utility.getNextEventShow(mContext) ? "false" : "true";
-                    Utility.setNextEventShow(mContext, show);
-                } else {
+                    switch (Utility.getNextEventIdx(mContext)) {
+                        case 0:
+                            Utility.setNextEventShow(mContext, show);
+                            Utility.setNextEventTimeInUse(mContext, Utility.getNextEventTime(mContext));
+                            Utility.setNextEventTitleInUse(mContext, Utility.getNextEventTitle(mContext));
+                            break;
+                        case 1:
+                            Utility.setNextEventTimeInUse(mContext, Utility.getNextUpdateLong(mContext));
+                            Utility.setNextEventTitleInUse(mContext, "NxtUpdate");
+                            break;
+                        case 2:
+                            Utility.setNextEventShow(mContext, show);
+                            break;
+                    }
+                    Log.v("SetCrono: ",show+" "+Utility.getNextEventTimeInUse(mContext)+Utility.getNextEventTitleInUse(mContext)+ String.valueOf(Utility.getNextEventIdx(mContext)));
+                    Utility.setNextEventTimeIdx(mContext);
+                }
+                 else {
                     Cursor cursor = mBoatAdapter.getCursor();
                     if (cursor != null && cursor.moveToPosition(position - 1)) {
                         ((Callback) getActivity())

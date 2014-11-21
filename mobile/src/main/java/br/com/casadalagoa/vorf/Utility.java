@@ -64,9 +64,46 @@ public class Utility {
         mEditor.putString(context.getString(R.string.pref_next_event_time_key), boat_pref).apply();
     }
 
+    public static String getNextEventTitleInUse(Context context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPrefs.getString(context.getString(R.string.pref_next_event_use_title_key),context.getString(R.string.pref_next_event_use_title_default));
+    }
+
+    public static void setNextEventTitleInUse(Context context, String boat_pref) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString(context.getString(R.string.pref_next_event_use_title_key), boat_pref).apply();
+    }
+
+    public static String getNextEventTimeInUse(Context context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPrefs.getString(context.getString(R.string.pref_next_event_use_time_key),context.getString(R.string.pref_next_event_use_time_default));
+    }
+
+    public static void setNextEventTimeInUse(Context context, String boat_pref) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString(context.getString(R.string.pref_next_event_use_time_key), boat_pref).apply();
+    }
+
+
     public static boolean getNextEventShow(Context context) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         return mPrefs.getString(context.getString(R.string.pref_next_event_show_key),context.getString(R.string.pref_next_event_show_default)).equals("true");
+    }
+
+    public static int getNextEventIdx(Context context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPrefs.getInt(context.getString(R.string.pref_next_event_show_idx_key),0);
+    }
+
+    public static void setNextEventTimeIdx(Context context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        int idx = mPrefs.getInt(context.getString(R.string.pref_next_event_show_idx_key),0);
+        idx++;
+        if (idx==3) idx = 0;
+        mEditor.putInt(context.getString(R.string.pref_next_event_show_idx_key), idx).apply();
     }
 
     public static void setNextEventShow(Context context, String boat_pref) {
@@ -98,9 +135,7 @@ public class Utility {
     public static String getNextUpdate(Context context) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         String mNextUpdatePref = mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def));
-
-        Log.v("GetNextUpdate",mNextUpdatePref);
-
+       // Log.v("GetNextUpdate",mNextUpdatePref);
         if ((!mNextUpdatePref.isEmpty())&&(!mNextUpdatePref.contains("null"))) {
             try {
                 java.util.Date date;
@@ -114,7 +149,26 @@ public class Utility {
                 Log.e("getNextUpdate","date parsing exception",e);
             }
         }
+        return "";
+    }
 
+    public static String getNextUpdateLong(Context context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String mNextUpdatePref = mPrefs.getString(context.getString(R.string.pref_next_report), context.getString(R.string.pref_next_report_def));
+        //Log.v("GetNextUpdate", mNextUpdatePref);
+        if ((!mNextUpdatePref.isEmpty())&&(!mNextUpdatePref.contains("null"))) {
+            try {
+                java.util.Date date;
+                SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+                date_f.setTimeZone(TimeZone.getTimeZone("GMT00:00"));
+                date = date_f.parse(mNextUpdatePref);
+                date_f.applyPattern("MMM dd, yyyy HH:mm:ss ZZZ");
+                date_f.setTimeZone(TimeZone.getDefault());
+                return date_f.format(date);
+            } catch (ParseException e) {
+                Log.e("getNextUpdate","date parsing exception",e);
+            }
+        }
         return "";
     }
 

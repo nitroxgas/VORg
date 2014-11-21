@@ -19,9 +19,15 @@
     <string name="pref_next_event_title_key" translatable="false">title_mobile</string>
     <string name="pref_next_event_title_default" translatable="false">Cape Town In-Port Race</string>
     <string name="pref_next_event_time_key" translatable="false">countdownFinishTime</string>
-    <string name="pref_next_event_time_default" translatable="false">Nov 15, 2014 12:00:00 +0000</string>
+    <string name="pref_next_event_time_default"     translatable="false">Nov 15, 2014 12:00:00 +0000</string>
+    <string name="pref_next_event_use_time_default" translatable="false">Nov 15, 2014 12:00:00 +0000</string>
+    <string name="pref_next_event_use_title_key" translatable="false">title_use</string>
+    <string name="pref_next_event_use_title_default" translatable="false">Cape Town In-Port Race</string>
+    <string name="pref_next_event_use_time_key" translatable="false">countdownFinishTimeUse</string>
+
     <string name="pref_next_event_show_key" translatable="false">show_countdown</string>
     <string name="pref_next_event_show_default" translatable="false">false</string>
+    <string name="pref_next_event_show_idx_key" translatable="false">idx_countdown</string>
     <string name="pref_next_report" translatable="false">pref_next_report</string>
     <string name="pref_next_report_def" translatable="false">null</string>
     <string name="pref_leg_key" translatable="false">legkey</string>
@@ -124,6 +130,7 @@
     <!-- Share format [CHAR LIMIT=NONE] -->
     <string name="format_share" translatable="false">        Weather for <xliff:g id="date">%1$s</xliff:g> in <xliff:g id="location">%2$s</xliff:g>:
         A high of <xliff:g id="high">%3$s</xliff:g> and low of <xliff:g id="low">%4$s</xliff:g></string>
+    <string name="next_report">Next Report</string>
 
 
 </resources>

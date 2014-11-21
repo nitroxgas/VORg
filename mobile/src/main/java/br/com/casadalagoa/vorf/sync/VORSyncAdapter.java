@@ -7,8 +7,10 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -56,6 +58,16 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
     private static final String START_ACTIVITY_PATH = "/start-activity";
 
+    /**
+     * Network connection timeout, in milliseconds.
+     */
+    private static final int NET_CONNECT_TIMEOUT_MILLIS = 15000;  // 15 seconds
+
+    /**
+     * Network read timeout, in milliseconds.
+     */
+    private static final int NET_READ_TIMEOUT_MILLIS = 10000;  // 10 seconds
+
     private final Context mContext;
 
     public VORSyncAdapter(Context context, boolean autoInitialize) {
@@ -90,11 +102,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
             syncHeader();
 
-            // String boatToQuery = Utility.getPreferredBoat(mContext);
-
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
-            HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             // Will contain the raw JSON response as a string.
@@ -135,7 +142,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                         REPORT_BASE_URL = "http://www.volvooceanrace.com/en/rdc/VOLVO_WEB_LEG1_2014.json";
                 }
 
-                // Not really needed, but if the query someday needs parameters just add them here
+               /* // Not really needed, but if the query someday needs parameters just add them here
                 Uri builtUri = Uri.parse(REPORT_BASE_URL).buildUpon().build();
 
                 URL url = new URL(builtUri.toString());
@@ -143,17 +150,16 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                 // Create the request to OpenBoatMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
+                urlConnection.connect();*/
 
                 // Read the input stream into a String
-                InputStream inputStream = urlConnection.getInputStream();
+                InputStream inputStream = downloadUrl(REPORT_BASE_URL);//urlConnection.getInputStream();
                 StringBuilder buffer = new StringBuilder();
                 if (inputStream == null) {
                     // Nothing to do.
                     return;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
-
                 String line;
                 while ((line = reader.readLine()) != null) {
                     // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
@@ -173,10 +179,6 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                 // If the code didn't successfully get the boat data, there's no point in attemping
                 // to parse it.
             } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                    Log.d(LOG_TAG, "Exit closing stream");
-                }
                 if (reader != null) {
                     try {
                         reader.close();
@@ -188,25 +190,36 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         }
     }
 
-    public void syncHeader(){
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String ReportJsonStr;// = null;
-
+    /**
+     * Given a string representation of a URL, sets up a connection and gets an input stream.
+     */
+    private InputStream downloadUrl(final String urlStr) throws IOException {
+        HttpURLConnection conn;
         try {
-            // Construct the URL
-            final String REPORT_BASE_URL = "http://www.volvooceanrace.com/en/headerData.json" ;
             // Not really needed, but if the query someday needs parameters just add them here
-            Uri builtUri = Uri.parse(REPORT_BASE_URL).buildUpon().build();
+            Uri builtUri = Uri.parse(urlStr).buildUpon().build();
             URL url = new URL(builtUri.toString());
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(NET_READ_TIMEOUT_MILLIS /* milliseconds */);
+            conn.setConnectTimeout(NET_CONNECT_TIMEOUT_MILLIS /* milliseconds */);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            // Starts the query
+            conn.connect();
+            return conn.getInputStream();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error ", e);
+        }
+        return null;
+    }
+
+
+    public void syncHeader(){
+        BufferedReader reader = null;
+        String ReportJsonStr;// = null;
+        try {
+            InputStream inputStream = downloadUrl("http://www.volvooceanrace.com/en/headerData.json");
+                    StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
                 // Nothing to do.
                 return;
@@ -225,17 +238,14 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
         } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
                 Log.d(LOG_TAG, "Exit closing stream");
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
                 }
-            }
         }
     }
 
@@ -253,6 +263,10 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
                 String nextEventTitle = headerData.getString(HD_Title);
                 Utility.setNextEventTime(getContext(), nextEventDay);
                 Utility.setNextEventTitle(getContext(), nextEventTitle);
+                if (Utility.getNextEventIdx(mContext)<2) {
+                    Utility.setNextEventTimeInUse(getContext(), nextEventDay);
+                    Utility.setNextEventTitleInUse(getContext(), nextEventTitle);
+                }
                 Log.d(LOG_TAG, "Sync Header Complete. ");
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
@@ -284,11 +298,11 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
             try {
 
                 JSONObject ReportJson = new JSONObject(ReportJsonStr);
-
                 JSONArray codeArray = ReportJson.getJSONArray(OWM_CODES);
                 JSONObject dataArray = ReportJson.getJSONObject("data");
                 String nextUpdate = ReportJson.getString("nextReport");
-                Utility.setNextUpdate(getContext(), nextUpdate);
+                Utility.setNextUpdate(mContext, nextUpdate);
+                if (Utility.getNextEventIdx(mContext)==1) Utility.setNextEventTimeInUse(mContext,nextUpdate);
                 JSONArray boatArray = dataArray.getJSONArray(OWM_LATEST);
 
                 Vector<ContentValues> cVVector = new Vector<ContentValues>(codeArray.length());
@@ -417,16 +431,16 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
 
         Account account = getSyncAccount(context);
         String authority = context.getString(R.string.content_authority);
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
                     syncPeriodic(syncInterval, flexTime).
                     setSyncAdapter(account, authority).build();
             ContentResolver.requestSync(request);
-        } else {*/
+        } else {
             ContentResolver.addPeriodicSync(account,
                     authority, new Bundle(), syncInterval);
-       // }
+        }
         Log.v("VORGSyncAdapter:", "Periodic Sync Configured");
     }
 
@@ -653,9 +667,9 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         if (mGoogleApiClient.isConnected()) {
             PutDataMapRequest dataMap = PutDataMapRequest.create(BD_PATH);
             dataMap.getDataMap().putStringArray(BD_KEY, boat_data);
-            dataMap.getDataMap().putString("next_event_title", Utility.getNextEventTitle(getContext()));
-            dataMap.getDataMap().putString("next_event_time", Utility.getNextEventTime(getContext()));
-            dataMap.getDataMap().putBoolean("show_countdown", Utility.getNextEventShow(getContext()));
+            dataMap.getDataMap().putString("next_event_title", Utility.getNextEventTitleInUse(getContext()));
+            dataMap.getDataMap().putString("next_event_time" , Utility.getNextEventTimeInUse(getContext()));
+            dataMap.getDataMap().putBoolean("show_countdown" , Utility.getNextEventShow(getContext()));
             dataMap.getDataMap().putInt("counter", count++);  // Just to be certain that the ondatachanged will be called on the watch!
             PutDataRequest request = dataMap.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, request)

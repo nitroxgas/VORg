@@ -13,5 +13,6 @@
     <string name="app_description_text">Mude a face do seu relógio para Volvo Ocean Face e escolha uma das equipes abaixo para acompanhar por seu relógio.\nClique aqui para exibir/ocultar uma contagem regressiva para o próximo evento.</string>
     <string name="app_wait_data">Aguardando dados...</string>
     <string name="app_about_text">Este não é um software da Volvo Ocean Race\nPara uma informação mais detalhada sobre a aventura e as equipes, por favor instale o incrível Volvo Ocean Race App do Google Play:\n http://goo.gl/fUpUhi</string>
+    <string name="next_report">Próxima Atualização</string>
 
 </resources>
