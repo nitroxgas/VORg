@@ -1,21 +1,14 @@
 package br.com.casadalagoa.vorf.conn;
 
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.data.FreezableUtils;
 import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.wearable.DataEvent;
-import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
@@ -24,12 +17,11 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import br.com.casadalagoa.vorf.Utility;
+import br.com.casadalagoa.vorf.sync.VORSyncAdapter;
 
 
-public class WearCom extends Activity implements  DataApi.DataListener,
+public class WearCom extends Activity implements  //DataApi.DataListener,
         MessageApi.MessageListener, NodeApi.NodeListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -37,42 +29,23 @@ public class WearCom extends Activity implements  DataApi.DataListener,
     private static final String TAG = "WearCom";
 
     private static final String KEY_IN_RESOLUTION = "is_in_resolution";
-    private static final int REQUEST_RESOLVE_ERROR = 1000;
+
+    private static final String START_ACTIVITY_PATH = "/start-activity";
 
     // Patch and data keys to send to watch
     private static final String BD_PATH = "/bd"; // Boat Data
     private static final String BD_KEY = "bd"; // Boat data array!
-
-   /*
-    private static final String BS_PATH = "/bs"; // Boat Speed
-    private static final String WS_PATH = "/ws"; // Wind Speed
-    private static final String WA_PATH = "/wa"; // Wind Angle
-    private static final String BA_PATH = "/ba"; // Boat Angle
-    private static final String BH_PATH = "/bh"; // Boat Heading
-    private static final String BL_PATH = "/bl"; // Boat Locale
-    private static final String DL_PATH = "/dl"; // Distance to leader
-    private static final String DC_PATH = "/dc"; // Distance to Complete
-    private static final String RK_PATH = "/rk"; // Ranking
-    */
-    /*
-    private static final String RK_KEY = "rk";
-    private static final String DL_KEY = "dl";
-    private static final String DC_KEY = "dc";
-    private static final String BL_KEY = "bl";
-    private static final String BH_KEY = "bh";
-    private static final String BS_KEY = "bs";
-    private static final String WS_KEY = "ws";
-    private static final String WA_KEY = "wa";
-    private static final String BA_KEY = "ba";
-    */
+    private static int count = 5;
+    private Context mContext;
 
 
+    private static final int REQUEST_RESOLVE_ERROR;
+
+    static {
+        REQUEST_RESOLVE_ERROR = 1000;
+    }
 
 
-    /**
-     * Request code for auto Google Play Services error resolution.
-     */
-    protected static final int REQUEST_CODE_RESOLUTION = 1;
 
     /**
      * Google API client.
@@ -94,8 +67,9 @@ public class WearCom extends Activity implements  DataApi.DataListener,
         if (savedInstanceState != null) {
             mIsInResolution = savedInstanceState.getBoolean(KEY_IN_RESOLUTION, false);
         }
-
+        mContext = getBaseContext();
     }
+
 
     /**
      * Called when the Activity is made visible.
@@ -110,7 +84,7 @@ public class WearCom extends Activity implements  DataApi.DataListener,
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(Wearable.API)
-                    // Optionally, add additional APIs and scopes if required.
+                            // Optionally, add additional APIs and scopes if required.
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
@@ -118,42 +92,8 @@ public class WearCom extends Activity implements  DataApi.DataListener,
         mGoogleApiClient.connect();
     }
 
-    /**
-     * Called when activity gets invisible. Connection to Play Services needs to
-     * be disconnected as soon as an activity is invisible.
-     */
-    @Override
-    protected void onStop() {
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.disconnect();
-        }
-        super.onStop();
-    }
-
-    /**
-     * Saves the resolution state.
-     */
-    @Override
-
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_IN_RESOLUTION, mIsInResolution);
-    }
-
-    /**
-     * Handles Google Play Services resolution callbacks.
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_CODE_RESOLUTION:
-                retryConnecting();
-                break;
-        }
-    }
-
     private void retryConnecting() {
+        Log.v(TAG, "RetryConnecting");
         mIsInResolution = false;
         if (!mGoogleApiClient.isConnecting()) {
             mGoogleApiClient.connect();
@@ -165,9 +105,7 @@ public class WearCom extends Activity implements  DataApi.DataListener,
      */
     @Override
     public void onConnected(Bundle connectionHint) {
-        Log.i(TAG, "GoogleApiClient connected");
-        // TODO: Start making API requests.
-        Wearable.DataApi.addListener(mGoogleApiClient, this);
+        Log.v(TAG, "GoogleApiClient connected");        
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.NodeApi.addListener(mGoogleApiClient, this);
     }
@@ -177,7 +115,7 @@ public class WearCom extends Activity implements  DataApi.DataListener,
      */
     @Override
     public void onConnectionSuspended(int cause) {
-        Log.i(TAG, "GoogleApiClient connection suspended");
+        Log.v(TAG, "GoogleApiClient connection suspended");
         retryConnecting();
     }
 
@@ -188,16 +126,9 @@ public class WearCom extends Activity implements  DataApi.DataListener,
      */
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
+        Log.v(TAG, "GoogleApiClient connection failed: " + result.toString());
         if (!result.hasResolution()) {
             // Show a localized error dialog.
-            GooglePlayServicesUtil.getErrorDialog(
-                    result.getErrorCode(), this, 0, new OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            retryConnecting();
-                        }
-                    }).show();
             return;
         }
         // If there is an existing resolution error being displayed or a resolution
@@ -207,103 +138,56 @@ public class WearCom extends Activity implements  DataApi.DataListener,
             return;
         }
         mIsInResolution = true;
-        try {
-            result.startResolutionForResult(this, REQUEST_CODE_RESOLUTION);
-        } catch (SendIntentException e) {
-            Log.e(TAG, "Exception while starting resolution activity", e);
-            retryConnecting();
-        }
-    }
+        retryConnecting();
 
-    @Override //DataListener
-    public void onDataChanged(DataEventBuffer dataEvents) {
-        final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
-        dataEvents.close();
-        // To handle UI changes, just in case.
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                for (DataEvent event : events) {
-                    if (event.getType() == DataEvent.TYPE_CHANGED) {
-                       // TODO: Implement in changed events
-                    } else if (event.getType() == DataEvent.TYPE_DELETED) {
-                        // TODO: Implement in deleted events
-                    }
-                }
-            }
-        });
     }
 
     @Override //MessageListener
     public void onMessageReceived(final MessageEvent messageEvent) {
-        // A message from watch was received
-        /*
-        Implement the handler if UI interaction will be necessary
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });*/
-
+        Log.v(TAG, "Message Received!");
+        if (messageEvent.getPath().equalsIgnoreCase(START_ACTIVITY_PATH)){
+            VORSyncAdapter.syncImmediately(getBaseContext(),true);
+        }
     }
 
     @Override //NodeListener
     public void onPeerConnected(final Node peer) {
-        // onPeerConnected:
-        /*mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });*/
+        Log.v(TAG, "Peer Connected! ");
     }
 
     @Override //NodeListener
     public void onPeerDisconnected(final Node peer) {
-        // onPeerDisconnected:
-        /*mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });*/
-    }
-
-    private Collection<String> getNodes() {
-        HashSet<String> results = new HashSet<String>();
-        NodeApi.GetConnectedNodesResult nodes =
-                Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-        for (Node node : nodes.getNodes()) {
-            results.add(node.getId());
-        }
-
-        return results;
+        Log.v(TAG, "Peer Disconnected! ");
     }
 
     public void sendData(String[] boat_data) {
         if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
+            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                     .addApi(Wearable.API)
                             // Optionally, add additional APIs and scopes if required.
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
+            Log.v("VORGSyncAdapter:", "New Connection on sendData!");
+            mGoogleApiClient.connect();
         }
-        mGoogleApiClient.connect();
-
         if (mGoogleApiClient.isConnected()) {
             PutDataMapRequest dataMap = PutDataMapRequest.create(BD_PATH);
             dataMap.getDataMap().putStringArray(BD_KEY, boat_data);
+            dataMap.getDataMap().putString("next_event_title", Utility.getNextEventTitleInUse(getBaseContext()));
+            dataMap.getDataMap().putString("next_event_time" , Utility.getNextEventTimeInUse(getBaseContext()));
+            dataMap.getDataMap().putBoolean("show_countdown" , Utility.getNextEventShow(getBaseContext()));
+            dataMap.getDataMap().putInt("counter", count++);  // Just to be certain that the ondatachanged will be called on the watch!
             PutDataRequest request = dataMap.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, request)
                     .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                         @Override
                         public void onResult(DataApi.DataItemResult dataItemResult) {
-                            Log.v(TAG, "Sending data was successful: " + dataItemResult.getStatus()
+                            Log.v(TAG, "Sending data was successful: " + String.valueOf(count)+" : "+ dataItemResult.getStatus()
                                     .isSuccess());
                         }
                     });
         }
     }
+
 }

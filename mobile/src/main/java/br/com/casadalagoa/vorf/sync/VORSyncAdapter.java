@@ -53,8 +53,8 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     public final String LOG_TAG = VORSyncAdapter.class.getSimpleName();
 
     // Interval at which to sync with the weather, in milliseconds.
-    // 1000 milliseconds (1 second) * 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 1000 * 60 * 5;// * 60;
+    // 60 seconds (1 minute) * 10 = 10 minutes
+    public static final int SYNC_INTERVAL = 60 * 10;//
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
     private static final String START_ACTIVITY_PATH = "/start-activity";
 
@@ -494,7 +494,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     }
 
     //  ###### Wear Connection Implementation
-    private static final String TAG = "VOR_WEARConnect";
+    private static final String TAG =  VORSyncAdapter.class.getSimpleName();
 
 /*
     private static final int REQUEST_RESOLVE_ERROR;
@@ -508,7 +508,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
     private static final String BD_PATH = "/bd"; // Boat Data
     private static final String BD_KEY = "bd"; // Boat data array!
 
-    private static int count = 5;
+    private static int count = 0;
 
 
     /**
@@ -546,7 +546,7 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
         outState.putBoolean(KEY_IN_RESOLUTION, mIsInResolution);
     }*/
 
-
+    public static boolean hasToSend = true;
 
     private void retryConnecting() {
         Log.v(TAG, "RetryConnecting");
@@ -565,7 +565,10 @@ public class VORSyncAdapter extends AbstractThreadedSyncAdapter  implements // D
        // Wearable.DataApi.addListener(mGoogleApiClient, this);
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.NodeApi.addListener(mGoogleApiClient, this);
-        //sendData(Utility.getBoatArray(getContext(),Utility.getPreferredBoat(getContext())));
+        if (hasToSend) {
+            sendData(Utility.getBoatArray(getContext(),Utility.getPreferredBoat(getContext())));
+            hasToSend = false;
+        }
     }
 
     /**

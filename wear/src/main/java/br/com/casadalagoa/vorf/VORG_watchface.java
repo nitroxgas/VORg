@@ -249,6 +249,7 @@ public class VORG_watchface extends WatchFaceActivity implements GoogleApiClient
                     mLegc.setText("LC\n"+boat_data[11]+"%");
                     mDTLC.setText("DTF "+boat_data[7]);
                     mDTL.setText("DTL "+boat_data[12]);
+                   // Log.v("Heading:","("+boat_data[13]+")");
                     mImg.setImageResource(Utility.getFormattedBoatHeading(getApplicationContext(),boat_data[23],boat_data[13]));
                     mImg.setVisibility(View.VISIBLE);
                     mCenter.setText("");

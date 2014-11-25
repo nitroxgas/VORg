@@ -14,7 +14,7 @@ public class VORSyncService extends Service {
         Log.d("VORSyncService", "onCreate - VORSyncService");
         synchronized (sSyncAdapterLock) {
             if (sVORSyncAdapter == null) {
-                sVORSyncAdapter = new VORSyncAdapter(getApplicationContext(), true);
+                sVORSyncAdapter = new VORSyncAdapter(getApplicationContext(), false);
             }
         }
     }

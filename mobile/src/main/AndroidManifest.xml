@@ -18,16 +18,16 @@
         android:theme="@style/AppTheme"
         >
 
-        <!--
-        <activity
-            android:name="vofconn.VORgService"
+
+        <service
+            android:name=".conn.VORgService"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-        </activity>
-        -->
+        </service>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -82,10 +82,6 @@
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <!--<intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>-->
             <intent-filter>
                 <action android:name="android.intent.action._BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
